@@ -3,7 +3,6 @@ import { Datepicker } from './formComponents/datepicker'
 import { FieldGroup } from './formComponents/fieldGroup'
 import { Input } from './formComponents/input'
 import { Label } from './formComponents/label'
-import { MultipleSelect } from './formComponents/multipleSelect'
 import { RadioButton } from './formComponents/radioButton'
 import { Select } from './formComponents/select'
 import { Slider } from './formComponents/slider'
@@ -16,7 +15,6 @@ export { Datepicker };
 export { FieldGroup}
 export { Input };
 export { Label };
-export { MultipleSelect };
 export { RadioButton };
 export { Select };
 export { Slider };

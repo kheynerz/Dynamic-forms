@@ -6,6 +6,7 @@ export class FormComponent {
         label: '',
         description: '',
         pattern: '',
+        value: '',
         required: false,      
         multiple: false,
         selectAllOption: '',
