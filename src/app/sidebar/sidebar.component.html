@@ -1,0 +1,41 @@
+<mat-sidenav-container class="full-height" autosize="true">
+
+  <mat-sidenav mode="side" opened>
+      <!---->
+      <div mat-menu-item class="with-icon padded" (click)="toggleSidebar()">
+          <mat-icon matTooltip="toggle side menu">menu</mat-icon>&nbsp;
+      </div> 
+
+      <div mat-menu-item class="padded">
+        <mat-icon>touch_app</mat-icon>&nbsp;
+        <mat-icon>pan_tool</mat-icon>&nbsp;
+        <mat-icon>delete</mat-icon>&nbsp;
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded" (click)="$event.stopPropagation()">
+        <mat-icon>{{i.icon}}</mat-icon>&nbsp;
+        <span>{{ i.name }}</span>
+      </div>
+
+      <mat-divider></mat-divider>
+      
+      <div class="padded">
+        <span>Properties</span>
+      </div>
+
+      <div mat-menu-item *ngFor="let i of sideProperties" class="propPadding">
+        <span [hidden]="collapse">{{ i }}</span>
+        <span [hidden]="collapse">{{ i }}</span>
+      </div>
+
+  </mat-sidenav>
+
+
+  <mat-sidenav-content class="padded">
+    <app-canva></app-canva>
+  </mat-sidenav-content>
+
+
+</mat-sidenav-container>

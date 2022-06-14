@@ -13,10 +13,19 @@ const appearance: MatFormFieldDefaultOptions = {
 };
 
 import { AppComponent } from './app.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { CanvaComponent } from './canva/canva.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SidebarComponent,
+    CanvaComponent
   ],
   imports: [ 
     BrowserModule,
@@ -28,7 +37,12 @@ import { AppComponent } from './app.component';
         { name: 'required', message: 'This field is required' },
       ],
     }),
-    FormlyMaterialModule
+    FormlyMaterialModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule
   ],
   providers: [
     {
