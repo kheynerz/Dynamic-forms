@@ -1,13 +1,9 @@
-export class Toggle {
-    className : string = '';
-    key : string = '';
-    type : string = 'toggle';
+import { FormComponent } from "./formComponent";
 
-    templateOptions = {
-      label: '',
-      description: '',
-      required: false,
-    }
+export class Toggle extends FormComponent{
+  type : string = 'toggle';
 
-
+  constructor(key: string, className : string){
+    super(key, className)
+  }
 }

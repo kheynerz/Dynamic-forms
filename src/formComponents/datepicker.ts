@@ -1,11 +1,9 @@
-export class Datepicker {
-  className : string = '';
+import { FormComponent } from "./formComponent";
+
+export class Datepicker extends FormComponent {
   type : string = 'datepicker';
-  key : string = '';
-  templateOptions: object = {
-    label: '',
-    placeholder: '',
-    description: '',
-    required: false
+ 
+  constructor(key: string, className : string){
+    super(key, className)
   }
 }

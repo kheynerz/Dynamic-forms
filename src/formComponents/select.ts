@@ -1,12 +1,9 @@
-export class Select {
-  className = ''
-  key: string = '';
+import { FormComponent } from "./formComponent";
+
+export class Select  extends FormComponent{
   type: string = 'select';
-  templateOptions = {
-    label: '',
-    placeholder: '',
-    description: '',
-    required: false,
-    options: [],
+  
+  constructor(key: string, className : string){
+    super(key, className)
   }
 }

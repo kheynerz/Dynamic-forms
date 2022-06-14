@@ -1,12 +1,9 @@
-export class Textarea {
-  className : string = '';
-  type : string = 'textarea';
-  key : string = '';
+import { FormComponent } from "./formComponent";
 
-  templateOptions ={
-    label: '', 
-    placeholder: '',
-    description: '',
-    required: false,
+export class Textarea extends FormComponent{
+  type : string = 'textarea';
+
+  constructor(key: string, className : string){
+    super(key, className)
   }
 }

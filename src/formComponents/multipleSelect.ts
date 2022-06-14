@@ -6,11 +6,9 @@ export class MultipleSelect {
     label: '',
     placeholder: '',
     description: '',
-    required: true,
+    required: false,
     multiple: true,
     selectAllOption: 'Select All',
     options: []
   }
-
-
 }

@@ -1,5 +1,6 @@
-import { Checkbox } from './formComponents/checkBox'
+import { Checkbox } from './formComponents/checkbox'
 import { Datepicker } from './formComponents/datepicker'
+import { FieldGroup } from './formComponents/fieldGroup'
 import { Input } from './formComponents/input'
 import { Label } from './formComponents/label'
 import { MultipleSelect } from './formComponents/multipleSelect'
@@ -9,8 +10,10 @@ import { Slider } from './formComponents/slider'
 import { Textarea } from './formComponents/textarea'
 import { Toggle } from './formComponents/toggle'
 
+
 export { Checkbox };
 export { Datepicker };
+export { FieldGroup}
 export { Input };
 export { Label };
 export { MultipleSelect };

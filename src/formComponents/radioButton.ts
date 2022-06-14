@@ -1,13 +1,9 @@
-export class RadioButton {
-  className : string = '';
-  type : string = 'radio';
-  key : string = '';
+import { FormComponent } from "./formComponent";
 
-  templateOptions = {
-    label: '',
-    placeholder: '',
-    description: '',
-    required: false,
-    options: []
+export class RadioButton extends FormComponent{
+  type : string = 'radio';
+
+  constructor(key: string, className : string){
+    super(key, className)
   }
 }

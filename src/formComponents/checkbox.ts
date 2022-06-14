@@ -1,17 +1,9 @@
-export class Checkbox {
-    className : string = '';
-    type : string = 'checkbox';
-    key : string = 'chk';
+import { FormComponent } from "./formComponent";
 
-    templateOptions = {
-      label: '',
-      description: '',
-      pattern: '',
-      required: false,
-    }
-    validation = {
-      messages: {
-        pattern: '',
-      },
-    }
+export class Checkbox extends FormComponent{
+  type : string = 'checkbox';
+
+  constructor(key: string, className : string){
+    super(key, className)
+  }
 }

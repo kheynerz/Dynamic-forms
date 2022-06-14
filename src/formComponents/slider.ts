@@ -1,12 +1,9 @@
-export class Slider {
-    className : string = '';
-    type : string = 'slider';
-    key : string = '';
+import { FormComponent } from "./formComponent";
 
-    templateOptions = {
-      label: '',
-      description: '',
-      required: false,
-    }
+export class Slider extends FormComponent{
+  type : string = 'slider';
 
+  constructor(key: string, className : string){
+    super(key, className)
+  }
 }

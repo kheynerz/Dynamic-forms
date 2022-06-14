@@ -1,11 +1,9 @@
-export class Input {
-  className : string = '';
+import { FormComponent } from "./formComponent";
+
+export class Input extends FormComponent {
   type : string = 'input';
-  key : string = '';
-  templateOptions: object = {
-    label : '',
-    placeholder: '',
-    description: '',
-    required: false,
+
+  constructor(key: string, className : string){
+    super(key, className)
   }
 }
