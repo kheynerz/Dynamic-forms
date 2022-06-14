@@ -1,9 +1,16 @@
 export class MultipleSelect {
-    className : string = 'flex-1';
-    type : string = 'input';
-    key : string = 'firstName';
+  className = '';
+  key: string = '';
+  type: string = 'select';
+  templateOptions = {
+    label: '',
+    placeholder: '',
+    description: '',
+    required: true,
+    multiple: true,
+    selectAllOption: 'Select All',
+    options: []
+  }
 
-    templateOptions: object = {
-      "label" : 'First Name'
-    }
+
 }

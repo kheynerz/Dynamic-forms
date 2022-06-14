@@ -1,9 +1,13 @@
 export class Toggle {
-    className : string = 'flex-1';
-    type : string = 'input';
-    key : string = 'firstName';
+    className : string = '';
+    key : string = '';
+    type : string = 'toggle';
 
-    templateOptions: object = {
-      "label" : 'First Name'
+    templateOptions = {
+      label: '',
+      description: '',
+      required: false,
     }
+
+
 }

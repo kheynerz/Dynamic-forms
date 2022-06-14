@@ -3,7 +3,15 @@ export class Checkbox {
     type : string = 'checkbox';
     key : string = 'chk';
 
-    templateOptions: object = {
-      "label" : 'First Name'
+    templateOptions = {
+      label: '',
+      description: '',
+      pattern: '',
+      required: false,
+    }
+    validation = {
+      messages: {
+        pattern: '',
+      },
     }
 }

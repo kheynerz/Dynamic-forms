@@ -1,9 +1,12 @@
 export class Slider {
-    className : string = 'flex-1';
-    type : string = 'input';
-    key : string = 'firstName';
+    className : string = '';
+    type : string = 'slider';
+    key : string = '';
 
-    templateOptions: object = {
-      "label" : 'First Name'
+    templateOptions = {
+      label: '',
+      description: '',
+      required: false,
     }
+
 }

@@ -1,9 +1,12 @@
 export class Textarea {
-    className : string = 'flex-1';
-    type : string = 'input';
-    key : string = 'firstName';
+  className : string = '';
+  type : string = 'textarea';
+  key : string = '';
 
-    templateOptions: object = {
-      "label" : 'First Name'
-    }
+  templateOptions ={
+    label: '', 
+    placeholder: '',
+    description: '',
+    required: false,
+  }
 }

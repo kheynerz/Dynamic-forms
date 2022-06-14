@@ -1,9 +1,12 @@
 export class Select {
-    className : string = 'flex-1';
-    type : string = 'input';
-    key : string = 'firstName';
-
-    templateOptions: object = {
-      "label" : 'First Name'
-    }
+  className = ''
+  key: string = '';
+  type: string = 'select';
+  templateOptions = {
+    label: '',
+    placeholder: '',
+    description: '',
+    required: false,
+    options: [],
+  }
 }
