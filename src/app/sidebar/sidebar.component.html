@@ -7,18 +7,30 @@
       </div> 
 
       <div mat-menu-item class="padded" >
-        <mat-icon>touch_app</mat-icon>&nbsp;
-        <mat-icon>pan_tool</mat-icon>&nbsp;
-        <mat-icon>delete</mat-icon>&nbsp;
-        <mat-icon (click)="uploadJSON()">cloud_upload</mat-icon>&nbsp;
-        <mat-icon (click)="saveJSON()">cloud_download</mat-icon>&nbsp;
+        <button color="basic" mat-icon-button>
+          <mat-icon>touch_app</mat-icon>&nbsp;
+        </button>
+        <button color="basic" mat-icon-button>
+          <mat-icon>pan_tool</mat-icon>&nbsp;
+        </button>
+        <button color="basic" mat-icon-button>
+          <mat-icon>delete</mat-icon>&nbsp;
+        </button>
+        <button (click)="uploadJSON()" color="basic" mat-icon-button>
+          <mat-icon>cloud_upload</mat-icon>&nbsp;
+        </button>
+        <button (click)="saveJSON()" color="basic" mat-icon-button>
+          <mat-icon>cloud_download</mat-icon>&nbsp;
+        </button>     
       </div>
 
       <mat-divider></mat-divider>
 
-      <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded" (click)="setDraggable(i.name)">
-        <mat-icon>{{i.icon}}</mat-icon>&nbsp;
-        <span>{{ i.name }}</span>
+      <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded">
+        <button (click)="setDraggable(i.formComponent)" color="basic" class="sidenavButtons" mat-raised-button>
+          <mat-icon>{{i.icon}}</mat-icon>&nbsp;
+          <span>{{ i.name }}</span>
+        </button>      
       </div>
 
       <mat-divider></mat-divider>

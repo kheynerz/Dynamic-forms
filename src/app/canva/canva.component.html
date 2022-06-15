@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <formly-form
+    <formly-form #form1
       [form]="form"
       [model]="model"
       [fields]="fields">
@@ -9,7 +9,7 @@
       Submit
     </button>
   
-    <button type="reset" color="warn" mat-raised-button>
+    <button id='reset' type="reset" color="warn" mat-raised-button>
       Reset
     </button>
 </form>

@@ -23,16 +23,25 @@ export class CanvaComponent{
   }
 
   onChange(id:string){
-    let dragValue:any;
-    let element = document.getElementById('submit'); //////////////////
+
+    let dragValue : any;
+  
+    let input = new Input('newKey','flex-1')
+    this.fields.push(input)
+    //this.fields = [input]
+    let element = document.getElementById('submit')//this.fields[0]; //////////////////
+    
+    console.log(this.fields)
 
     if (element){  
+      
       element.style.position = 'absolute';
       dragValue = element;
     } 
 
     document.onmouseup = function(){
-      console.log("Dropped "+id)
+      console.log("Dropped "+id);
+
       dragValue = null;
     }
     document.onmousemove = function(e){
@@ -40,7 +49,7 @@ export class CanvaComponent{
       let y = e.pageY;
 
       if(dragValue){
-        console.log("Dragging "+id)
+        console.log("Dragging "+id);
         dragValue.style.top = y-50  + 'px';
         dragValue.style.left = x-175  + 'px';
       }  
