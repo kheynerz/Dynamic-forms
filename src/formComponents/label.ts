@@ -2,7 +2,8 @@
 export class Label {
     template = ``
 
-    constructor(value: string){
-        this.template = `<Label>${value}</Label>`
+    constructor(value: string, styles : string){
+        console.log(styles);
+        this.template = `<span>${value}</span>`
     }
 }

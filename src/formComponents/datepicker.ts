@@ -5,5 +5,9 @@ export class Datepicker extends FormComponent {
  
   constructor(key: string, className : string){
     super(key, className)
+    setTimeout(()=> {
+      super.defaultValue = new Date()
+    }, 0);
+    
   }
 }

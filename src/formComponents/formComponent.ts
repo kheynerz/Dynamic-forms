@@ -1,7 +1,7 @@
 export class FormComponent {
     className : string = '';
     key : string = '';
-
+    defaultValue: any = '';
     templateOptions = {
         label: '',
         description: '',
