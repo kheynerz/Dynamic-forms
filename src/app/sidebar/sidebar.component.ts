@@ -24,6 +24,10 @@ export class SidebarComponent implements OnInit{
     this.collapse = !this.collapse;
   }
 
+  sidebarActions() {
+    //download and upload here
+  }
+
   setDraggable(id:string){
     this.canva.onChange(id);
   }

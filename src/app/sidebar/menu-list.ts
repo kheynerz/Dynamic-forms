@@ -7,7 +7,7 @@ export class ComponenetItem {
 }
 
 export const componentList = [
-    new ComponenetItem('Field Group', '', 'group_work'),
+    new ComponenetItem('Field Group', '', 'crop_landscape'),
     new ComponenetItem('Checkbox', '', 'check_box'),
     new ComponenetItem('Datepicker', '', 'date_range'),
     new ComponenetItem('Input', '', 'input'),
@@ -16,7 +16,7 @@ export const componentList = [
     new ComponenetItem('Radiobutton', '', 'radio_button_checked'),
     new ComponenetItem('Slider', '', 'slider'),
     new ComponenetItem('Textarea', '', 'text_rotation_none'),
-    new ComponenetItem('Toggle', '', 'indeterminate_check_box')
+    new ComponenetItem('Toggle', '', 'edit_attributes')
 ];
 
 export const properties = [
