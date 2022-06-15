@@ -1,15 +1,10 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-body { padding: 10px; }
-
-.header {
-  text-align: center;
-  padding: .3rem;
-
-}
-.header .img {
-  margin-bottom: .3rem;
+body { 
+  padding: 10px; 
+  font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif';
 }
 
-form .mat-raised-button {
-  margin-right: 8px;
+
+Label {
+  font-size: large;
 }
