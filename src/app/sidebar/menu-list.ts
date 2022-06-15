@@ -12,9 +12,8 @@ export const componentList = [
     new ComponenetItem('Datepicker', '', 'date_range'),
     new ComponenetItem('Input', '', 'input'),
     new ComponenetItem('Label', '', 'label'),
-    new ComponenetItem('Multiple Select', '', 'select_all'),
+    new ComponenetItem('Select', '', 'select_all'),
     new ComponenetItem('Radiobutton', '', 'radio_button_checked'),
-    new ComponenetItem('Select', '', 'select'),
     new ComponenetItem('Slider', '', 'slider'),
     new ComponenetItem('Textarea', '', 'text_rotation_none'),
     new ComponenetItem('Toggle', '', 'indeterminate_check_box')

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {componentList} from './menu-list'
 import {properties} from './menu-list'
+import {CanvaComponent} from '../canva/canva.component'
 
 @Component({
   selector: 'app-sidebar',
@@ -9,9 +10,10 @@ import {properties} from './menu-list'
 })
 export class SidebarComponent implements OnInit{
 
+  canva = new CanvaComponent();
   sideComponents = componentList;
   sideProperties = properties;
-  collapse = false;
+  collapse = true;
 
   constructor() { }
 
@@ -20,6 +22,10 @@ export class SidebarComponent implements OnInit{
 
   toggleSidebar() {
     this.collapse = !this.collapse;
+  }
+
+  setDraggable(id:string){
+    this.canva.onChange(id);
   }
 
 }

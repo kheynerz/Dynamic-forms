@@ -14,7 +14,7 @@
 
       <mat-divider></mat-divider>
 
-      <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded" (click)="$event.stopPropagation()">
+      <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded" (click)="setDraggable(i.name)">
         <mat-icon>{{i.icon}}</mat-icon>&nbsp;
         <span>{{ i.name }}</span>
       </div>
