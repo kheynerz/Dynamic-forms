@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {componentList} from './menu-list'
 import {properties} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
@@ -9,8 +9,8 @@ import {CanvaComponent} from '../canva/canva.component'
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit{
+  @ViewChild('canva') canva!: CanvaComponent;
 
-  canva = new CanvaComponent();
   sideComponents = componentList;
   sideProperties = properties;
   collapse = true;
@@ -18,6 +18,8 @@ export class SidebarComponent implements OnInit{
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.canva);
+    
   }
 
   toggleSidebar() {
@@ -25,7 +27,15 @@ export class SidebarComponent implements OnInit{
   }
 
   sidebarActions() {
-    //download and upload here
+    console.log("Sidebar actions");
+    
+  }
+  saveJSON() {
+    console.log("Sidebar actions");
+    
+  }
+  uploadJSON() {
+    this.canva.onUpload()
   }
 
   setDraggable(id:string){

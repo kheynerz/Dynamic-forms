@@ -6,12 +6,12 @@
           <mat-icon matTooltip="toggle side menu">menu</mat-icon>&nbsp;
       </div> 
 
-      <div mat-menu-item class="padded" (click)="sidebarActions()">
+      <div mat-menu-item class="padded" >
         <mat-icon>touch_app</mat-icon>&nbsp;
         <mat-icon>pan_tool</mat-icon>&nbsp;
         <mat-icon>delete</mat-icon>&nbsp;
-        <mat-icon>search</mat-icon>&nbsp;
-        <mat-icon>search</mat-icon>&nbsp;
+        <mat-icon (click)="uploadJSON()">cloud_upload</mat-icon>&nbsp;
+        <mat-icon (click)="saveJSON()">cloud_download</mat-icon>&nbsp;
       </div>
 
       <mat-divider></mat-divider>
@@ -36,7 +36,7 @@
 
 
   <mat-sidenav-content class="padded">
-    <app-canva></app-canva>
+    <app-canva #canva></app-canva>
   </mat-sidenav-content>
 
 
