@@ -7,21 +7,11 @@
       </div> 
 
       <div mat-menu-item class="padded" >
-        <button color="basic" mat-icon-button>
-          <mat-icon>touch_app</mat-icon>&nbsp;
-        </button>
-        <button color="basic" mat-icon-button>
-          <mat-icon>pan_tool</mat-icon>&nbsp;
-        </button>
-        <button color="basic" mat-icon-button>
-          <mat-icon>delete</mat-icon>&nbsp;
-        </button>
-        <button (click)="uploadJSON()" color="basic" mat-icon-button>
-          <mat-icon>cloud_upload</mat-icon>&nbsp;
-        </button>
-        <button (click)="saveJSON()" color="basic" mat-icon-button>
-          <mat-icon>cloud_download</mat-icon>&nbsp;
-        </button>     
+        <mat-icon>touch_app</mat-icon>&nbsp;
+        <mat-icon>pan_tool</mat-icon>&nbsp;
+        <mat-icon>delete</mat-icon>&nbsp;
+        <mat-icon (click)="openFile()">cloud_upload</mat-icon>&nbsp;
+        <mat-icon (click)="saveJSON ()">cloud_download</mat-icon>&nbsp;
       </div>
 
       <mat-divider></mat-divider>
@@ -51,5 +41,5 @@
     <app-canva #canva></app-canva>
   </mat-sidenav-content>
 
-
 </mat-sidenav-container>
+<input #FileInput type="file" style="display:none" (change)="onChangeInputFile()">

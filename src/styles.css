@@ -1,9 +1,10 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~ngx-toastr/toastr';
+
 body { 
   padding: 10px; 
   font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif';
 }
-
 
 Label {
   font-size: large;

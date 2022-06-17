@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material/button';
+import { ToastrModule } from 'ngx-toastr';
+
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
@@ -10,6 +11,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 
 
 /*Form components*/
+import { MatButtonModule } from '@angular/material/button';
 
 //Slider
 import { FormlyMatSliderModule } from '@ngx-formly/material/slider';
@@ -46,7 +48,11 @@ import { CanvaComponent } from './canva/canva.component';
     BrowserAnimationsModule,
     MatButtonModule,
     ReactiveFormsModule,
-
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true
+    }),
     FormlyModule.forRoot({
       validationMessages: [
         { name: 'required', message: 'This field is required' },
@@ -63,6 +69,7 @@ import { CanvaComponent } from './canva/canva.component';
     FormlyMatToggleModule,
     FormlyMatDatepickerModule,
     MatNativeDateModule
+
   ],
   providers: [
     {
