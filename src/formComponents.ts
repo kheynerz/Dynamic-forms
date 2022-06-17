@@ -23,20 +23,6 @@ export { Toggle };
 
 export default {
     "Checkbox" : Checkbox,
-    "Datepicker" : Datepicker,
-    "FieldGroup" :FieldGroup,
-    "Input" :Input,
-    "Label" : Label,
-    "RadioButton" : RadioButton,
-    "Select" : Select,
-    "Slider" : Slider,
-    "Textarea" : Textarea,
-    "Toggle" : Toggle 
-}
-
-
-export default {
-    "Checkbox" : Checkbox,
     "Date Picker" : Datepicker,
     "Field Group" :FieldGroup,
     "Input" :Input,
