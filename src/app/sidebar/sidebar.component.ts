@@ -3,7 +3,7 @@ import {componentList} from './menu-list'
 import {properties} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
 
-import FileSaver from 'file-saver';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -36,12 +36,10 @@ export class SidebarComponent implements OnInit{
   }
 
   saveJSON() {
-    let data = this.canva.onSave()
-    console.log(data);
-    var blob = new Blob([data], {type: "text/json;charset=utf-8"});
-    FileSaver.saveAs(blob, this.filename+'.json');
-    
+    this.canva.onSave(this.filename)
   }
+  
+  
   openFile(){
     this.FileInput.nativeElement.click()
   }
@@ -50,7 +48,8 @@ export class SidebarComponent implements OnInit{
     let input = this.FileInput.nativeElement
     let files : Array<Blob> =   Array.from(input.files);
     let file: Blob = files[0]
-    this.canva.onUpload(file)
+    let extension: string = input.files[0].name.split('.').pop().toLowerCase()
+    this.canva.onUpload(file, extension)
     this.FileInput.nativeElement.value = null
   }
 
