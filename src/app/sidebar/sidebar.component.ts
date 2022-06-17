@@ -3,6 +3,8 @@ import {componentList} from './menu-list'
 import {properties} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
 
+import FileSaver from 'file-saver';
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -10,12 +12,14 @@ import {CanvaComponent} from '../canva/canva.component'
 })
 export class SidebarComponent implements OnInit{
   @ViewChild('canva') canva!: CanvaComponent;
+  @ViewChild('FileInput') FileInput!: ElementRef;
+
 
   sideComponents = componentList;
   sideProperties = properties;
   collapse = true;
-
-  constructor() { }
+  
+  filename = 'formly'
 
   ngOnInit(): void {
     console.log(this.canva);
@@ -30,12 +34,24 @@ export class SidebarComponent implements OnInit{
     console.log("Sidebar actions");
     
   }
+
   saveJSON() {
-    console.log("Sidebar actions");
+    let data = this.canva.onSave()
+    console.log(data);
+    var blob = new Blob([data], {type: "text/json;charset=utf-8"});
+    FileSaver.saveAs(blob, this.filename+'.json');
     
   }
-  uploadJSON() {
-    this.canva.onUpload()
+  openFile(){
+    this.FileInput.nativeElement.click()
+  }
+
+  onChangeInputFile(){
+    let input = this.FileInput.nativeElement
+    let files : Array<Blob> =   Array.from(input.files);
+    let file: Blob = files[0]
+    this.canva.onUpload(file)
+    this.FileInput.nativeElement.value = null
   }
 
   setDraggable(id:string){

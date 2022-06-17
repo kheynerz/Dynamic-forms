@@ -63,6 +63,7 @@ import { CanvaComponent } from './canva/canva.component';
     FormlyMatToggleModule,
     FormlyMatDatepickerModule,
     MatNativeDateModule
+
   ],
   providers: [
     {

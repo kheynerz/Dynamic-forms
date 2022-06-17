@@ -1,7 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
-import { Input } from 'src/formComponents';
+import components from 'src/formComponents';
+
 
 @Component({
   selector: 'app-canva',
@@ -9,12 +10,16 @@ import { Input } from 'src/formComponents';
   styleUrls: ['./canva.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CanvaComponent{
-  
+export class CanvaComponent implements OnInit{
   form = new FormGroup({});
   model = {};
-  fields: FormlyFieldConfig[] = [];
-  
+  input = new components['Input']('1','flex-1')
+  group = new components['FieldGroup']([this.input, new components['Input']('2','flex-1')])
+  fields: FormlyFieldConfig[] = [this.group]
+
+  ngOnInit(){
+    this.input.templateOptions.label = ''
+  }
 
   onSubmit() {
     if (this.form.valid) {
@@ -24,7 +29,7 @@ export class CanvaComponent{
 
   onChange(id:string){
     let dragValue:any;
-    let element = document.getElementById('submit'); //////////////////
+    let element = document.getElementById('submit'); 
 
     if (element){  
       element.style.position = 'absolute';
@@ -47,15 +52,27 @@ export class CanvaComponent{
     } 
   }
 
-  onUpload(){
-    this.fields = [new Input('newKey','flex-1')]
-    console.log(this.fields);
+  onUpload(file : Blob){
+    const reader = new FileReader();
+    let data: Array<any>;
+    reader.readAsText(file, "UTF-8");
+    reader.onload =  (evt) => {
+      try {
+        data = JSON.parse(String(evt.target?.result));
+        this.fields = data 
+      } catch (error) {
+        console.log("error reading file");
+      }
+    }
+    reader.onerror = _ => {
+        console.log("error reading file");
+    }
+  }
+  onSave(){
+    let data = JSON.stringify(this.fields)
+    return data
   }
   
-  onSave(){
-
-  }
-
 }
 
 

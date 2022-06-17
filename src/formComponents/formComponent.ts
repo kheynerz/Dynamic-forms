@@ -3,15 +3,15 @@ export class FormComponent {
     key : string = '';
     defaultValue: any = '';
     templateOptions = {
-        label: '',
-        description: '',
-        pattern: '',
-        value: '',
-        required: false,      
-        multiple: false,
-        selectAllOption: '',
-        options: []
-    }
+      label: '',
+      description: '',
+      pattern: '',
+      value: '',
+      required: false,      
+      multiple: false,
+      selectAllOption: '',
+      options : [{}]
+    } 
     validation = {
       messages: {
         pattern: '',

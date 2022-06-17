@@ -10,7 +10,7 @@
         <mat-icon>touch_app</mat-icon>&nbsp;
         <mat-icon>pan_tool</mat-icon>&nbsp;
         <mat-icon>delete</mat-icon>&nbsp;
-        <mat-icon (click)="uploadJSON()">cloud_upload</mat-icon>&nbsp;
+        <mat-icon (click)="openFile()">cloud_upload</mat-icon>&nbsp;
         <mat-icon (click)="saveJSON()">cloud_download</mat-icon>&nbsp;
       </div>
 
@@ -39,5 +39,5 @@
     <app-canva #canva></app-canva>
   </mat-sidenav-content>
 
-
 </mat-sidenav-container>
+<input #FileInput type="file" style="display:none" (change)="onChangeInputFile()">

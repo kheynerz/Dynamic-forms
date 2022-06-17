@@ -1,9 +1,10 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 body { 
+  width: 100%;
+  height: 100%;
   padding: 10px; 
   font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif';
 }
-
 
 Label {
   font-size: large;
