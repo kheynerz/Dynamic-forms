@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
-import { Input } from 'src/formComponents';
+import formComponent from 'src/formComponents';
 
 @Component({
   selector: 'app-canva',
@@ -14,7 +14,6 @@ export class CanvaComponent{
   form = new FormGroup({});
   model = {};
   fields: FormlyFieldConfig[] = [];
-  
 
   onSubmit() {
     if (this.form.valid) {
@@ -25,13 +24,20 @@ export class CanvaComponent{
   onChange(id:string){
 
     let dragValue : any;
-  
-    let input = new Input('newKey','flex-1')
-    this.fields.push(input)
-    //this.fields = [input]
-    let element = document.getElementById('submit')//this.fields[0]; //////////////////
     
-    console.log(this.fields)
+    type ObjectKey = keyof typeof formComponent;
+    const requiredKey = id as ObjectKey;
+    let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
+
+    let newFieldGroup = new formComponent['Field Group']([newComponent])
+
+    this.fields = [ ...this.fields, newFieldGroup ];
+    console.log(this.fields);
+
+
+    let element = document.getElementById('reset')//this.fields; //////////////////
+
+
 
     if (element){  
       
@@ -41,9 +47,11 @@ export class CanvaComponent{
 
     document.onmouseup = function(){
       console.log("Dropped "+id);
+      
 
       dragValue = null;
     }
+
     document.onmousemove = function(e){
       let x = e.pageX;
       let y = e.pageY;
@@ -54,10 +62,11 @@ export class CanvaComponent{
         dragValue.style.left = x-175  + 'px';
       }  
     } 
+
   }
 
   onUpload(){
-    this.fields = [new Input('newKey','flex-1')]
+    this.fields = [new formComponent["Input"]('newKey','flex-1')]
     console.log(this.fields);
   }
   

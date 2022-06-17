@@ -27,7 +27,7 @@
       <mat-divider></mat-divider>
 
       <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded">
-        <button (click)="setDraggable(i.formComponent)" color="basic" class="sidenavButtons" mat-raised-button>
+        <button (click)="setDraggable(i.name)" color="basic" class="sidenavButtons" mat-raised-button>
           <mat-icon>{{i.icon}}</mat-icon>&nbsp;
           <span>{{ i.name }}</span>
         </button>      
