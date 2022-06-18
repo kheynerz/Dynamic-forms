@@ -27,17 +27,17 @@ export class CanvaComponent implements OnInit{
   constructor(private toastr: ToastrService) {}
 
   //Method to show a toastr error notification
-  showError(message: string, title:string){
+  private showError(message: string, title:string){
     this.toastr.error(message, title)
   }
 
   //Method to show a toastr success notification
-  showSuccess(message: string, title:string){
+  private showSuccess(message: string, title:string){
     this.toastr.success(message, title)
   }
 
   //Method to show a toastr info notification
-  showInfo(message: string, title:string){
+  private showInfo(message: string, title:string){
     this.toastr.info(message, title)
   }
 
@@ -94,6 +94,85 @@ export class CanvaComponent implements OnInit{
 
   }
 
+
+
+  // Method use to filter the key and values of the formly field 
+  private replacer(key: string, value: any) {
+    
+    let undefinedValues = ["", false]
+
+    let ignoredKeys = ['_keyPath', 'id', 'hooks', 'modelOptions', 'wrappers', '_flatOptions'   ]
+
+    let otherIgnores = ['hideFieldUnderline', 'indeterminate', 'floatLabel', 'hideLabel', 'align', 'color', 'tabindex']
+
+
+    if (undefinedValues.indexOf(value) > -1)return undefined;
+
+    if (ignoredKeys.indexOf(key) > -1) return undefined;
+    
+    if (otherIgnores.indexOf(key) > -1) return undefined;
+
+    if (key === 'type' && (value === 'formly-template' || value === 'formly-group')) return undefined
+
+    //If object is empty
+    if (typeof value === 'object'){
+      let len = Object.keys(value).length
+      if (len === 0) return undefined;
+    }
+
+    //If options is empty
+    if (key === 'options' && value.length === 1 && Object.keys(value[0]).length === 0) return undefined;
+
+    return value;
+  }
+
+  //Stringify the data of the fields of the formly and changes the datepicker class to an object
+  private stringifyData() : string{
+     //Create a duplicate of the fields
+    const data  = [...this.fields]
+
+    //Looping the data and change the Datepickers to an object with his properties 
+    //This has to be done because the Formly Datepicker generates a circular structure in the json
+    data.forEach((element, i) => {
+      if (element instanceof formComponent['Field Group']){
+        element.fieldGroup.forEach((component, j) => {
+          if (component instanceof formComponent['Date Picker']){
+            element.fieldGroup[j] = component.returnObject()
+          }
+        });
+      }else{
+        if (element instanceof formComponent['Date Picker']){
+          data[i] = element.returnObject()
+        }
+      }
+    });
+
+    //The stringify method is applied twice, because, some data inside objects is deleted in the first one,
+    //and these objects can be empty, the second time is to delete these objects from the json
+    let firstStringify = JSON.stringify(data, this.replacer)
+    
+    return JSON.stringify(JSON.parse(firstStringify, this.replacer))
+  }
+
+
+  onSave(filename: string){
+    try {
+      let data = this.stringifyData()
+
+      //Check if theres data to save
+      if (!data.length){
+        this.showInfo(`El formulario se encuentra vacío`,'Formulario vacío');
+        return
+      }
+      //Use the package FileSaver to save to the local machine of the user
+      var blob = new Blob([data], {type: "text/json;charset=utf-8"});
+      FileSaver.saveAs(blob, filename+'.json');
+      this.showSuccess(`Se descargó el archivo ${filename}.json con éxito`,'Archivo descargado');
+    } catch (_) {
+      this.showError(`Ocurrió un error inesperado al descargar el archivo`,'Error al descargar el archivo');
+    }
+  }
+
   onUpload(file : Blob, extension: string){
     //Supported data types
     let fileTypes = ['json', 'txt'];
@@ -125,65 +204,6 @@ export class CanvaComponent implements OnInit{
   }
 
 
-  // Property Filter 
-  private replacer(key: string, value: any) {
-    
-    let undefinedValues = ["", false, '0']
-
-    let ignoredKeys = ['_keyPath', 'id', 'hooks', 'modelOptions', 'wrappers', '_flatOptions'   ]
-
-    let otherIgnores = ['hideFieldUnderline', 'indeterminate', 'floatLabel', 'hideLabel', 'align', 'color', 'tabindex']
-
-
-    if (undefinedValues.indexOf(value) > -1)return undefined;
-
-    if (ignoredKeys.indexOf(key) > -1) return undefined;
-    
-    if (otherIgnores.indexOf(key) > -1) return undefined;
-
-    if (key === 'type' && (value === 'formly-template' || value === 'formly-group')) return undefined
-
-    //If object is empty
-    if (typeof value === 'object'){
-      let len = Object.keys(value).length
-      if (len === 0) return undefined;
-    }
-
-    //If options is empty
-    if (key === 'options' && value.length === 1 && Object.keys(value[0]).length === 0) return undefined;
-
-    return value;
-  }
-
-  private finalClean(json: string){
-    return JSON.stringify(JSON.parse(json, this.replacer))
-  }
-
-  onSave(filename: string){
-    try {
-      let data = JSON.stringify(this.datepicker)
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-    
-    /*try {
-      //Check if theres data to save
-      if (!this.fields.length){
-        this.showInfo(`El formulario se encuentra vacío`,'Formulario vacío');
-        return;
-      }
-
-      //Stringify the data and use the package FileSaver to save to the local machine of the user
-      let data = this.finalClean(JSON.stringify(this.fields, this.replacer));
-      
-      var blob = new Blob([data], {type: "text/json;charset=utf-8"});
-      FileSaver.saveAs(blob, filename+'.json');
-      this.showSuccess(`Se descargó el archivo ${filename}.json con éxito`,'Archivo descargado');
-    } catch (error) {
-      this.showError(`Ocurrió un error inesperado al descargar el archivo`,'Error al descargar el archivo');
-    }*/
-  }
 }
 
 

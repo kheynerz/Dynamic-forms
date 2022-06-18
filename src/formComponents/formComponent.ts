@@ -5,6 +5,7 @@ export class FormComponent {
     templateOptions = {
       label: '',
       description: '',
+      placeholder: '',
       pattern: '',
       value: '',
       required: false,      
