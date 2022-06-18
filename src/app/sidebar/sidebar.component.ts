@@ -26,8 +26,10 @@ export class SidebarComponent implements OnInit{
     
   }
 
+  
   toggleSidebar() {
     this.collapse = !this.collapse;
+    
   }
 
   sidebarActions() {

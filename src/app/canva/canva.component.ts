@@ -47,46 +47,57 @@ export class CanvaComponent implements OnInit{
     }
   }
 
+  getDragValue(id:string){
+    //variables to get button to drag over the canva
+    let element = document.getElementById(id), newElement;
+    newElement = element!.cloneNode(true) as HTMLElement;
+
+    //adding button to canva 
+    document.body.appendChild(newElement);
+    newElement!.style.zIndex = '10';
+    newElement!.style.position = 'absolute';
+    return newElement
+  }
+
   onChange(id:string){
 
-    let dragValue : any;
-    
+    //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
     let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
 
+    //Add component to fieldgroup
     let newFieldGroup = new formComponent['Field Group']([newComponent])
 
-    this.fields = [ ...this.fields, newFieldGroup ];
-    console.log(this.fields);
+    //getting the button to drag
+    let dragValue : any = this.getDragValue(id);
+    
 
-
-    let element = document.getElementById('reset')//this.fields; //////////////////
-
-
-    if (element){  
-      
-      element.style.position = 'absolute';
-      dragValue = element;
-    } 
-
-    document.onmouseup = function(){
-      console.log("Dropped "+id);
-      
-
-      dragValue = null;
+    //events 
+    
+    document.onmouseup = () => {
+      if (dragValue){
+        document.body.removeChild(dragValue);
+        dragValue = null; 
+          
+        this.fields = [ ...this.fields, newFieldGroup ];
+      }     
     }
 
-    document.onmousemove = function(e){
+    
+    document.onmousemove = (e) =>{
       let x = e.pageX;
       let y = e.pageY;
 
       if(dragValue){
-        console.log("Dragging "+id);
-        dragValue.style.top = y-50  + 'px';
-        dragValue.style.left = x-175  + 'px';
+        dragValue.style.top = y  + 'px';
+        dragValue.style.left = x  + 'px';
       }  
     } 
+
+    
+    //Rendering new form in canva when position is selected
+    //this.fields = [ ...this.fields, newFieldGroup ];
 
   }
 
