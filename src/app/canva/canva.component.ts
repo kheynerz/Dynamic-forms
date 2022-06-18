@@ -18,7 +18,11 @@ import FileSaver from 'file-saver';
 export class CanvaComponent implements OnInit{
   form = new FormGroup({});
   model = {};
-  fields: FormlyFieldConfig[] = [];
+  input = new formComponent['Input']('input1', 'flex-1');
+  input2 = new formComponent['Input']('input2', 'flex-1');
+  datepicker = new formComponent['Date Picker']('datepicker', 'flex-1')
+  group = new formComponent['Field Group']([this.input, this.input2, this.datepicker])
+  fields: FormlyFieldConfig[] = [this.group];
 
   constructor(private toastr: ToastrService) {}
 
@@ -120,8 +124,50 @@ export class CanvaComponent implements OnInit{
     }
   }
 
+
+  // Property Filter 
+  private replacer(key: string, value: any) {
+    
+    let undefinedValues = ["", false, '0']
+
+    let ignoredKeys = ['_keyPath', 'id', 'hooks', 'modelOptions', 'wrappers', '_flatOptions'   ]
+
+    let otherIgnores = ['hideFieldUnderline', 'indeterminate', 'floatLabel', 'hideLabel', 'align', 'color', 'tabindex']
+
+
+    if (undefinedValues.indexOf(value) > -1)return undefined;
+
+    if (ignoredKeys.indexOf(key) > -1) return undefined;
+    
+    if (otherIgnores.indexOf(key) > -1) return undefined;
+
+    if (key === 'type' && (value === 'formly-template' || value === 'formly-group')) return undefined
+
+    //If object is empty
+    if (typeof value === 'object'){
+      let len = Object.keys(value).length
+      if (len === 0) return undefined;
+    }
+
+    //If options is empty
+    if (key === 'options' && value.length === 1 && Object.keys(value[0]).length === 0) return undefined;
+
+    return value;
+  }
+
+  private finalClean(json: string){
+    return JSON.stringify(JSON.parse(json, this.replacer))
+  }
+
   onSave(filename: string){
     try {
+      let data = JSON.stringify(this.datepicker)
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+    
+    /*try {
       //Check if theres data to save
       if (!this.fields.length){
         this.showInfo(`El formulario se encuentra vacío`,'Formulario vacío');
@@ -129,13 +175,14 @@ export class CanvaComponent implements OnInit{
       }
 
       //Stringify the data and use the package FileSaver to save to the local machine of the user
-      let data = JSON.stringify(this.fields)
+      let data = this.finalClean(JSON.stringify(this.fields, this.replacer));
+      
       var blob = new Blob([data], {type: "text/json;charset=utf-8"});
       FileSaver.saveAs(blob, filename+'.json');
       this.showSuccess(`Se descargó el archivo ${filename}.json con éxito`,'Archivo descargado');
     } catch (error) {
       this.showError(`Ocurrió un error inesperado al descargar el archivo`,'Error al descargar el archivo');
-    }
+    }*/
   }
 }
 
