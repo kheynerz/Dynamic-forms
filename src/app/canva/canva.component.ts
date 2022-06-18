@@ -96,22 +96,20 @@ export class CanvaComponent implements OnInit{
 
 
 
-  // Method use to filter the key and values of the formly field 
+  // Method use to filter the key and values of the formly field using the JSON.stringify method
   private replacer(key: string, value: any) {
     
+    //Arrays of data to ignore in the json
     let undefinedValues = ["", false]
-
     let ignoredKeys = ['_keyPath', 'id', 'hooks', 'modelOptions', 'wrappers', '_flatOptions'   ]
-
     let otherIgnores = ['hideFieldUnderline', 'indeterminate', 'floatLabel', 'hideLabel', 'align', 'color', 'tabindex']
 
-
+    //Data to ignore
     if (undefinedValues.indexOf(value) > -1)return undefined;
-
     if (ignoredKeys.indexOf(key) > -1) return undefined;
-    
     if (otherIgnores.indexOf(key) > -1) return undefined;
 
+    //innecesary types
     if (key === 'type' && (value === 'formly-template' || value === 'formly-group')) return undefined
 
     //If object is empty
