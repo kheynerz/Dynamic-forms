@@ -38,12 +38,18 @@ import { MatListModule } from '@angular/material/list';
 import { CanvaComponent } from './canva/canva.component';
 import { CodeTabComponent } from './code-tab/code-tab.component';
 
+import { LabelWrapperComponent } from './labelWrapper';
+import { FormlyFieldLabel } from './labelType';
+
+
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
     CanvaComponent,
-    CodeTabComponent
+    CodeTabComponent,
+    LabelWrapperComponent,
+    FormlyFieldLabel
   ],
   imports: [ 
     BrowserModule,
@@ -57,8 +63,18 @@ import { CodeTabComponent } from './code-tab/code-tab.component';
     }),
     FormlyModule.forRoot({
       validationMessages: [
-        { name: 'required', message: 'This field is required' },
+        { name: 'required', message: 'This field is required' }
       ],
+      wrappers: [
+        { name: 'label-wrapper', component: LabelWrapperComponent },
+      ],
+      types: [
+        {
+          name: 'label',
+          component: FormlyFieldLabel,
+          wrappers: ['label-wrapper']
+        },
+      ]
     }),
     FormlyMaterialModule,
     LayoutModule,

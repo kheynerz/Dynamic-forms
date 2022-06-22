@@ -21,7 +21,15 @@ export class CanvaComponent implements OnInit{
   input = new formComponent['Input']('input1', 'flex-1');
   input2 = new formComponent['Input']('input2', 'flex-1');
   datepicker = new formComponent['Date Picker']('datepicker', 'flex-1')
-  group = new formComponent['Field Group']([this.input, this.input2])
+  group = new formComponent['Field Group']([this.input, this.input2, 
+    {key: 'label1', 
+    type: 'label', 
+    className: 'flex-1', 
+    templateOptions : {
+      label: 'ACa va el texto'
+    }
+    }
+  ])
   fields: FormlyFieldConfig[] = [this.group];
 
   changed: boolean = true;
@@ -69,15 +77,12 @@ export class CanvaComponent implements OnInit{
 
 
     if (element){  
-      
       element.style.position = 'absolute';
       dragValue = element;
     } 
 
     document.onmouseup = function(){
       console.log("Dropped "+id);
-      
-
       dragValue = null;
     }
 
@@ -105,7 +110,7 @@ export class CanvaComponent implements OnInit{
     'multiple', 'selectAllOption', 'options', 'validation', 'messages']
 
     //Data to ignore
-    if (undefinedValues.indexOf(value) > -1)return undefined;
+    if (undefinedValues.indexOf(value) > -1) return undefined;
     
     //innecesary types
     if (key === 'type' && (value === 'formly-template' || value === 'formly-group')) return undefined
@@ -151,8 +156,6 @@ export class CanvaComponent implements OnInit{
 
 
   onSave(filename: string){
-
-    
     try {
       let data = this.stringifyData()
       
