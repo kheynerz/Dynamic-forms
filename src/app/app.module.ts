@@ -36,12 +36,14 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { CanvaComponent } from './canva/canva.component';
+import { CodeTabComponent } from './code-tab/code-tab.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
-    CanvaComponent
+    CanvaComponent,
+    CodeTabComponent
   ],
   imports: [ 
     BrowserModule,

@@ -21,8 +21,10 @@ export class CanvaComponent implements OnInit{
   input = new formComponent['Input']('input1', 'flex-1');
   input2 = new formComponent['Input']('input2', 'flex-1');
   datepicker = new formComponent['Date Picker']('datepicker', 'flex-1')
-  group = new formComponent['Field Group']([this.input, this.input2, this.datepicker])
+  group = new formComponent['Field Group']([this.input, this.input2])
   fields: FormlyFieldConfig[] = [this.group];
+
+  changed: boolean = true;
 
   constructor(private toastr: ToastrService) {}
 
@@ -41,9 +43,7 @@ export class CanvaComponent implements OnInit{
     this.toastr.info(message, title)
   }
 
-  ngOnInit(){
-   
-  }
+  ngOnInit(){}
 
   onSubmit() {
     if (this.form.valid) {
@@ -92,23 +92,21 @@ export class CanvaComponent implements OnInit{
       }  
     } 
 
+
+    this.changed = true
   }
-
-
-
+ 
   // Method use to filter the key and values of the formly field using the JSON.stringify method
   private replacer(key: string, value: any) {
-    
     //Arrays of data to ignore in the json
-    let undefinedValues = ["", false]
-    let ignoredKeys = ['_keyPath', 'id', 'hooks', 'modelOptions', 'wrappers', '_flatOptions'   ]
-    let otherIgnores = ['hideFieldUnderline', 'indeterminate', 'floatLabel', 'hideLabel', 'align', 'color', 'tabindex']
+    let undefinedValues = ["", false, null, undefined]
+    
+    let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'required',
+    'multiple', 'selectAllOption', 'options', 'validation', 'messages']
 
     //Data to ignore
     if (undefinedValues.indexOf(value) > -1)return undefined;
-    if (ignoredKeys.indexOf(key) > -1) return undefined;
-    if (otherIgnores.indexOf(key) > -1) return undefined;
-
+    
     //innecesary types
     if (key === 'type' && (value === 'formly-template' || value === 'formly-group')) return undefined
 
@@ -116,10 +114,24 @@ export class CanvaComponent implements OnInit{
     if (typeof value === 'object'){
       let len = Object.keys(value).length
       if (len === 0) return undefined;
-    }
 
-    //If options is empty
-    if (key === 'options' && value.length === 1 && Object.keys(value[0]).length === 0) return undefined;
+      if (value instanceof formComponent['Field Group']) return value
+      if (value instanceof formComponent['Checkbox']) return value.returnObject()
+      if (value instanceof formComponent['Date Picker']) return value.returnObject()
+      if (value instanceof formComponent['Input']) return value.returnObject()
+      //if (value instanceof formComponent['Label']) return value.returnObject()
+      if (value instanceof formComponent['Radiobutton']) return value.returnObject()
+      if (value instanceof formComponent['Select']) return value.returnObject()
+      if (value instanceof formComponent['Slider']) return value.returnObject()
+      if (value instanceof formComponent['Text Area']) return value.returnObject()
+      if (value instanceof formComponent['Toggle']) return value.returnObject()
+    }
+    
+    if (acceptedKeys.indexOf(key) === -1){
+      if (isNaN(+key)) return undefined;
+    };
+   
+    
 
     return value;
   }
@@ -129,46 +141,37 @@ export class CanvaComponent implements OnInit{
      //Create a duplicate of the fields
     const data  = [...this.fields]
 
-    //Looping the data and change the Datepickers to an object with his properties 
-    //This has to be done because the Formly Datepicker generates a circular structure in the json
-    data.forEach((element, i) => {
-      if (element instanceof formComponent['Field Group']){
-        element.fieldGroup.forEach((component, j) => {
-          if (component instanceof formComponent['Date Picker']){
-            element.fieldGroup[j] = component.returnObject()
-          }
-        });
-      }else{
-        if (element instanceof formComponent['Date Picker']){
-          data[i] = element.returnObject()
-        }
-      }
-    });
-
     //The stringify method is applied twice, because, some data inside objects is deleted in the first one,
     //and these objects can be empty, the second time is to delete these objects from the json
-    let firstStringify = JSON.stringify(data, this.replacer)
+    let firstJson = JSON.stringify(data, this.replacer)
+    let finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer))
     
-    return JSON.stringify(JSON.parse(firstStringify, this.replacer))
+    return finalJson
   }
 
 
   onSave(filename: string){
+
+    
     try {
       let data = this.stringifyData()
-
+      
       //Check if theres data to save
       if (!data.length){
         this.showInfo(`El formulario se encuentra vacío`,'Formulario vacío');
         return
       }
       //Use the package FileSaver to save to the local machine of the user
-      var blob = new Blob([data], {type: "text/json;charset=utf-8"});
-      FileSaver.saveAs(blob, filename+'.json');
+      //var blob = new Blob([data], {type: "text/json;charset=utf-8"});
+      //FileSaver.saveAs(blob, filename+'.json');
       this.showSuccess(`Se descargó el archivo ${filename}.json con éxito`,'Archivo descargado');
-    } catch (_) {
+    } catch (error) {
+      console.log(error);
+      
       this.showError(`Ocurrió un error inesperado al descargar el archivo`,'Error al descargar el archivo');
     }
+    console.log(this.fields);
+
   }
 
   onUpload(file : Blob, extension: string){
@@ -199,6 +202,19 @@ export class CanvaComponent implements OnInit{
     reader.onerror = _ => {
       this.showError('No se logró leer el archivo ingresado','Error al cargar el archivo');
     }
+  }
+
+  getJsonData(){
+    let data: string = ""
+    let dataChanged: boolean = false
+
+    if (this.changed){
+      data = this.stringifyData()
+      dataChanged = true;
+    }
+    this.changed = false;
+
+    return {dataChanged, data}
   }
 
 

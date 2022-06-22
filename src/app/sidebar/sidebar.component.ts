@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {componentList} from './menu-list'
 import {properties} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
-
+import { CodeTabComponent } from '../code-tab/code-tab.component';
 
 
 @Component({
@@ -11,15 +11,18 @@ import {CanvaComponent} from '../canva/canva.component'
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit{
-  @ViewChild('canva') canva!: CanvaComponent;
   @ViewChild('FileInput') FileInput!: ElementRef;
+  @ViewChild('canva') canva!: CanvaComponent;
+  @ViewChild('codeTab') codeTab!: CodeTabComponent;
 
+  filename = 'formly'
 
   sideComponents = componentList;
   sideProperties = properties;
   collapse = true;
   
-  filename = 'formly'
+  showCanva = true
+  jsonData: string = "";
 
   ngOnInit(): void {
     console.log(this.canva);
@@ -39,7 +42,6 @@ export class SidebarComponent implements OnInit{
     this.canva.onSave(this.filename)
   }
   
-  
   openFile(){
     this.FileInput.nativeElement.click()
   }
@@ -51,6 +53,21 @@ export class SidebarComponent implements OnInit{
     let extension: string = input.files[0].name.split('.').pop().toLowerCase()
     this.canva.onUpload(file, extension)
     this.FileInput.nativeElement.value = null
+  }
+
+  changeTab(){  
+
+    if (this.showCanva){
+      let result = this.canva.getJsonData()
+      if (result.dataChanged){
+        this.codeTab.setData(result.data)
+      }
+      this.showCanva = false
+    }else{
+
+
+      this.showCanva = true
+    }
   }
 
   setDraggable(id:string){
