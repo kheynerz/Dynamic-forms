@@ -20,21 +20,20 @@ export class CanvaComponent implements OnInit{
   model = {};
   input = new formComponent['Input']('input1', 'flex-1');
   input2 = new formComponent['Input']('input2', 'flex-1');
+  label =  new formComponent['Label']('label','flex-1');
+  label2 =  new formComponent['Label']('label2','flex-1')
   datepicker = new formComponent['Date Picker']('datepicker', 'flex-1')
-  group = new formComponent['Field Group']([this.input, this.input2, 
-    {key: 'label1', 
-    type: 'label', 
-    className: 'flex-1', 
-    templateOptions : {
-      label: 'ACa va el texto'
-    }
-    }
-  ])
+  group = new formComponent['Field Group']([this.input, this.input2,this.label, this.label2])
   fields: FormlyFieldConfig[] = [this.group];
 
   changed: boolean = true;
 
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService) {
+    this.label.templateOptions.label = 'Texto'
+    this.label2.templateOptions.label = 'Texto2'
+    this.label.changeStyleProperty('font-size', '28px')
+    this.input.changePosition(2)
+  }
 
   //Method to show a toastr error notification
   private showError(message: string, title:string){
@@ -124,7 +123,7 @@ export class CanvaComponent implements OnInit{
       if (value instanceof formComponent['Checkbox']) return value.returnObject()
       if (value instanceof formComponent['Date Picker']) return value.returnObject()
       if (value instanceof formComponent['Input']) return value.returnObject()
-      //if (value instanceof formComponent['Label']) return value.returnObject()
+      if (value instanceof formComponent['Label']) return value.returnObject()
       if (value instanceof formComponent['Radiobutton']) return value.returnObject()
       if (value instanceof formComponent['Select']) return value.returnObject()
       if (value instanceof formComponent['Slider']) return value.returnObject()
