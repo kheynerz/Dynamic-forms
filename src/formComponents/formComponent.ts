@@ -61,7 +61,6 @@ export class FormComponent {
     document.getElementsByTagName('head')[0].appendChild(style);
     
     this.stylesClass = this.key + 'Styles'
-    console.log(this.stylesClass);
     
     this.className = this.flexPosition + ` ${this.stylesClass}` 
   }

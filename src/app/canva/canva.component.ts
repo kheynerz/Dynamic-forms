@@ -164,15 +164,12 @@ export class CanvaComponent implements OnInit{
         return
       }
       //Use the package FileSaver to save to the local machine of the user
-      //var blob = new Blob([data], {type: "text/json;charset=utf-8"});
-      //FileSaver.saveAs(blob, filename+'.json');
+      var blob = new Blob([data], {type: "text/json;charset=utf-8"});
+      FileSaver.saveAs(blob, filename+'.json');
       this.showSuccess(`Se descargó el archivo ${filename}.json con éxito`,'Archivo descargado');
     } catch (error) {
-      console.log(error);
-      
       this.showError(`Ocurrió un error inesperado al descargar el archivo`,'Error al descargar el archivo');
     }
-    console.log(this.fields);
 
   }
 
@@ -212,13 +209,14 @@ export class CanvaComponent implements OnInit{
 
     if (this.changed){
       data = this.stringifyData()
+      data = JSON.stringify(JSON.parse(data), undefined, 4)
       dataChanged = true;
     }
     this.changed = false;
 
     return {dataChanged, data}
   }
-
+  
 
 }
 

@@ -54,7 +54,6 @@ export class SidebarComponent implements OnInit{
   }
 
   changeTab(){  
-
     if (this.showCanva){
       let result = this.canva.getJsonData()
       if (result.dataChanged){
@@ -62,7 +61,8 @@ export class SidebarComponent implements OnInit{
       }
       this.showCanva = false
     }else{
-
+      console.log(this.codeTab.getValue());
+      
 
       this.showCanva = true
     }
