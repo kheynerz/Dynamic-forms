@@ -1,7 +1,7 @@
 
 export class FormComponent {
   flexPosition: string = '';
-  styles: object = {color: 'cyan'};
+  styles: object = {};
   stylesClass: string = '';
 
   className : string = '';
@@ -35,19 +35,22 @@ export class FormComponent {
   returnObject(){
     let values: any = {"key": this.key, "className" : this.flexPosition, "type": this.type}
 
-    if (this.templateOptions.label != '') values['label'] = this.templateOptions.label
-    if (this.templateOptions.description != '')  values['description'] = this.templateOptions.description
-    if (this.templateOptions.placeholder != '')  values['placeholder'] = this.templateOptions.placeholder
-    if (this.templateOptions.pattern != '')  values['pattern'] = this.templateOptions.pattern
-    if (this.templateOptions.value != '')  values['value'] = this.templateOptions.value
-    if (this.templateOptions.required != false)  values['required'] = this.templateOptions.required
-    if (this.templateOptions.multiple != false)  values['multiple'] = this.templateOptions.multiple
-    if (this.templateOptions.selectAllOption != '')  values['selectAllOption'] = this.templateOptions.selectAllOption
+    let templateOptions: any = {}
+    if (this.templateOptions.label != '') templateOptions['label'] = this.templateOptions.label
+    if (this.templateOptions.description != '')  templateOptions['description'] = this.templateOptions.description
+    if (this.templateOptions.placeholder != '')  templateOptions['placeholder'] = this.templateOptions.placeholder
+    if (this.templateOptions.pattern != '')  templateOptions['pattern'] = this.templateOptions.pattern
+    if (this.templateOptions.value != '')  templateOptions['value'] = this.templateOptions.value
+    if (this.templateOptions.required != false)  templateOptions['required'] = this.templateOptions.required
+    if (this.templateOptions.multiple != false)  templateOptions['multiple'] = this.templateOptions.multiple
+    if (this.templateOptions.selectAllOption != '')  templateOptions['selectAllOption'] = this.templateOptions.selectAllOption
     
     if (this.templateOptions.options.length === 1 && Object.keys(this.templateOptions.options[0]).length === 0){
-      values['options'] = this.templateOptions.options
+      templateOptions['options'] = this.templateOptions.options
     };
     
+    values['templateOptions'] = templateOptions
+
     return values
   }
 

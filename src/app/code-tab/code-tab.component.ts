@@ -12,7 +12,7 @@ export class CodeTabComponent {
   
   data: string = '';
   aceEditor: any;
-  dataChanged: boolean = false;
+  changed: boolean = false;
 
   ngAfterViewInit(): void {
     ace.config.set("fontSize", "18px");
@@ -23,22 +23,20 @@ export class CodeTabComponent {
     
     this.aceEditor.on("change", () => {
       this.data = this.aceEditor.getValue()
-      this.dataChanged = true
+      this.changed = true
     });
 
   }
 
   setData(jsonData: string){
     this.aceEditor.session.setValue(jsonData);
-    this.dataChanged = false
+    this.changed = false
   }
 
-  getValue(): object{
-    let changed = this.dataChanged   
-    this.dataChanged = false
-    //Validate data
-    return {'changed': changed, 'data': this.data }
-
+  getJsonData(){
+    let dataChanged = this.changed
+    this.changed = false
+    return {dataChanged, "data": this.data}
   }
   
 }

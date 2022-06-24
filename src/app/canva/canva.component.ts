@@ -31,7 +31,6 @@ export class CanvaComponent implements OnInit{
   constructor(private toastr: ToastrService) {
     this.label.templateOptions.label = 'Texto'
     this.label2.templateOptions.label = 'Texto2'
-    this.label.changeStyleProperty('font-size', '28px')
     this.input.changePosition(2)
   }
 
@@ -148,7 +147,7 @@ export class CanvaComponent implements OnInit{
     //The stringify method is applied twice, because, some data inside objects is deleted in the first one,
     //and these objects can be empty, the second time is to delete these objects from the json
     let firstJson = JSON.stringify(data, this.replacer)
-    let finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer))
+    let finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer), undefined, 4)
     
     return finalJson
   }
@@ -170,54 +169,59 @@ export class CanvaComponent implements OnInit{
     } catch (error) {
       this.showError(`Ocurrió un error inesperado al descargar el archivo`,'Error al descargar el archivo');
     }
-
   }
 
   onUpload(file : Blob, extension: string){
     //Supported data types
     let fileTypes = ['json', 'txt'];
 
+    let success: boolean = true
+
     //Check extension of the file
     if (fileTypes.indexOf(extension) == -1){
       this.showError('Extensión del archivo incorrecta. Solo se admite json y txt.','Error al cargar el archivo');
-      return;
+      success = false
+      return {success, "data": "[]"};
     }
-    
-    //The data to read is always an array
-    let data: Array<any>;
 
     //Read the file, parse the data of the file and save it in the "fields" variable of the class
     const reader = new FileReader();
     reader.readAsText(file, "UTF-8");
     reader.onload =  (evt) => {
       try {
-        data = JSON.parse(String(evt.target?.result));
-        this.fields = data 
+        this.setData(String(evt.target?.result));
+        
         this.showSuccess('Se cargó el archivo con éxito','');
       } catch (error) {
         this.showError(' ','Error al cargar el archivo');
+        success = false
       }
     }
     reader.onerror = _ => {
       this.showError('No se logró leer el archivo ingresado','Error al cargar el archivo');
     }
+    this.changed = true
+    return {success, "data": this.stringifyData()};
+  }
+
+  setData(jsonData: string){
+    //The data to read is always an array
+    let data: Array<object> = []
+    try {
+      data = JSON.parse(jsonData);
+      this.fields = data 
+    } catch (error) {
+      this.showError('El JSON presenta errores en su estructura', 'Error al modificar el JSON');
+    }
+    console.log(this.fields);
+    
   }
 
   getJsonData(){
-    let data: string = ""
-    let dataChanged: boolean = false
-
-    if (this.changed){
-      data = this.stringifyData()
-      data = JSON.stringify(JSON.parse(data), undefined, 4)
-      dataChanged = true;
-    }
-    this.changed = false;
-
-    return {dataChanged, data}
+    let dataChanged = this.changed
+    this.changed = false
+    return {dataChanged, "data": this.stringifyData()}
   }
-  
-
 }
 
 

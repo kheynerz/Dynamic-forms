@@ -49,7 +49,11 @@ export class SidebarComponent implements OnInit{
     let files : Array<Blob> =   Array.from(input.files);
     let file: Blob = files[0]
     let extension: string = input.files[0].name.split('.').pop().toLowerCase()
-    this.canva.onUpload(file, extension)
+    let result = this.canva.onUpload(file, extension)
+    if (result.success){
+      this.codeTab.setData(result.data)
+      this.showCanva = true
+    }
     this.FileInput.nativeElement.value = null
   }
 
@@ -61,13 +65,13 @@ export class SidebarComponent implements OnInit{
       }
       this.showCanva = false
     }else{
-      console.log(this.codeTab.getValue());
-      
-
+      let result = this.codeTab.getJsonData();
+      if (result.dataChanged){
+        this.canva.setData(result.data)
+      }
       this.showCanva = true
     }
   }
-
   setDraggable(id:string){
     this.canva.onChange(id);
   }
