@@ -50,7 +50,6 @@ export class FormComponent {
     };
     
     values['templateOptions'] = templateOptions
-
     return values
   }
 

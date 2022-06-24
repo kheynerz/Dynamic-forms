@@ -3,6 +3,7 @@ import { Datepicker } from './formComponents/datepicker'
 import { FieldGroup } from './formComponents/fieldGroup'
 import { Input } from './formComponents/input'
 import { Label } from './formComponents/label'
+import { Label2 } from './formComponents/label2'
 import { RadioButton } from './formComponents/radioButton'
 import { Select } from './formComponents/select'
 import { Slider } from './formComponents/slider'
@@ -22,6 +23,7 @@ export { Textarea };
 export { Toggle };
 
 export default {
+    "Test" : Label2,
     "Checkbox" : Checkbox,
     "Date Picker" : Datepicker,
     "Field Group" :FieldGroup,

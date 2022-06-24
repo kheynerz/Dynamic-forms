@@ -21,16 +21,20 @@ export class CanvaComponent implements OnInit{
   input = new formComponent['Input']('input1', 'flex-1');
   input2 = new formComponent['Input']('input2', 'flex-1');
   label =  new formComponent['Label']('label','flex-1');
-  label2 =  new formComponent['Label']('label2','flex-1')
+  label2 =  new formComponent['Test']('label2', 'Texto')
   datepicker = new formComponent['Date Picker']('datepicker', 'flex-1')
-  group = new formComponent['Field Group']([this.input, this.input2,this.label, this.label2])
+  group = new formComponent['Field Group']([this.input,this.label2, this.input2,this.label])
   fields: FormlyFieldConfig[] = [this.group];
 
   changed: boolean = true;
 
   constructor(private toastr: ToastrService) {
-    this.label.templateOptions.label = 'Texto'
-    this.label2.templateOptions.label = 'Texto2'
+    this.label.templateOptions.label = 'OWO'
+    this.label2.changeBold(true)
+    this.label2.changeUnderline(true)
+    this.label2.changeSize(1)
+    this.label2.changeText('Hello')
+    this.label2.getTemplate()
     this.input.changePosition(2)
   }
 
@@ -58,7 +62,7 @@ export class CanvaComponent implements OnInit{
   }
 
   onChange(id:string){
-
+    
     let dragValue : any;
     
     type ObjectKey = keyof typeof formComponent;
@@ -104,8 +108,9 @@ export class CanvaComponent implements OnInit{
     //Arrays of data to ignore in the json
     let undefinedValues = ["", false, null, undefined]
     
-    let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'required',
-    'multiple', 'selectAllOption', 'options', 'validation', 'messages']
+    let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 
+                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 
+                        'required', 'multiple', 'selectAllOption', 'options', 'validation', 'messages', 'template']
 
     //Data to ignore
     if (undefinedValues.indexOf(value) > -1) return undefined;
@@ -118,6 +123,8 @@ export class CanvaComponent implements OnInit{
       let len = Object.keys(value).length
       if (len === 0) return undefined;
 
+      console.log(value);
+      
       if (value instanceof formComponent['Field Group']) return value
       if (value instanceof formComponent['Checkbox']) return value.returnObject()
       if (value instanceof formComponent['Date Picker']) return value.returnObject()
@@ -128,6 +135,11 @@ export class CanvaComponent implements OnInit{
       if (value instanceof formComponent['Slider']) return value.returnObject()
       if (value instanceof formComponent['Text Area']) return value.returnObject()
       if (value instanceof formComponent['Toggle']) return value.returnObject()
+      
+      if (value instanceof formComponent['Test']){
+
+        return value.returnObject()
+      } 
     }
     
     if (acceptedKeys.indexOf(key) === -1){
@@ -147,6 +159,8 @@ export class CanvaComponent implements OnInit{
     //The stringify method is applied twice, because, some data inside objects is deleted in the first one,
     //and these objects can be empty, the second time is to delete these objects from the json
     let firstJson = JSON.stringify(data, this.replacer)
+    console.log(firstJson);
+    
     let finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer), undefined, 4)
     
     return finalJson
