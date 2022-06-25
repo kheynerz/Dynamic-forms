@@ -45,9 +45,11 @@ export class Label2 {
     }
 
     public returnObject(){
-        let values: any = {"key": this.key, "className" : this.flexPosition, "type": this.type, "template": this.getTemplate()}
-        console.log(values);
-        return values
+        return {"key": this.key, 
+                "className" : this.flexPosition, 
+                "type": this.type, 
+                "template": this.getTemplate()
+            }
     }
 
 

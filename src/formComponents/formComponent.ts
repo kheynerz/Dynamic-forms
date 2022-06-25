@@ -1,23 +1,30 @@
 
 export class FormComponent {
-  flexPosition: string = '';
   styles: object = {};
   stylesClass: string = '';
-
   className : string = '';
+
   key : string = '';
   type: string = '';
+
   defaultValue: any = '';
-  templateOptions = {
+  flexPosition: string = '';
+  #availableProperties: Array<string> = ['']
+  templateOptions:  { label: string, description: string, placeholder: string, pattern: string, 
+                      value: string, selectAllOption: string, rows: any, cols:any,thumbLabel: any,
+                      required: any, multiple: any, options: Array<object>} = {
     label: '',
     description: '',
     placeholder: '',
     pattern: '',
     value: '',
+    selectAllOption: '',
+    rows: 1,
+    cols: 1,
+    thumbLabel: false,
     required: false,      
     multiple: false,
-    selectAllOption: '',
-    options : [{}]
+    options : []
   } 
   validation = {
     messages: {
@@ -25,11 +32,47 @@ export class FormComponent {
     },
   }
 
-  constructor(key: string, className : string, type: string){
+  constructor(key: string, className : string, type: string, availableProperties: Array<string>){
+    this.#availableProperties = availableProperties
     this.key = key;
     this.className= className;
     this.type = type;
     this.flexPosition = className;
+  }
+
+
+  private changeProps(property: string, newValue: string | boolean | number | Date ): boolean{
+    let success = false
+    if (property === "defaultValue"){
+      this.defaultValue = newValue
+    }else{
+      try {
+        type ObjectKey = keyof typeof this.templateOptions;
+        const myVar = property as ObjectKey;
+        if (typeof newValue === 'string'){
+          if ((property !== 'required') && (property !== 'multiple')){
+            this.templateOptions[myVar] = newValue
+            success = true
+          }
+        }else if (typeof newValue === 'boolean'){
+          this.templateOptions[myVar] = newValue
+          if (property === 'multiple'){
+            if (newValue){
+              this.templateOptions.selectAllOption = "Select All"
+            }else{
+              this.templateOptions.selectAllOption = ""
+            }
+          }
+
+          success = true
+        }else if (typeof newValue === 'number'){
+          this.templateOptions[myVar] = newValue
+        }
+
+
+      } catch (_) { }
+    }
+    return success
   }
 
   returnObject(){
@@ -84,9 +127,44 @@ export class FormComponent {
   
   }
 
-  changePosition(newSize: Number){
+  changeSize(newSize: Number){
     this.className = `flex-${newSize}` + ` ${this.stylesClass}`
     this.flexPosition = `flex-${newSize}`;
+  }
+ 
+
+  changeProperty(property: string, newValue: string | boolean | number | Date ){
+    let result = false
+    if (this.#availableProperties.indexOf(property) >= 0){
+      result = this.changeProps(property, newValue)
+    }
+    return result
+  }
+
+  getProperties(): Array<string>{
+    return this.#availableProperties
+  }
+
+  addOption(label: string, value: any, disable: boolean){
+    let success = false
+    if (this.#availableProperties.indexOf("options") !== -1){
+      this.templateOptions.options.push({label, value, disable})
+      success = true
+    }
+    return success
+
+  }
+
+  removeOption(index: number){
+    let success = false
+    if (this.#availableProperties.indexOf("options") !== -1){
+      if (index > -1) {
+        if (this.templateOptions.options.splice(index, 1).length !== 0) {
+          success = true
+        }
+      }
+    }
+    return success
   }
 
 }

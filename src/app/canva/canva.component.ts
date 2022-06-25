@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
@@ -15,28 +15,19 @@ import FileSaver from 'file-saver';
   styleUrls: ['./canva.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CanvaComponent implements OnInit{
+export class CanvaComponent{
   form = new FormGroup({});
   model = {};
-  input = new formComponent['Input']('input1', 'flex-1');
-  input2 = new formComponent['Input']('input2', 'flex-1');
-  label =  new formComponent['Label']('label','flex-1');
-  label2 =  new formComponent['Test']('label2', 'Texto')
-  datepicker = new formComponent['Date Picker']('datepicker', 'flex-1')
-  group = new formComponent['Field Group']([this.input,this.label2, this.input2,this.label])
+  input = new formComponent['Checkbox']('input1', 'flex-1');
+  group = new formComponent['Field Group']([this.input])
   fields: FormlyFieldConfig[] = [this.group];
 
   changed: boolean = true;
 
   constructor(private toastr: ToastrService) {
-    this.label.templateOptions.label = 'OWO'
-    this.label2.changeBold(true)
-    this.label2.changeUnderline(true)
-    this.label2.changeSize(1)
-    this.label2.changeText('Hello')
-    this.label2.getTemplate()
-    this.input.changePosition(2)
+    console.log(this.input.getProperties())
   }
+
 
   //Method to show a toastr error notification
   private showError(message: string, title:string){
@@ -52,8 +43,6 @@ export class CanvaComponent implements OnInit{
   private showInfo(message: string, title:string){
     this.toastr.info(message, title)
   }
-
-  ngOnInit(){}
 
   onSubmit() {
     if (this.form.valid) {
@@ -123,8 +112,6 @@ export class CanvaComponent implements OnInit{
       let len = Object.keys(value).length
       if (len === 0) return undefined;
 
-      console.log(value);
-      
       if (value instanceof formComponent['Field Group']) return value
       if (value instanceof formComponent['Checkbox']) return value.returnObject()
       if (value instanceof formComponent['Date Picker']) return value.returnObject()
@@ -159,8 +146,6 @@ export class CanvaComponent implements OnInit{
     //The stringify method is applied twice, because, some data inside objects is deleted in the first one,
     //and these objects can be empty, the second time is to delete these objects from the json
     let firstJson = JSON.stringify(data, this.replacer)
-    console.log(firstJson);
-    
     let finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer), undefined, 4)
     
     return finalJson
@@ -222,19 +207,24 @@ export class CanvaComponent implements OnInit{
     //The data to read is always an array
     let data: Array<object> = []
     try {
+      //Parse the data to json and assign it to the formly field
       data = JSON.parse(jsonData);
       this.fields = data 
     } catch (error) {
       this.showError('El JSON presenta errores en su estructura', 'Error al modificar el JSON');
     }
-    console.log(this.fields);
-    
   }
 
   getJsonData(){
+    //If the data has changed 
     let dataChanged = this.changed
+    let data = ""
+
+    if (this.changed){
+      data = this.stringifyData()
+    }
     this.changed = false
-    return {dataChanged, "data": this.stringifyData()}
+    return {dataChanged, "data": data}
   }
 }
 
