@@ -21,10 +21,22 @@ export class CanvaComponent{
 
   changed: boolean = true;
 
-  fields: FormlyFieldConfig[] = [];
+  rbtn = new formComponent['Select']('rbtn-key', 'flex-1')
+  group = new formComponent['Field Group']([this.rbtn])
+  fields: FormlyFieldConfig[] = [this.group];
   newComponent: Object= {};
 
-  constructor(private toastr: ToastrService, private el:ElementRef) {}
+  constructor(private toastr: ToastrService, private el:ElementRef) {
+    this.rbtn.changeProperty('label', 'Text Area ')
+    this.rbtn.changeProperty('description', 'Text Area ')
+    console.log(this.rbtn.changeProperty('required', true))
+    this.rbtn.addOption('Opcion 1', 1)
+    this.rbtn.addOption('Opcion 2', 2)
+    this.rbtn.addOption('Opcion 3', 3)
+    
+    this.rbtn.changeProperty('description', 'Text Area ')
+    
+  }
 
   //Method to show a toastr error notification
   private showError(message: string, title:string){
@@ -173,8 +185,8 @@ export class CanvaComponent{
     let undefinedValues = ["", false, null, undefined]
     
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 
-                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 
-                        'required', 'multiple', 'selectAllOption', 'options', 'validation', 'messages', 'template']
+                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'selectAllOption', 
+                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validation', 'messages', 'template']
 
     //Data to ignore
     if (undefinedValues.indexOf(value) > -1) return undefined;
@@ -197,11 +209,7 @@ export class CanvaComponent{
       if (value instanceof formComponent['Slider']) return value.returnObject()
       if (value instanceof formComponent['Text Area']) return value.returnObject()
       if (value instanceof formComponent['Toggle']) return value.returnObject()
-      
-      if (value instanceof formComponent['Test']){
-
-        return value.returnObject()
-      } 
+      if (value instanceof formComponent['Test']) return value.returnObject()
     }
     
     if (acceptedKeys.indexOf(key) === -1){

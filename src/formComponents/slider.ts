@@ -1,7 +1,7 @@
 import { FormComponent } from "./formComponent";
 
 export class Slider extends FormComponent{
-  constructor(key: string, className : string){
-    super(key, className, 'slider', ['label', 'description', 'required' , 'thumbLabel'])
+  constructor(key: string, flexPosition : string){
+    super(key, flexPosition, 'slider', ['label', 'description', 'required' , 'thumbLabel'])
   }
 }
