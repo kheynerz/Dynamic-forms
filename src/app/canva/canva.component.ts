@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
@@ -19,8 +19,9 @@ export class CanvaComponent implements OnInit{
   form = new FormGroup({});
   model = {};
   fields: FormlyFieldConfig[] = [];
+  newComponent: Object= {};
 
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService, private el:ElementRef) {}
 
   //Method to show a toastr error notification
   showError(message: string, title:string){
@@ -38,7 +39,7 @@ export class CanvaComponent implements OnInit{
   }
 
   ngOnInit(){
-   
+    
   }
 
   onSubmit() {
@@ -59,33 +60,101 @@ export class CanvaComponent implements OnInit{
     return newElement
   }
 
-  onChange(id:string){
+  clickOnCanva(clickX: number, clickY: number){
+    let onCanva = false, xCheck: boolean, yCheck: boolean;
+    let width: number, height: number;
 
+    //start positions of canva
+    const {x, y} = this.el.nativeElement.getBoundingClientRect();
+
+    //size of canva
+    width = this.el.nativeElement.offsetWidth;
+    height = this.el.nativeElement.offsetHeight;
+    
+    //booleans for XY click position condition
+    xCheck = x <= clickX && clickX <= x+width
+    yCheck = y <= clickY && clickY <= y+height
+
+    if(xCheck && yCheck){
+      //condition to check click was on canva 
+      onCanva = true;
+    } 
+
+    return onCanva;
+  }
+
+  insertWithListener(){
+    let formlyForm = document.getElementsByTagName("formly-form").item(0);
+    
+    if (formlyForm){
+
+      for (let i = 0; i < formlyForm.children.length; i++) {
+        //add click listener to all field groups in screen 
+        const clickListener = (e: Event) => { 
+          
+        
+          e.stopImmediatePropagation();        
+
+          //creating fields to render, with the new component
+          let newFields:FormlyFieldConfig[] = [];
+          let newFieldGroup = new formComponent['Field Group']([]); 
+
+          
+          newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!, this.newComponent ];  
+          newFields = [ ...this.fields];  
+          newFields[i] = newFieldGroup;         
+          newFields.splice(newFields.length-1, 1);
+
+          //updating fields in screen
+          this.fields = [ ...newFields];
+   
+          
+        };
+
+        formlyForm.children[i].addEventListener('click', clickListener);
+
+        
+      }
+    }
+ 
+
+  }
+  
+  onChange(id:string){
+    
     //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
-    let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
-
-    //Add component to fieldgroup
-    let newFieldGroup = new formComponent['Field Group']([newComponent])
+    this.newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
+    let newFieldGroup = new formComponent['Field Group']([this.newComponent]);
 
     //getting the button to drag
-    let dragValue : any = this.getDragValue(id);
-    
+    let dragValue: any = this.getDragValue(id);  
 
-    //events 
+    //Mouse events 
     
-    document.onmouseup = () => {
+    document.onmouseup = (e) => {   
       if (dragValue){
         document.body.removeChild(dragValue);
-        dragValue = null; 
+        
+        let x = e.pageX;
+        let y = e.pageY;
           
-        this.fields = [ ...this.fields, newFieldGroup ];
+        if (this.clickOnCanva(x, y)){ 
+          //Rendering new form in canva when a valid position is selected  
+    
+          this.fields = [ ...this.fields, newFieldGroup ]; 
+          this.insertWithListener();
+          
+        }   
+        
       }     
+      
     }
-
     
     document.onmousemove = (e) =>{
+
+      //dragging element
       let x = e.pageX;
       let y = e.pageY;
 
@@ -93,11 +162,7 @@ export class CanvaComponent implements OnInit{
         dragValue.style.top = y  + 'px';
         dragValue.style.left = x  + 'px';
       }  
-    } 
-
-    
-    //Rendering new form in canva when position is selected
-    //this.fields = [ ...this.fields, newFieldGroup ];
+    }  
 
   }
 

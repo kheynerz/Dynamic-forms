@@ -29,4 +29,8 @@ display-flex { display: flex; }
   color: black;
 }
 
+.canva{
+  width: 100%;
+  height: 98%;
+}
 
