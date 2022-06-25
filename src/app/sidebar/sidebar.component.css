@@ -1,24 +1,19 @@
 .sidenav-container {
   height: 100%;
+  width: 100%;
 }
 
 .padded {
   padding: 10px;
 }
 
-.propPadding {
-  padding: 3px;
-  padding-left: 30px;
-  padding-right: 20px;
+.title {
+  padding: 20px;
 }
 
 .with-icon {
   display: flex;
   align-items: center;
-}
-
-.sidenav {
-  width: 300px;
 }
 
 .sidenav .mat-toolbar {
@@ -35,3 +30,6 @@
   width: 150px;
   text-align: left;
 }
+
+
+

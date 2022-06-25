@@ -27,8 +27,10 @@ export class SidebarComponent implements OnInit{
   ngOnInit(): void {
   }
 
+  
   toggleSidebar() {
     this.collapse = !this.collapse;
+    
   }
 
   sidebarActions() {
@@ -60,6 +62,8 @@ export class SidebarComponent implements OnInit{
   changeTab(){  
     if (this.showCanva){
       let result = this.canva.getJsonData()
+      console.log(result);
+      
       if (result.dataChanged){
         this.codeTab.setData(result.data)
       }

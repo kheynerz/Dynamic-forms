@@ -1,49 +1,72 @@
-<mat-sidenav-container class="full-height" autosize="true">
+<mat-sidenav-container class="sidenav-container" autosize="true">
 
-  <mat-sidenav mode="side" opened>
-      <!---->
-      <div mat-menu-item class="with-icon padded" (click)="toggleSidebar()">
-          <mat-icon matTooltip="toggle side menu">menu</mat-icon>&nbsp;
-      </div> 
-
-      <div mat-menu-item class="padded" >
-        <mat-icon>touch_app</mat-icon>&nbsp;
-        <mat-icon>pan_tool</mat-icon>&nbsp;
-        <mat-icon (click)="changeTab()">delete</mat-icon>&nbsp;
-        <mat-icon (click)="openFile()">cloud_upload</mat-icon>&nbsp;
-        <mat-icon (click)="saveJSON ()">cloud_download</mat-icon>&nbsp;
-      </div>
+  <!--Left sidenav-->
+  <mat-sidenav mode="side" opened #left position="start">
+      <div class="title">
+        <button color="basic" mat-icon-button>
+          <mat-icon>folder</mat-icon>&nbsp;
+        </button>        
+        <span> formInProgressName </span>
+      </div>  
 
       <mat-divider></mat-divider>
 
+      <div mat-menu-item class="padded" >
+        <button color="basic" mat-icon-button>
+          <mat-icon>touch_app</mat-icon>&nbsp;
+        </button>   
+        <button color="basic" mat-icon-button>
+          <mat-icon>pan_tool</mat-icon>&nbsp;
+        </button>
+        <button (click)="changeTab()" color="basic" mat-icon-button>
+          <mat-icon>delete</mat-icon>&nbsp;
+        </button>
+        <button (click)="openFile()" color="basic" mat-icon-button>
+          <mat-icon>cloud_upload</mat-icon>&nbsp;
+        </button>
+        <button (click)="saveJSON ()" color="basic" mat-icon-button>
+          <mat-icon>cloud_download</mat-icon>&nbsp;
+        </button> 
+      </div>
+
+      <mat-divider class="padded"></mat-divider>
+
       <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded">
-        <button (click)="setDraggable(i.name)" color="basic" class="sidenavButtons" mat-raised-button>
+        <button id="{{ i.name }}" (click)="setDraggable(i.name)" color="basic" class="sidenavButtons" mat-raised-button>
           <mat-icon>{{i.icon}}</mat-icon>&nbsp;
           <span>{{ i.name }}</span>
         </button>      
       </div>
+  </mat-sidenav>
+
+  <!--Right sidenav-->
+  <mat-sidenav mode="side" opened #right position="end">
+      <div mat-menu-item class="with-icon padded">
+          <button (click)="toggleSidebar()" color="basic" mat-icon-button>
+            <mat-icon>menu</mat-icon>&nbsp;
+          </button>         
+      </div> 
 
       <mat-divider></mat-divider>
-      
+
       <div class="padded">
-        <span>Properties</span>
+        <span [hidden]="collapse">Properties</span>
       </div>
 
-      <div mat-menu-item *ngFor="let i of sideProperties" class="propPadding">
-        <span [hidden]="collapse">{{ i }}</span>
-        <span [hidden]="collapse">{{ i }}</span>
+      <div mat-menu-item *ngFor="let i of sideProperties" class="padded">
+        <span [hidden]="collapse">{{ i+i }}</span>
+        <span [hidden]="collapse">{{ i+i }}</span>
       </div>
-
   </mat-sidenav>
 
 
+  <!--Middle content-->
   <mat-sidenav-content class="padded">
     <app-canva [hidden]="!showCanva" #canva></app-canva>
     <app-code-tab #codeTab [hidden]="showCanva"></app-code-tab>
   </mat-sidenav-content>
 
-
-
+  
 </mat-sidenav-container>
 
 <input #FileInput type="file" style="display:none" (change)="onChangeInputFile()">
