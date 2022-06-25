@@ -135,7 +135,7 @@ export class CanvaComponent{
     document.onmouseup = (e) => {   
       if (dragValue){
         document.body.removeChild(dragValue);
-        
+        dragValue = null;
         let x = e.pageX;
         let y = e.pageY;
           
