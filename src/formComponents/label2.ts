@@ -5,7 +5,7 @@ export class Label2 {
     flexPosition = 'flex-1'
     key = ''
     text = ``
-    #size = 6;
+    #size = 3;
     #bold: boolean = false;
     #italic: boolean = false;
     #undelined: boolean = false;
@@ -15,7 +15,7 @@ export class Label2 {
     constructor(key: string, text: string){
         this.key = key,
         this.text = text
-        this.template = `<h6>${text}</h6>`
+        this.template = `<h3>${text}</h3>`
     }
 
     public changeBold(value: boolean){

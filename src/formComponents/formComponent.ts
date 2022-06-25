@@ -1,17 +1,20 @@
-
+/*This class is a base for all the components that can be created with Formly*/
 export class FormComponent {
-  styles: object = {};
-  stylesClass: string = '';
-  className : string = '';
+  /*Formly doesnt implement style property but is posible to add a class with the custom css to the component*/
+  styles: object = {};//Custom CSS styles that can be applied to the Component
+  stylesClass: string = '';//Name of the class with the custom CSS
 
+  //Formly principal properties
+  className : string = '';
   key : string = '';
   type: string = '';
 
-  defaultValue: any = '';
+  defaultValue: any = ''; //Some components 
   flexPosition: string = '';
   #availableProperties: Array<string> = ['']
+  
   templateOptions:  { label: string, description: string, placeholder: string, pattern: string, 
-                      value: string, selectAllOption: string, rows: any, cols:any,thumbLabel: any,
+                      value: string, selectAllOption: string, rows: any, thumbLabel: any,
                       required: any, multiple: any, options: Array<object>} = {
     label: '',
     description: '',
@@ -20,7 +23,6 @@ export class FormComponent {
     value: '',
     selectAllOption: '',
     rows: 1,
-    cols: 1,
     thumbLabel: false,
     required: false,      
     multiple: false,
@@ -96,7 +98,7 @@ export class FormComponent {
     return values
   }
 
-  changeStyle(newStyles: string){
+  private changeStyle(newStyles: string){
     var child = document.getElementById(this.key);
     child?.parentNode?.removeChild(child)
 
