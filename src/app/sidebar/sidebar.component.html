@@ -62,8 +62,8 @@
 
   <!--Middle content-->
   <mat-sidenav-content class="padded">
-    <app-canva [hidden]="!showCanva" #canva></app-canva>
-    <app-code-tab #codeTab [hidden]="showCanva"></app-code-tab>
+    <app-canva [hidden]="!toggleCanva" #canva></app-canva>
+    <app-code-tab #codeTab [hidden]="toggleCanva"></app-code-tab>
   </mat-sidenav-content>
 
   

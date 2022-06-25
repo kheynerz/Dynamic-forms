@@ -27,14 +27,12 @@ export class CanvaComponent{
   newComponent: Object= {};
 
   constructor(private toastr: ToastrService, private el:ElementRef) {
-    this.rbtn.changeProperty('label', 'Text Area ')
-    this.rbtn.changeProperty('description', 'Text Area ')
+    this.rbtn.changeProperty('label', 'SELECT')
+    this.rbtn.changeProperty('description', 'SELECT SELECT ')
     console.log(this.rbtn.changeProperty('required', true))
     this.rbtn.addOption('Opcion 1', 1)
     this.rbtn.addOption('Opcion 2', 2)
     this.rbtn.addOption('Opcion 3', 3)
-    
-    this.rbtn.changeProperty('description', 'Text Area ')
     
   }
 
@@ -289,6 +287,7 @@ export class CanvaComponent{
   }
 
   setData(jsonData: string){
+    let success = true
     //The data to read is always an array
     let data: Array<object> = []
     try {
@@ -296,8 +295,10 @@ export class CanvaComponent{
       data = JSON.parse(jsonData);
       this.fields = data 
     } catch (error) {
+      success = false
       this.showError('El JSON presenta errores en su estructura', 'Error al modificar el JSON');
     }
+    return success
   }
 
   getJsonData(){

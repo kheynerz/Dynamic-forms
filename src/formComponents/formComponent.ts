@@ -115,15 +115,20 @@ export class FormComponent {
     if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
    
     values['templateOptions'] = templateOptions
+
     return values
   }
 
   private changeStyle(newStyles: string){
-    var child = document.getElementById(this.key);
+    /*Creates a style tag for custom css for a form component*/
+
+    //Remove the style tag if exists
+    var child = document.getElementById(this.key+"styles");
     child?.parentNode?.removeChild(child)
 
+    //Create a new style tag
     var style = document.createElement('style');
-    style.setAttribute("id", this.key);
+    style.setAttribute("id", this.key+"styles");
     style.innerHTML = `.${this.key}Styles {${newStyles}}`;
     document.getElementsByTagName('head')[0].appendChild(style);
     
@@ -132,33 +137,37 @@ export class FormComponent {
     this.className = this.flexPosition + ` ${this.stylesClass}` 
   }
 
-  changeStyleProperty(key: string, property: string){
+  changeStyleProperty(property: string, value: string){
+    //Get the styles and change the value of the property
     const style = {
       ...this.styles,
-      [key]: property,
+      [property]: value,
     };
     
-    
+    //Transform the object of styles in a CSS String
     const styleString = (
       Object.entries(style).map(([k, v]) => `${k}:${v}`).join(';')
     );
 
+    //In case a property is in Camel Case transform it to snake-case
     let newStyles = styleString.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
     
     this.changeStyle(newStyles)
-  
   }
 
   changeSize(newSize: Number){
+    //Change the flex size of the component
     this.className = `flex-${newSize}` + ` ${this.stylesClass}`
     this.flexPosition = `flex-${newSize}`;
   }
  
 
   changeProperty(property: string, newValue: string | boolean | number | Date ){
+    //Public method to change a property of the component
     let result = false
+    //Check if the property is available for the component
     if (this.#availableProperties.indexOf(property) >= 0){
-      result = this.changeProps(property, newValue)
+      result = this.changeProps(property, newValue)//Change the property
     }
     return result
   }
@@ -169,6 +178,7 @@ export class FormComponent {
 
   addOption(label: string, value: any, disable: boolean = false){
     let success = false
+    //Check if the component can add options, and push it
     if (this.#availableProperties.indexOf("options") !== -1){
       this.templateOptions.options.push({label, value, disable})
       success = true
@@ -179,6 +189,7 @@ export class FormComponent {
 
   removeOption(index: number){
     let success = false
+    //Check if the component can add options, remove the index
     if (this.#availableProperties.indexOf("options") !== -1){
       if (index > -1) {
         if (this.templateOptions.options.splice(index, 1).length !== 0) {
