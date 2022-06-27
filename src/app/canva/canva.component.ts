@@ -22,7 +22,8 @@ export class CanvaComponent{
   changed: boolean = true;
 
   fields: FormlyFieldConfig[] = [];
-  newComponent: Object= {};
+  
+
 
   constructor(private toastr: ToastrService, private el:ElementRef) {}
 
@@ -82,41 +83,27 @@ export class CanvaComponent{
     return onCanva;
   }
 
-  insertWithListener(){
-    let formlyForm = document.getElementsByTagName("formly-form").item(0);
-    
-    if (formlyForm){
+  clickOnFieldGroup(){
+    return new Promise((resolve, reject) => {
+      let formlyForm = document.getElementsByTagName("formly-form").item(0);
 
-      for (let i = 0; i < formlyForm.children.length; i++) {
-        //add click listener to all field groups in screen 
-        const clickListener = (e: Event) => { 
-          
-        
-          e.stopImmediatePropagation();        
+      if (formlyForm){
+        for (let i = 0; i < formlyForm.children.length; i++) {
+          //add click listener to all field groups in screen 
 
-          //creating fields to render, with the new component
-          let newFields:FormlyFieldConfig[] = [];
-          let newFieldGroup = new formComponent['Field Group']([]); 
-
-          
-          newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!, this.newComponent ];  
-          newFields = [ ...this.fields];  
-          newFields[i] = newFieldGroup;         
-          newFields.splice(newFields.length-1, 1);
-
-          //updating fields in screen
-          this.fields = [ ...newFields];
-   
-          
-        };
-
-        formlyForm.children[i].addEventListener('click', clickListener);
-
-        
+          formlyForm.children[i].addEventListener('click', ()=>{
+            //resolve promise if field group is clicked
+            resolve(i);
+          });
+        }
       }
-    }
- 
-
+    
+      //reject promise if not resolved 
+      setTimeout(() => {  
+        reject();
+      }, 100);
+     
+    })
   }
   
   onChange(id:string){
@@ -124,8 +111,8 @@ export class CanvaComponent{
     //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
-    this.newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
-    let newFieldGroup = new formComponent['Field Group']([this.newComponent]);
+    let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
+    let newFieldGroup = new formComponent['Field Group']([newComponent]);
 
     //getting the button to drag
     let dragValue: any = this.getDragValue(id);  
@@ -135,24 +122,39 @@ export class CanvaComponent{
     document.onmouseup = (e) => {   
       if (dragValue){
         document.body.removeChild(dragValue);
-        
+        dragValue = null;
         let x = e.pageX;
         let y = e.pageY;
           
         if (this.clickOnCanva(x, y)){ 
           //Rendering new form in canva when a valid position is selected  
     
+          //adding one field group always to the end of canva
           this.fields = [ ...this.fields, newFieldGroup ]; 
-          this.insertWithListener();
-          
-        }   
-        
-      }     
-      
+ 
+          this.clickOnFieldGroup().then( (i:any)=>{
+            //if promise resolved, add new component to selected field group
+
+            //creating fields to render, with the new component
+            let newFields:FormlyFieldConfig[] = [];
+            let newFieldGroup = new formComponent['Field Group']([]); 
+
+            newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!, newComponent ];  
+            newFields = [ ...this.fields];  
+            newFields[i] = newFieldGroup;    
+            //removing previously added field group     
+            newFields.splice(newFields.length-1, 1);
+  
+            //updating fields in screen
+            this.fields = [ ...newFields];
+            
+          }).catch(r=>{});
+
+        } 
+      }      
     }
     
     document.onmousemove = (e) =>{
-
       //dragging element
       let x = e.pageX;
       let y = e.pageY;
