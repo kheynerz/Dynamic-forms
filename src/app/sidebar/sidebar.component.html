@@ -11,15 +11,18 @@
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
-        <button (click)="changeTab()" color="basic" mat-icon-button>
-          <mat-icon>touch_app</mat-icon>&nbsp;
-        </button>   
-        <button (click)="moveComponent()" color="basic" mat-icon-button>
-          <mat-icon>pan_tool</mat-icon>&nbsp;
-        </button>
-        <button (click)="deleteComponent()" color="basic" mat-icon-button>
-          <mat-icon>delete</mat-icon>&nbsp;
-        </button>
+        <mat-button-toggle-group #modesGroup="matButtonToggleGroup">
+          <mat-button-toggle color="basic" value="select">
+            <mat-icon>touch_app</mat-icon>&nbsp;
+          </mat-button-toggle>
+          <mat-button-toggle (click)="moveComponent()" color="basic" value="move">
+            <mat-icon>pan_tool</mat-icon>&nbsp;
+          </mat-button-toggle>   
+          <mat-button-toggle (click)="deleteComponent()" color="basic" value="delete">
+            <mat-icon>delete</mat-icon>&nbsp;
+          </mat-button-toggle>    
+        </mat-button-toggle-group>
+
         <button (click)="openFile()" color="basic" mat-icon-button>
           <mat-icon>cloud_upload</mat-icon>&nbsp;
         </button>
@@ -31,7 +34,7 @@
       <mat-divider class="padded"></mat-divider>
 
       <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded">
-        <button id="{{ i.name }}" (click)="setDraggable(i.name, group.value)" color="basic" class="sidenavButtons" mat-raised-button>
+        <button id="{{ i.name }}" (click)="setDraggable(i.name, insertGroup.value)" color="basic" class="sidenavButtons" mat-raised-button>
           <mat-icon>{{i.icon}}</mat-icon>&nbsp;
           <span>{{ i.name }}</span>
         </button>      
@@ -39,16 +42,16 @@
 
       <mat-divider class="padded"></mat-divider>
 
-      <div>Insert mode: {{group.value}}</div>
-      <mat-button-toggle-group #group="matButtonToggleGroup" value="Right">
-        <mat-button-toggle value="Left" aria-label="Text align left">
+      
+      <mat-button-toggle-group #insertGroup="matButtonToggleGroup" value="Right">
+        <mat-button-toggle value="Left" aria-label="Insert mode left">
           <mat-icon>keyboard_arrow_left</mat-icon>
         </mat-button-toggle>
-        <mat-button-toggle value="Right" aria-label="Text align center">
+        <mat-button-toggle value="Right" aria-label="Insert mode right">
           <mat-icon>keyboard_arrow_right</mat-icon>
         </mat-button-toggle>       
       </mat-button-toggle-group>
-      
+      <div>Insert: {{insertGroup.value}}</div>
 
   </mat-sidenav>
 

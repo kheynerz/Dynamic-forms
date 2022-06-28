@@ -120,7 +120,7 @@ export class CanvaComponent{
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
     let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
-    let newFieldGroup = new formComponent['Field Group']([newComponent]);
+    let endFieldGroup = new formComponent['Field Group']([newComponent]);
 
     //getting the button to drag
     let dragValue: any = this.getDragValue(id);  
@@ -136,7 +136,7 @@ export class CanvaComponent{
           //Rendering new form in canva when a valid position is selected  
     
           //adding one field group always to the end of canva
-          this.fields = [ ...this.fields, newFieldGroup ]; 
+          this.fields = [ ...this.fields, endFieldGroup ]; 
  
           this.clickOnComponent().then( ([i,j]:any)=>{
             //if promise resolved, add new component to selected field group
@@ -148,14 +148,15 @@ export class CanvaComponent{
             newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
 
             //index where to splice depending in the insert mode 
-            if (insertMode === "Right")
-              j++;
+            insertMode === "Right" ? j++ : null;         
+
             //insert component in the index specified
             newFieldGroup.fieldGroup.splice(j, 0, newComponent);
 
             newFields = [ ...this.fields];  
             newFields[i] = newFieldGroup;    
-            //removing previously added field group     
+
+            //removing previously added end field group     
             newFields.splice(newFields.length-1, 1);
   
 
@@ -199,17 +200,22 @@ export class CanvaComponent{
           //delete component in the index specified
           newFieldGroup.fieldGroup.splice(j, 1);
     
-          newFields = [ ...this.fields];  
-          newFields[i] = newFieldGroup;    
- 
+          newFields = [ ...this.fields]; 
+          
+          //if new field group has items update it, else remove it 
+          newFieldGroup.fieldGroup.length === 0 ? newFields.splice(i, 1) : newFields[i] = newFieldGroup;
+          
+
           //updating fields in screen
           this.fields = [ ...newFields];
           
         }).catch(r=>{});
 
+        this.changed = true
+
       }
     }  
- 
+   
   }
 
   onMove(){

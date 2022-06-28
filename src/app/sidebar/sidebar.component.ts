@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import {componentList, properties} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
 import { CodeTabComponent } from '../code-tab/code-tab.component';
@@ -33,7 +33,6 @@ export class SidebarComponent{
   //Data to show in the json code editor
   jsonData: string = "";
 
-  
   toggleSidebar() {
     this.collapse = !this.collapse;
   }
@@ -104,7 +103,7 @@ export class SidebarComponent{
       this.toggleCanva = true
     }
   }
-  setDraggable(id:string, insertMode:string){
+  setDraggable(id:string,insertMode:string){
     this.canva.onChange(id, insertMode);
   }
 
