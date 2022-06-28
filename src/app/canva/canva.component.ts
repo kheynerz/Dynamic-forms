@@ -25,7 +25,9 @@ export class CanvaComponent{
   
 
 
-  constructor(private toastr: ToastrService, private el:ElementRef) {}
+  constructor(private toastr: ToastrService, private el:ElementRef) {
+    
+  }
 
   //Method to show a toastr error notification
   private showError(message: string, title:string){
@@ -227,8 +229,8 @@ export class CanvaComponent{
     let undefinedValues = ["", false, null, undefined]
     
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 
-                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 
-                        'required', 'multiple', 'selectAllOption', 'options', 'validation', 'messages', 'template']
+                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'selectAllOption', 
+                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validation', 'messages', 'template']
 
     //Data to ignore
     if (undefinedValues.indexOf(value) > -1) return undefined;
@@ -251,11 +253,7 @@ export class CanvaComponent{
       if (value instanceof formComponent['Slider']) return value.returnObject()
       if (value instanceof formComponent['Text Area']) return value.returnObject()
       if (value instanceof formComponent['Toggle']) return value.returnObject()
-      
-      if (value instanceof formComponent['Test']){
-
-        return value.returnObject()
-      } 
+      if (value instanceof formComponent['Test']) return value.returnObject()
     }
     
     if (acceptedKeys.indexOf(key) === -1){
@@ -335,6 +333,7 @@ export class CanvaComponent{
   }
 
   setData(jsonData: string){
+    let success = true
     //The data to read is always an array
     let data: Array<object> = []
     try {
@@ -342,8 +341,10 @@ export class CanvaComponent{
       data = JSON.parse(jsonData);
       this.fields = data 
     } catch (error) {
+      success = false
       this.showError('El JSON presenta errores en su estructura', 'Error al modificar el JSON');
     }
+    return success
   }
 
   getJsonData(){

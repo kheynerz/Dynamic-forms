@@ -42,6 +42,7 @@ import { CodeTabComponent } from './code-tab/code-tab.component';
 import { LabelWrapperComponent } from './labelWrapper';
 import { FormlyFieldLabel } from './labelType';
 
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { FormlyFieldLabel } from './labelType';
     BrowserAnimationsModule,
     MatButtonModule,
     MatButtonToggleModule,
+    MatTabsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 2000,

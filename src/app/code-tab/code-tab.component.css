@@ -1,4 +1,7 @@
 .app-ace-editor {
     height: 100%;
     width: 100%;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    
 }

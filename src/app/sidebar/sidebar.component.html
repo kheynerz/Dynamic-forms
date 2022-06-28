@@ -1,14 +1,13 @@
 <mat-sidenav-container class="sidenav-container" autosize="true">
 
   <!--Left sidenav-->
-  <mat-sidenav mode="side" opened #left position="start">
+  <mat-sidenav mode="side" class="side" opened #left position="start">
       <div class="title">
         <button color="basic" mat-icon-button>
           <mat-icon>folder</mat-icon>&nbsp;
-        </button>        
-        <span> formInProgressName </span>
-      </div>  
-
+        </button>
+        <input placeholder="Forms Name">
+      </div>
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
@@ -54,7 +53,7 @@
   </mat-sidenav>
 
   <!--Right sidenav-->
-  <mat-sidenav mode="side" opened #right position="end">
+  <mat-sidenav class="rigthSideNav" mode="side" opened #right position="end">
       <div mat-menu-item class="with-icon padded">
           <button (click)="toggleSidebar()" color="basic" mat-icon-button>
             <mat-icon>menu</mat-icon>&nbsp;
@@ -67,7 +66,7 @@
         <span [hidden]="collapse">Properties</span>
       </div>
 
-      <div mat-menu-item *ngFor="let i of sideProperties" class="padded">
+      <div mat-menu-item *ngFor="let i of sideProperties" class="padded properties">
         <span [hidden]="collapse">{{ i+i }}</span>
         <span [hidden]="collapse">{{ i+i }}</span>
       </div>
@@ -75,10 +74,16 @@
 
 
   <!--Middle content-->
-  <mat-sidenav-content class="padded">
-    <app-canva [hidden]="!showCanva" #canva></app-canva>
-    <app-code-tab #codeTab [hidden]="showCanva"></app-code-tab>
-  </mat-sidenav-content>
+  <mat-sidenav-content class="table">
+    
+    <mat-tab-group [selectedIndex]="selected.value"
+                  (selectedIndexChange)="selected.setValue($event); changeTab()">
+      <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab">
+      </mat-tab>
+    </mat-tab-group>
+    <app-canva [hidden]="!toggleCanva" #canva></app-canva>
+    <app-code-tab [hidden]="toggleCanva" #codeTab></app-code-tab>
+  </mat-sidenav-content>  
 
   
 </mat-sidenav-container>
