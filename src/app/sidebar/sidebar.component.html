@@ -1,16 +1,13 @@
 <mat-sidenav-container class="sidenav-container" autosize="true">
 
   <!--Left sidenav-->
-  <mat-sidenav mode="side" opened #left position="start">
+  <mat-sidenav mode="side" class="side" opened #left position="start">
       <div class="title">
         <button color="basic" mat-icon-button>
           <mat-icon>folder</mat-icon>&nbsp;
-        </button>        
-        <div class="title">
-          <input placeholder="Forms Name">
-        </div>  
-      </div>  
-
+        </button>
+        <input placeholder="Forms Name">
+      </div>
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
@@ -64,19 +61,15 @@
 
   <!--Middle content-->
   <mat-sidenav-content class="table">
-    <mat-tab-group [selectedIndex]="selected.value"
-    (selectedIndexChange)="selected.setValue($event)">
     
-    <mat-tab label="Form">
-      <app-canva  #canva>Loading</app-canva>
-    </mat-tab>
-
-    <mat-tab label="JSON">
-      <app-code-tab #codeTab></app-code-tab>
-    </mat-tab>
-
+    <mat-tab-group [selectedIndex]="selected.value"
+                  (selectedIndexChange)="selected.setValue($event); changeTab()">
+      <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab">
+      </mat-tab>
     </mat-tab-group>
-  </mat-sidenav-content>
+    <app-canva [hidden]="!toggleCanva" #canva></app-canva>
+    <app-code-tab [hidden]="toggleCanva" #codeTab></app-code-tab>
+  </mat-sidenav-content>  
 
   
 </mat-sidenav-container>

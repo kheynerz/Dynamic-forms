@@ -40,7 +40,6 @@ export class SidebarComponent{
 
   sidebarActions() {
     console.log("Sidebar actions");
-    
   }
 
   saveJSON() {
