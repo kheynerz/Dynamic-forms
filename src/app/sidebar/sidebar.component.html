@@ -6,19 +6,19 @@
         <button color="basic" mat-icon-button>
           <mat-icon>folder</mat-icon>&nbsp;
         </button>        
-        <span> formInProgressName </span>
+        <span>{{filename}}</span>
       </div>  
 
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
-        <button color="basic" mat-icon-button>
+        <button [disabled]="!toggleCanva" (click)="canva.changeClickMode('Normal')" color="basic" mat-icon-button>
           <mat-icon>touch_app</mat-icon>&nbsp;
         </button>   
-        <button color="basic" mat-icon-button>
+        <button [disabled]="!toggleCanva" (click)="canva.changeClickMode('Move')" color="basic" mat-icon-button>
           <mat-icon>pan_tool</mat-icon>&nbsp;
         </button>
-        <button (click)="changeTab()" color="basic" mat-icon-button>
+        <button (click)="changeTab()" (click)="canva.changeClickMode('Delete')" color="basic" mat-icon-button>
           <mat-icon>delete</mat-icon>&nbsp;
         </button>
         <button (click)="openFile()" color="basic" mat-icon-button>
@@ -40,25 +40,9 @@
   </mat-sidenav>
 
   <!--Right sidenav-->
-  <mat-sidenav mode="side" opened #right position="end">
-      <div mat-menu-item class="with-icon padded">
-          <button (click)="toggleSidebar()" color="basic" mat-icon-button>
-            <mat-icon>menu</mat-icon>&nbsp;
-          </button>         
-      </div> 
-
-      <mat-divider></mat-divider>
-
-      <div class="padded">
-        <span [hidden]="collapse">Properties</span>
-      </div>
-
-      <div mat-menu-item *ngFor="let i of sideProperties" class="padded">
-        <span [hidden]="collapse">{{ i+i }}</span>
-        <span [hidden]="collapse">{{ i+i }}</span>
-      </div>
+  <mat-sidenav *ngIf="toggleCanva" mode="side" opened #right position="end">
+      <app-properties #properties></app-properties>
   </mat-sidenav>
-
 
   <!--Middle content-->
   <mat-sidenav-content class="padded">

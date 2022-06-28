@@ -40,6 +40,7 @@ import { CodeTabComponent } from './code-tab/code-tab.component';
 
 import { LabelWrapperComponent } from './labelWrapper';
 import { FormlyFieldLabel } from './labelType';
+import { PropertiesComponent } from './properties/properties.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { FormlyFieldLabel } from './labelType';
     CanvaComponent,
     CodeTabComponent,
     LabelWrapperComponent,
-    FormlyFieldLabel
+    FormlyFieldLabel,
+    PropertiesComponent
   ],
   imports: [ 
     BrowserModule,

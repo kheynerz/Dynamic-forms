@@ -19,7 +19,10 @@ export class CanvaComponent{
   form = new FormGroup({});
   model = {};
 
+  clickMode: string = 'Normal'
   changed: boolean = true;
+  selectedElement: any;
+
 
   rbtn = new formComponent['Select']('rbtn-key', 'flex-1')
   group = new formComponent['Field Group']([this.rbtn])
@@ -29,7 +32,6 @@ export class CanvaComponent{
   constructor(private toastr: ToastrService, private el:ElementRef) {
     this.rbtn.changeProperty('label', 'SELECT')
     this.rbtn.changeProperty('description', 'SELECT SELECT ')
-    console.log(this.rbtn.changeProperty('required', true))
     this.rbtn.addOption('Opcion 1', 1)
     this.rbtn.addOption('Opcion 2', 2)
     this.rbtn.addOption('Opcion 3', 3)
@@ -49,6 +51,12 @@ export class CanvaComponent{
   //Method to show a toastr info notification
   private showInfo(message: string, title:string){
     this.toastr.info(message, title)
+  }
+
+  changeClickMode(newMode: string){
+    this.clickMode = newMode
+    console.log(this.clickMode);
+    
   }
 
   onSubmit() {

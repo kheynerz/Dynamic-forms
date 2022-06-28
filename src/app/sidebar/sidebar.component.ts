@@ -1,15 +1,15 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import {componentList, properties} from './menu-list'
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {componentList} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
 import { CodeTabComponent } from '../code-tab/code-tab.component';
-
+import { PropertiesComponent } from '../properties/properties.component';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent{
+export class SidebarComponent implements AfterViewInit{
   //Input of type file if the user wants to upload a JSON
   @ViewChild('FileInput') FileInput!: ElementRef;
   //Canva where the user can build the Form with the components
@@ -17,25 +17,23 @@ export class SidebarComponent{
   //Code editor where the user can see and edit the JSON of the Form
   @ViewChild('codeTab') codeTab!: CodeTabComponent;
 
-  filename = 'formInProgress'
+  @ViewChild('properties') properties!: PropertiesComponent;
+
+  filename = 'Form'
 
   sideComponents = componentList;
-  sideProperties = properties;
-  collapse = true;
+  //sideProperties = properties;
   //Variable to toggle the view of the canva and the code editor
   toggleCanva = true
   
   //Data to show in the json code editor
   jsonData: string = "";
-
   
-  toggleSidebar() {
-    this.collapse = !this.collapse;
+  ngAfterViewInit() {
   }
 
   sidebarActions() {
     console.log("Sidebar actions");
-    
   }
 
   saveJSON() {
