@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import {componentList, properties} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
 import { CodeTabComponent } from '../code-tab/code-tab.component';
+import {FormControl} from '@angular/forms';
 
 
 @Component({
@@ -18,6 +19,10 @@ export class SidebarComponent{
   @ViewChild('codeTab') codeTab!: CodeTabComponent;
 
   filename = 'formInProgress'
+
+  tabs = ['Form','Json'];
+  selected = new FormControl(0);
+
 
   sideComponents = componentList;
   sideProperties = properties;

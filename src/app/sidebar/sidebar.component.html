@@ -6,7 +6,9 @@
         <button color="basic" mat-icon-button>
           <mat-icon>folder</mat-icon>&nbsp;
         </button>        
-        <span> formInProgressName </span>
+        <div class="title">
+          <input placeholder="Forms Name">
+        </div>  
       </div>  
 
       <mat-divider></mat-divider>
@@ -40,7 +42,7 @@
   </mat-sidenav>
 
   <!--Right sidenav-->
-  <mat-sidenav mode="side" opened #right position="end">
+  <mat-sidenav class="rigthSideNav" mode="side" opened #right position="end">
       <div mat-menu-item class="with-icon padded">
           <button (click)="toggleSidebar()" color="basic" mat-icon-button>
             <mat-icon>menu</mat-icon>&nbsp;
@@ -53,7 +55,7 @@
         <span [hidden]="collapse">Properties</span>
       </div>
 
-      <div mat-menu-item *ngFor="let i of sideProperties" class="padded">
+      <div mat-menu-item *ngFor="let i of sideProperties" class="padded properties">
         <span [hidden]="collapse">{{ i+i }}</span>
         <span [hidden]="collapse">{{ i+i }}</span>
       </div>
@@ -61,9 +63,19 @@
 
 
   <!--Middle content-->
-  <mat-sidenav-content class="padded">
-    <app-canva [hidden]="!toggleCanva" #canva></app-canva>
-    <app-code-tab #codeTab [hidden]="toggleCanva"></app-code-tab>
+  <mat-sidenav-content class="table">
+    <mat-tab-group [selectedIndex]="selected.value"
+    (selectedIndexChange)="selected.setValue($event)">
+    
+    <mat-tab label="Form">
+      <app-canva  #canva>Loading</app-canva>
+    </mat-tab>
+
+    <mat-tab label="JSON">
+      <app-code-tab #codeTab></app-code-tab>
+    </mat-tab>
+
+    </mat-tab-group>
   </mat-sidenav-content>
 
   
