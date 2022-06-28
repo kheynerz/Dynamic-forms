@@ -94,7 +94,7 @@ export class CanvaComponent{
     return onCanva;
   }
 
-  clickOnFieldGroup(){
+  clickOnComponent(){
     return new Promise((resolve, reject) => {
       let formlyForm = document.getElementsByTagName("formly-form").item(0);
 
@@ -102,12 +102,17 @@ export class CanvaComponent{
         let fieldGroups = formlyForm.children;
 
         for (let i = 0; i < fieldGroups.length; i++) {
-          //add click listener to all field groups in screen 
+          //add click listener to all form component items in screen 
 
-          fieldGroups[i].addEventListener('click', ()=>{
-            //resolve promise if field group is clicked
-            resolve(i);
-          });
+          let items = fieldGroups[i].children.item(0)!.children;
+
+          for (let j = 0; j < items.length; j++) {
+            items[j].addEventListener('click', ()=>{
+              //resolve promise if some component is clicked
+              resolve([i,j]);
+            });
+          }    
+
         }
       }
     
@@ -119,8 +124,7 @@ export class CanvaComponent{
     })
   }
   
-  onChange(id:string){
-    
+  onChange(id:string, insertMode:string){  
     //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
@@ -143,19 +147,27 @@ export class CanvaComponent{
           //adding one field group always to the end of canva
           this.fields = [ ...this.fields, newFieldGroup ]; 
  
-          this.clickOnFieldGroup().then( (i:any)=>{
+          this.clickOnComponent().then( ([i,j]:any)=>{
             //if promise resolved, add new component to selected field group
 
             //creating fields to render, with the new component
             let newFields:FormlyFieldConfig[] = [];
             let newFieldGroup = new formComponent['Field Group']([]); 
+      
+            newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
 
-            newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!, newComponent ];///////////////////////////////////  
+            //index where to splice depending in the insert mode 
+            if (insertMode === "Right")
+              j++;
+            //insert component in the index specified
+            newFieldGroup.fieldGroup.splice(j, 0, newComponent);
+
             newFields = [ ...this.fields];  
             newFields[i] = newFieldGroup;    
             //removing previously added field group     
             newFields.splice(newFields.length-1, 1);
   
+
             //updating fields in screen
             this.fields = [ ...newFields];
             
@@ -178,6 +190,46 @@ export class CanvaComponent{
 
 
     this.changed = true
+  }
+
+  onDelete(){
+    document.onmouseup = (e) =>{
+      if (this.clickOnCanva(e.pageX, e.pageY)){
+
+        this.clickOnComponent().then( ([i,j]:any)=>{
+          //if promise resolved, delete selected component 
+    
+          //creating fields to render, without the component
+          let newFields:FormlyFieldConfig[] = [];
+          let newFieldGroup = new formComponent['Field Group']([]); 
+    
+          newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
+    
+          //delete component in the index specified
+          newFieldGroup.fieldGroup.splice(j, 1);
+    
+          newFields = [ ...this.fields];  
+          newFields[i] = newFieldGroup;    
+ 
+          //updating fields in screen
+          this.fields = [ ...newFields];
+          
+        }).catch(r=>{});
+
+      }
+    }  
+ 
+  }
+
+  onMove(){
+    document.onmouseup = (e) =>{
+      if (this.clickOnCanva(e.pageX, e.pageY)){
+
+        
+
+      }
+    }  
+ 
   }
  
   // Method use to filter the key and values of the formly field using the JSON.stringify method

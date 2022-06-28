@@ -12,6 +12,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 
 /*Form components*/
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 //Slider
 import { FormlyMatSliderModule } from '@ngx-formly/material/slider';
@@ -42,6 +43,7 @@ import { LabelWrapperComponent } from './labelWrapper';
 import { FormlyFieldLabel } from './labelType';
 import { PropertiesComponent } from './properties/properties.component';
 
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import { PropertiesComponent } from './properties/properties.component';
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatButtonToggleModule,
+    MatTabsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 2000,

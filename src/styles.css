@@ -4,8 +4,6 @@
 body { 
   padding: 10px; 
   font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif';
+  background-color: #839AA8;
 }
 
-Label {
-  font-size: large;
-}

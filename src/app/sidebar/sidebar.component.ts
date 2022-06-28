@@ -3,6 +3,8 @@ import {componentList} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
 import { CodeTabComponent } from '../code-tab/code-tab.component';
 import { PropertiesComponent } from '../properties/properties.component';
+import {FormControl} from '@angular/forms';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +22,10 @@ export class SidebarComponent implements AfterViewInit{
   @ViewChild('properties') properties!: PropertiesComponent;
 
   filename = 'Form'
+
+  tabs = ['Form','Json'];
+  selected = new FormControl(0);
+
 
   sideComponents = componentList;
   //sideProperties = properties;
@@ -98,8 +104,16 @@ export class SidebarComponent implements AfterViewInit{
       this.toggleCanva = true
     }
   }
-  setDraggable(id:string){
-    this.canva.onChange(id);
+  setDraggable(id:string, insertMode:string){
+    this.canva.onChange(id, insertMode);
+  }
+
+  deleteComponent(){
+    this.canva.onDelete();
+  }
+
+  moveComponent(){
+    this.canva.onMove();
   }
 
 }
