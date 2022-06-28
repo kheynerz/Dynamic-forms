@@ -88,10 +88,12 @@ export class CanvaComponent{
       let formlyForm = document.getElementsByTagName("formly-form").item(0);
 
       if (formlyForm){
-        for (let i = 0; i < formlyForm.children.length; i++) {
+        let fieldGroups = formlyForm.children;
+
+        for (let i = 0; i < fieldGroups.length; i++) {
           //add click listener to all field groups in screen 
 
-          formlyForm.children[i].addEventListener('click', ()=>{
+          fieldGroups[i].addEventListener('click', ()=>{
             //resolve promise if field group is clicked
             resolve(i);
           });
@@ -123,10 +125,8 @@ export class CanvaComponent{
       if (dragValue){
         document.body.removeChild(dragValue);
         dragValue = null;
-        let x = e.pageX;
-        let y = e.pageY;
           
-        if (this.clickOnCanva(x, y)){ 
+        if (this.clickOnCanva(e.pageX, e.pageY)){ 
           //Rendering new form in canva when a valid position is selected  
     
           //adding one field group always to the end of canva
@@ -139,7 +139,7 @@ export class CanvaComponent{
             let newFields:FormlyFieldConfig[] = [];
             let newFieldGroup = new formComponent['Field Group']([]); 
 
-            newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!, newComponent ];  
+            newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!, newComponent ];///////////////////////////////////  
             newFields = [ ...this.fields];  
             newFields[i] = newFieldGroup;    
             //removing previously added field group     
