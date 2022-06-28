@@ -12,13 +12,13 @@
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
-        <button color="basic" mat-icon-button>
+        <button (click)="changeTab()" color="basic" mat-icon-button>
           <mat-icon>touch_app</mat-icon>&nbsp;
         </button>   
-        <button (click)="changeTab()" color="basic" mat-icon-button>
+        <button (click)="moveComponent()" color="basic" mat-icon-button>
           <mat-icon>pan_tool</mat-icon>&nbsp;
         </button>
-        <button color="basic" mat-icon-button>
+        <button (click)="deleteComponent()" color="basic" mat-icon-button>
           <mat-icon>delete</mat-icon>&nbsp;
         </button>
         <button (click)="openFile()" color="basic" mat-icon-button>
@@ -32,11 +32,25 @@
       <mat-divider class="padded"></mat-divider>
 
       <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded">
-        <button id="{{ i.name }}" (click)="setDraggable(i.name)" color="basic" class="sidenavButtons" mat-raised-button>
+        <button id="{{ i.name }}" (click)="setDraggable(i.name, group.value)" color="basic" class="sidenavButtons" mat-raised-button>
           <mat-icon>{{i.icon}}</mat-icon>&nbsp;
           <span>{{ i.name }}</span>
         </button>      
       </div>
+
+      <mat-divider class="padded"></mat-divider>
+
+      <div>Insert mode: {{group.value}}</div>
+      <mat-button-toggle-group #group="matButtonToggleGroup" value="Right">
+        <mat-button-toggle value="Left" aria-label="Text align left">
+          <mat-icon>keyboard_arrow_left</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="Right" aria-label="Text align center">
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </mat-button-toggle>       
+      </mat-button-toggle-group>
+      
+
   </mat-sidenav>
 
   <!--Right sidenav-->

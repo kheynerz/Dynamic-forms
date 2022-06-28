@@ -76,8 +76,16 @@ export class SidebarComponent implements OnInit{
       this.showCanva = true
     }
   }
-  setDraggable(id:string){
-    this.canva.onChange(id);
+  setDraggable(id:string, insertMode:string){
+    this.canva.onChange(id, insertMode);
+  }
+
+  deleteComponent(){
+    this.canva.onDelete();
+  }
+
+  moveComponent(){
+    this.canva.onMove();
   }
 
 }

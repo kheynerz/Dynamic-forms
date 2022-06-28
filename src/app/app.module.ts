@@ -12,6 +12,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 
 /*Form components*/
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 //Slider
 import { FormlyMatSliderModule } from '@ngx-formly/material/slider';
@@ -55,6 +56,7 @@ import { FormlyFieldLabel } from './labelType';
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatButtonToggleModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 2000,
