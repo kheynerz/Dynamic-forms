@@ -15,9 +15,12 @@
           <mat-button-toggle color="basic" value="select">
             <mat-icon>touch_app</mat-icon>&nbsp;
           </mat-button-toggle>
-          <mat-button-toggle (click)="moveComponent()" color="basic" value="move">
+          <mat-button-toggle (click)="move(insertGroup.value, true)" color="basic" value="move">
             <mat-icon>pan_tool</mat-icon>&nbsp;
           </mat-button-toggle>   
+          <mat-button-toggle (click)="move(insertGroup.value, false)" color="basic" value="move">
+            <mat-icon>pan_tool</mat-icon>&nbsp;
+          </mat-button-toggle>  
           <mat-button-toggle (click)="deleteComponent()" color="basic" value="delete">
             <mat-icon>delete</mat-icon>&nbsp;
           </mat-button-toggle>    

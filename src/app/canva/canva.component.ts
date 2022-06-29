@@ -114,13 +114,9 @@ export class CanvaComponent{
      
     })
   }
-  
-  onChange(id:string, insertMode:string){  
-    //Creating the new component specified by button chosen
-    type ObjectKey = keyof typeof formComponent;
-    const requiredKey = id as ObjectKey;
-    let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
-    let endFieldGroup = new formComponent['Field Group']([newComponent]);
+
+  dragAddComponent(id:string, insertMode:string, newComponent : Object){
+    let endFieldGroup = new formComponent['FieldGroup']([newComponent]);
 
     //getting the button to drag
     let dragValue: any = this.getDragValue(id);  
@@ -143,7 +139,7 @@ export class CanvaComponent{
 
             //creating fields to render, with the new component
             let newFields:FormlyFieldConfig[] = [];
-            let newFieldGroup = new formComponent['Field Group']([]); 
+            let newFieldGroup = new formComponent['FieldGroup']([]); 
       
             newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
 
@@ -179,9 +175,41 @@ export class CanvaComponent{
         dragValue.style.left = x  + 'px';
       }  
     }  
+  }
 
+  removeComponent(i: number, j : number){
+    //if promise resolved, delete selected component 
+    
+    //creating fields to render, without the component
+    let newFields:FormlyFieldConfig[] = [];
+    let newFieldGroup = new formComponent['FieldGroup']([]); 
 
-    this.changed = true
+    newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
+
+    //delete component in the index specified
+    let removed = newFieldGroup.fieldGroup.splice(j, 1);
+
+    newFields = [ ...this.fields]; 
+    
+    //if new field group has items update it, else remove it 
+    newFieldGroup.fieldGroup.length === 0 ? newFields.splice(i, 1) : newFields[i] = newFieldGroup;
+    
+
+    //updating fields in screen
+    this.fields = [ ...newFields];
+
+    return removed;
+  }
+   
+  onChange(id:string, insertMode:string){  
+    //Creating the new component specified by button chosen
+    type ObjectKey = keyof typeof formComponent;
+    const requiredKey = id as ObjectKey;
+    let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
+
+    this.dragAddComponent(id, insertMode, newComponent);
+
+    this.changed = true;
   }
 
   onDelete(){
@@ -189,40 +217,39 @@ export class CanvaComponent{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
         this.clickOnComponent().then( ([i,j]:any)=>{
-          //if promise resolved, delete selected component 
-    
-          //creating fields to render, without the component
-          let newFields:FormlyFieldConfig[] = [];
-          let newFieldGroup = new formComponent['Field Group']([]); 
-    
-          newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
-    
-          //delete component in the index specified
-          newFieldGroup.fieldGroup.splice(j, 1);
-    
-          newFields = [ ...this.fields]; 
           
-          //if new field group has items update it, else remove it 
-          newFieldGroup.fieldGroup.length === 0 ? newFields.splice(i, 1) : newFields[i] = newFieldGroup;
-          
-
-          //updating fields in screen
-          this.fields = [ ...newFields];
+          this.removeComponent(i,j);
           
         }).catch(r=>{});
 
-        this.changed = true
+        this.changed = true;
 
       }
     }  
    
   }
 
-  onMove(){
+  onMove(insertMode:string, component:boolean){
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
-        
+        this.clickOnComponent().then( ([i,j]:any)=>{
+
+          if(component){
+            let removedItem = this.removeComponent(i,j)[0]
+
+            //class name of object removed to create draggable button
+            let removedID = removedItem.constructor.name;
+            
+            this.dragAddComponent(removedID, insertMode, removedItem)
+          }else{
+            
+          }
+
+   
+        }).catch(r=>{});
+
+        this.changed = true
 
       }
     }  
@@ -249,17 +276,17 @@ export class CanvaComponent{
       let len = Object.keys(value).length
       if (len === 0) return undefined;
 
-      if (value instanceof formComponent['Field Group']) return value
+      if (value instanceof formComponent['FieldGroup']) return value
       if (value instanceof formComponent['Checkbox']) return value.returnObject()
-      if (value instanceof formComponent['Date Picker']) return value.returnObject()
+      if (value instanceof formComponent['Datepicker']) return value.returnObject()
       if (value instanceof formComponent['Input']) return value.returnObject()
       if (value instanceof formComponent['Label']) return value.returnObject()
-      if (value instanceof formComponent['Radiobutton']) return value.returnObject()
+      if (value instanceof formComponent['RadioButton']) return value.returnObject()
       if (value instanceof formComponent['Select']) return value.returnObject()
       if (value instanceof formComponent['Slider']) return value.returnObject()
-      if (value instanceof formComponent['Text Area']) return value.returnObject()
+      if (value instanceof formComponent['Textarea']) return value.returnObject()
       if (value instanceof formComponent['Toggle']) return value.returnObject()
-      if (value instanceof formComponent['Test']) return value.returnObject()
+      if (value instanceof formComponent['Label2']) return value.returnObject()
     }
     
     if (acceptedKeys.indexOf(key) === -1){

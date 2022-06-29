@@ -111,8 +111,8 @@ export class SidebarComponent{
     this.canva.onDelete();
   }
 
-  moveComponent(){
-    this.canva.onMove();
+  move(insertMode:string, component: boolean){
+    this.canva.onMove(insertMode, component);
   }
 
 }
