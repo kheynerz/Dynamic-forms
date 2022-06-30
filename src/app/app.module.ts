@@ -5,9 +5,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
+
+
+import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
+
+
+
+import {MatDialogModule } from '@angular/material/dialog';
 
 
 /*Form components*/
@@ -59,8 +66,10 @@ import {MatTabsModule} from '@angular/material/tabs';
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatDialogModule, 
     MatButtonToggleModule,
     MatTabsModule,
+    FormsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 2000,
@@ -88,6 +97,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    
       //Form Components
     FormlyMatSliderModule,
     FormlyMatToggleModule,

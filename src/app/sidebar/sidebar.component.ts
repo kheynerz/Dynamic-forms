@@ -21,7 +21,7 @@ export class SidebarComponent implements AfterViewInit{
 
   @ViewChild('properties') properties!: PropertiesComponent;
 
-  filename = 'Form'
+  filename = ''
 
   tabs = ['Form','Json'];
   selected = new FormControl(0);
@@ -36,6 +36,7 @@ export class SidebarComponent implements AfterViewInit{
   jsonData: string = "";
   
   ngAfterViewInit() {
+    this.canva.onNormalClick()
   }
 
   sidebarActions() {
@@ -114,6 +115,11 @@ export class SidebarComponent implements AfterViewInit{
 
   moveComponent(){
     this.canva.onMove();
+  }
+
+  showProperties(component: any){
+    this.properties.showProperties(component)
+    
   }
 
 }

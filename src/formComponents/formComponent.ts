@@ -6,7 +6,7 @@ export class FormComponent {
 
   //Formly principal properties
   className : string = '';
-  key : string = '';
+  key : any = '';
   type: string = '';
 
   
@@ -33,7 +33,7 @@ export class FormComponent {
 
 
   constructor(key: string, flexPosition : string, type: string, availableProperties: Array<string>){
-    this.#availableProperties = availableProperties
+    this.#availableProperties = ['key', ...availableProperties]
     this.key = key;
     this.className= flexPosition;
     this.type = type;
@@ -45,6 +45,8 @@ export class FormComponent {
     //In formly defaultValue is separated from the template properties
     if (property === "defaultValue"){
       this.defaultValue = newValue
+    }else if (property === 'key'){
+      this.key = newValue
     }else{
       try {
         //Create an ObjectKey to dynamically access the template options
@@ -175,6 +177,24 @@ export class FormComponent {
   getProperties(): Array<string>{
     return this.#availableProperties
   }
+
+  get(prop: string): any{
+
+    if (prop === 'key'){
+      return this.key
+    }
+
+    if (prop === 'defaultValue'){
+      return this.defaultValue
+    }
+
+    //Create an ObjectKey to dynamically access the template options
+    type ObjectKey = keyof typeof this.templateOptions;
+    const key = prop as ObjectKey;
+    
+    return this.templateOptions[key]
+  }
+
 
   addOption(label: string, value: any, disable: boolean = false){
     let success = false

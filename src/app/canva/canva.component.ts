@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef} from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
@@ -15,7 +15,7 @@ import FileSaver from 'file-saver';
   styleUrls: ['./canva.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CanvaComponent{
+export class CanvaComponent implements OnChanges{
   form = new FormGroup({});
   model = {};
 
@@ -23,13 +23,17 @@ export class CanvaComponent{
   changed: boolean = true;
   selectedElement: any;
 
-
   fields: FormlyFieldConfig[] = [];
   
-
+  @Output() selectedComponent = new EventEmitter<any>();
 
   constructor(private toastr: ToastrService, private el:ElementRef) {
     
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("hubueron cambios");
+    
+
   }
 
   //Method to show a toastr error notification
@@ -174,7 +178,11 @@ export class CanvaComponent{
           }).catch(r=>{});
 
         } 
-      }      
+      } 
+      
+      if (this.clickMode === 'Normal'){
+        this.onNormalClick()
+      }
     }
     
     document.onmousemove = (e) =>{
@@ -222,16 +230,32 @@ export class CanvaComponent{
   }
 
   onMove(){
+    
+    this.fields = [...this.fields]
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
-
         
-
       }
     }  
  
   }
  
+
+
+
+  onNormalClick(){
+    document.onmouseup = (e) =>{
+      if (this.clickOnCanva(e.pageX, e.pageY)){
+
+        this.clickOnComponent().then( ([i,j]:any)=>{
+          //if promise resolved, Show properties of selected component 
+          this.selectedComponent.emit({"isSelected" : true, "component": this.fields[i].fieldGroup![j]})
+        }).catch(_=>{this.selectedComponent.emit({"isSelected": false})});
+
+      }
+    }  
+  }
+
   // Method use to filter the key and values of the formly field using the JSON.stringify method
   private replacer(key: string, value: any) {
     //Arrays of data to ignore in the json
@@ -289,8 +313,12 @@ export class CanvaComponent{
     return finalJson
   }
 
-
   onSave(filename: string){
+    if (filename === ""){
+      this.showInfo(`Por favor ingrese el nombre del archivo`,'Archivo sin nombre');
+      return
+    }
+
     try {
       let data = this.stringifyData()
       
