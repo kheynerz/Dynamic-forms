@@ -64,7 +64,7 @@ export class SidebarComponent implements AfterViewInit{
   }
 
   onChangeInputFile(){
-    //If the user selects a file in the input File
+    //Hook when the user selects a file
     let input = this.FileInput.nativeElement
     let files : Array<Blob> =   Array.from(input.files);
     //Get only the first file of the list
@@ -94,6 +94,7 @@ export class SidebarComponent implements AfterViewInit{
         this.codeTab.setData(result.data)
       }
       this.toggleCanva = false
+      this.properties.lockPropertiesBar(true)
     }else{
       //Get the data of the code editor
       let result = this.codeTab.getJsonData();
@@ -102,6 +103,7 @@ export class SidebarComponent implements AfterViewInit{
       if (result.dataChanged){
         this.canva.setData(result.data)
       }
+      this.properties.lockPropertiesBar(false)
       this.toggleCanva = true
     }
   }
@@ -120,6 +122,16 @@ export class SidebarComponent implements AfterViewInit{
   showProperties(component: any){
     this.properties.showProperties(component)
     
+  }
+
+  updateChanges(changes: any){
+    if (changes.success){
+      this.canva.update(changes)
+      let result = this.canva.getJsonData()
+      if (result.dataChanged){
+        this.codeTab.setData(result.data)
+      }
+    }
   }
 
 }

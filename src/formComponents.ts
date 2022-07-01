@@ -23,12 +23,11 @@ export { Textarea };
 export { Toggle };
 
 export default {
-    "Test" : Label2,
+    "Label" : Label2,
     "Checkbox" : Checkbox,
     "Date Picker" : Datepicker,
     "Field Group" :FieldGroup,
     "Input" :Input,
-    "Label" : Label,
     "Radiobutton" : RadioButton,
     "Select" : Select,
     "Slider" : Slider,

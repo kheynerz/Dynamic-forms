@@ -7,12 +7,11 @@ export class ComponenetItem {
 
 export const componentList = [
     
-    new ComponenetItem('Test', 'label'),
     new ComponenetItem('Checkbox', 'check_box'),
     new ComponenetItem('Date Picker', 'date_range'),
     //new ComponenetItem('Field Group', 'crop_landscape'),
     new ComponenetItem('Input', 'input'),
-    //new ComponenetItem('Label', 'label'),
+    new ComponenetItem('Label', 'label'),
     new ComponenetItem('Radiobutton', 'radio_button_checked'),
     new ComponenetItem('Select', 'select_all'),
     new ComponenetItem('Slider', 'slider'),

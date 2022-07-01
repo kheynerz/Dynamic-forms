@@ -10,39 +10,39 @@ export class Label2 {
     key = ''
 
     //Properties of the label
-    #text = ``
-    #size = 3;
-    #bold: boolean = false;
-    #italic: boolean = false;
-    #undelined: boolean = false;
-    #del: boolean = false;
-
-
+    templateOptions: { text: any, size:any, bold: any, italic: any, under:any, del: any } = {
+         text: '', size: 4, bold : false, italic: false, 
+        under: false, del: false
+    }
     constructor(key: string, text: string){
         this.key = key,
-        this.#text = text
-        this.template = `<h3>${text}</h3>`
+        this.templateOptions['text'] = text
+        this.template = `<h4>${text}</h4>`
     }
 
-    /*Setters of the properties*/ 
-    public changeBold(value: boolean){
-        this.#bold = value
+
+    public getProperties(): Array<string>{
+        return ['key', 'text', 'italic','under','del','size']
     }
-    public changeItalic(value: boolean){
-        this.#italic = value
+
+    public get(prop:string): any{
+        if (prop ==='key'){
+            return this.key
+        }
+
+        type ObjectKey = keyof typeof this.templateOptions;
+        const key = prop as ObjectKey;
+
+        return this.templateOptions[key]
     }
-    public changeUnderline(value: boolean){
-        this.#undelined = value
+    public changeProperty(property: string, newValue: string | boolean | number ){
+        type ObjectKey = keyof typeof this.templateOptions;
+        const key = property as ObjectKey;
+        this.templateOptions[key] = newValue
+        
+        this.getTemplate()
     }
-    public changeDel(value: boolean){
-        this.#del = value
-    }
-    public changeText(value: string){
-        this.#text = value
-    }
-    public changeSize(value: number){
-        this.#size = value
-    }
+
 
     /*Get the template of the label*/
     public getTemplate(){
@@ -62,7 +62,7 @@ export class Label2 {
 
     /*This function add the <strong> tag to the template*/
     private addBold(){
-        if (this.#bold){
+        if (this.templateOptions['bold']){
             this.template += `<strong>`
             this.addItalic()
             this.template +=`</strong>`
@@ -74,7 +74,7 @@ export class Label2 {
     
     /*This function add the <i> tag to the template*/
     private addItalic(){
-        if (this.#italic){
+        if (this.templateOptions['italic']){
             this.template += `<i>`
             this.addUnderline()
             this.template +=`</i>`
@@ -85,7 +85,7 @@ export class Label2 {
 
     /*This function add the <u> tag to the template*/
     private addUnderline(){
-        if (this.#undelined){
+        if (this.templateOptions['under']){
             this.template += `<u>`
             this.addDel()
             this.template +=`</u>`
@@ -96,7 +96,7 @@ export class Label2 {
 
     /*This function add the <del> tag to the template*/
     private addDel(){
-        if (this.#del){
+        if (this.templateOptions['del']){
             this.template += `<del>`
             this.addSize()
             this.template +=`</del>`
@@ -107,14 +107,15 @@ export class Label2 {
 
     /*This function add the size to the template*/
     private addSize(){
-        this.template += `<h${this.#size}>`
+        let size = this.templateOptions['size'] + (5 - 2*(this.templateOptions['size']-1))
+        this.template += `<h${size}>`
         this.addText()
-        this.template += `</h${this.#size}>`
+        this.template += `</h${size}>`
     }
 
     /*This function add the text to the template*/
     private addText(){
-        this.template += `${this.#text}`
+        this.template += `${this.templateOptions['text']}`
     }
 
 }

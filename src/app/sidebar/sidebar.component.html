@@ -54,7 +54,7 @@
 
   <!--Right sidenav-->
   <mat-sidenav  class="rigthSideNav" mode="side" opened #right position="end">
-      <app-properties #properties></app-properties>
+    <app-properties (updateChanges)="updateChanges($event)" #properties></app-properties>
   </mat-sidenav>
 
   <!--Middle content-->

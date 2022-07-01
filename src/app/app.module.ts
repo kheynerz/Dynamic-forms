@@ -12,10 +12,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 
-
-
-import {MatDialogModule } from '@angular/material/dialog';
-
+import {MatSelectModule} from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table'  
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatInputModule } from '@angular/material/input'
+import { MatDialogModule } from '@angular/material/dialog';
 
 /*Form components*/
 import { MatButtonModule } from '@angular/material/button';
@@ -51,6 +52,7 @@ import { FormlyFieldLabel } from './labelType';
 import { PropertiesComponent } from './properties/properties.component';
 
 import {MatTabsModule} from '@angular/material/tabs';
+import { OptionsComponent } from './dialogs/options/options.component';
 
 @NgModule({
   declarations: [
@@ -60,15 +62,20 @@ import {MatTabsModule} from '@angular/material/tabs';
     CodeTabComponent,
     LabelWrapperComponent,
     FormlyFieldLabel,
-    PropertiesComponent
+    PropertiesComponent,
+    OptionsComponent
   ],
   imports: [ 
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatInputModule,
     MatDialogModule, 
     MatButtonToggleModule,
     MatTabsModule,
+    MatTableModule,
+    MatSelectModule,
+    MatCheckboxModule,
     FormsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({

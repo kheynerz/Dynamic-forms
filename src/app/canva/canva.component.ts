@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
@@ -15,7 +15,7 @@ import FileSaver from 'file-saver';
   styleUrls: ['./canva.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CanvaComponent implements OnChanges{
+export class CanvaComponent{
   form = new FormGroup({});
   model = {};
 
@@ -27,13 +27,19 @@ export class CanvaComponent implements OnChanges{
   
   @Output() selectedComponent = new EventEmitter<any>();
 
-  constructor(private toastr: ToastrService, private el:ElementRef) {
-    
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log("hubueron cambios");
-    
+  constructor(private toastr: ToastrService, private el:ElementRef) {}
 
+  public async update(changes: any){
+    if (changes.success){
+      let fieldGroup = this.fields[changes.i].fieldGroup!
+      if (fieldGroup){
+        fieldGroup[changes.j] = {}
+        await setTimeout(()=>{
+          fieldGroup[changes.j] = changes.component
+          this.changed = true
+        },10)
+      }
+    }
   }
 
   //Method to show a toastr error notification
@@ -249,7 +255,7 @@ export class CanvaComponent implements OnChanges{
 
         this.clickOnComponent().then( ([i,j]:any)=>{
           //if promise resolved, Show properties of selected component 
-          this.selectedComponent.emit({"isSelected" : true, "component": this.fields[i].fieldGroup![j]})
+          this.selectedComponent.emit({"isSelected" : true, "component": this.fields[i].fieldGroup![j], i,j})
         }).catch(_=>{this.selectedComponent.emit({"isSelected": false})});
 
       }
@@ -262,7 +268,7 @@ export class CanvaComponent implements OnChanges{
     let undefinedValues = ["", false, null, undefined]
     
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 
-                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'selectAllOption', 
+                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'disabled','selectAllOption', 
                         'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validation', 'messages', 'template']
 
     //Data to ignore
@@ -286,7 +292,6 @@ export class CanvaComponent implements OnChanges{
       if (value instanceof formComponent['Slider']) return value.returnObject()
       if (value instanceof formComponent['Text Area']) return value.returnObject()
       if (value instanceof formComponent['Toggle']) return value.returnObject()
-      if (value instanceof formComponent['Test']) return value.returnObject()
     }
     
     if (acceptedKeys.indexOf(key) === -1){
