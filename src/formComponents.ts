@@ -4,7 +4,7 @@ import { FieldGroup } from './formComponents/fieldGroup'
 import { Input } from './formComponents/input'
 import { Label } from './formComponents/label'
 import { Label2 } from './formComponents/label2'
-import { RadioButton } from './formComponents/radioButton'
+import { Radio } from './formComponents/radio'
 import { Select } from './formComponents/select'
 import { Slider } from './formComponents/slider'
 import { Textarea } from './formComponents/textarea'
@@ -16,7 +16,7 @@ export { Datepicker };
 export { FieldGroup}
 export { Input };
 export { Label };
-export { RadioButton };
+export { Radio };
 export { Select };
 export { Slider };
 export { Textarea };
@@ -29,7 +29,7 @@ export default {
     "FieldGroup" :FieldGroup,
     "Input" :Input,
     "Label" : Label,
-    "RadioButton" : RadioButton,
+    "Radio" : Radio,
     "Select" : Select,
     "Slider" : Slider,
     "Textarea" : Textarea,

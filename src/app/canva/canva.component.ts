@@ -23,7 +23,7 @@ export class CanvaComponent{
 
   fields: FormlyFieldConfig[] = [];
   
-
+  formlyForm = null
 
   constructor(private toastr: ToastrService, private el:ElementRef) {
     
@@ -85,32 +85,32 @@ export class CanvaComponent{
     return onCanva;
   }
 
+  
   clickOnComponent(){
     return new Promise((resolve, reject) => {
-      let formlyForm = document.getElementsByTagName("formly-form").item(0);
+      let formlyForm = document.getElementById("form1");
 
       if (formlyForm){
         let fieldGroups = formlyForm.children;
 
         for (let i = 0; i < fieldGroups.length; i++) {
           //add click listener to all form component items in screen 
-
-          let items = fieldGroups[i].children.item(0)!.children;
+          
+          let items  = fieldGroups[i].children.item(0)!.children;
 
           for (let j = 0; j < items.length; j++) {
             items[j].addEventListener('click', ()=>{
               //resolve promise if some component is clicked
               resolve([i,j]);
             });
-          }    
-
+          } 
         }
       }
     
       //reject promise if not resolved 
       setTimeout(() => {  
         reject();
-      }, 100);
+      }, 10);
      
     })
   }
@@ -177,23 +177,20 @@ export class CanvaComponent{
     }  
   }
 
-  removeComponent(i: number, j : number){
-    //if promise resolved, delete selected component 
-    
+  removeComponent(i: number, j : number){ 
+
     //creating fields to render, without the component
     let newFields:FormlyFieldConfig[] = [];
     let newFieldGroup = new formComponent['FieldGroup']([]); 
-
     newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
 
-    //delete component in the index specified
+    //delete component in the index specified and save it for return
     let removed = newFieldGroup.fieldGroup.splice(j, 1);
 
     newFields = [ ...this.fields]; 
     
-    //if new field group has items update it, else remove it 
+    //if new field group has items, update it, else remove it 
     newFieldGroup.fieldGroup.length === 0 ? newFields.splice(i, 1) : newFields[i] = newFieldGroup;
-    
 
     //updating fields in screen
     this.fields = [ ...newFields];
@@ -201,12 +198,13 @@ export class CanvaComponent{
     return removed;
   }
    
-  onChange(id:string, insertMode:string){  
+  onInsert(id:string, insertMode:string){  
     //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
-    let newComponent = new formComponent[requiredKey]('key'+Math.random() as string & object[],'flex-1');
+    let newComponent = new formComponent[requiredKey](requiredKey+Math.random() as string & object[],'flex-1');
 
+    //drag and add the selected component
     this.dragAddComponent(id, insertMode, newComponent);
 
     this.changed = true;
@@ -217,43 +215,77 @@ export class CanvaComponent{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
         this.clickOnComponent().then( ([i,j]:any)=>{
+          //if promise resolved, delete selected component 
           
           this.removeComponent(i,j);
           
         }).catch(r=>{});
 
         this.changed = true;
-
+    
       }
     }  
    
   }
 
-  onMove(insertMode:string, component:boolean){
+  onMove(insertMode:string){
+    
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
         this.clickOnComponent().then( ([i,j]:any)=>{
+          //if promise resolved, remove selected component and save it   
+          let removedItem = this.removeComponent(i,j)[0]
 
-          if(component){
-            let removedItem = this.removeComponent(i,j)[0]
+          //class name of object removed to create draggable button
+          let removedID = removedItem.constructor.name;
+          
+          //In case the component has a different class
+          type ObjectKey = keyof typeof removedItem;
+          const key = 'type' as ObjectKey;      
+          if (removedID === "Object"){
+            //getting type of component to drag 
+            removedID = removedItem[key]
+            removedID = removedID.charAt(0).toUpperCase() + removedID.slice(1)
+          }       
+          
+          //drag and add the selected component
+          this.dragAddComponent(removedID, insertMode, removedItem)
+          
+        }).catch(r=>{});
 
-            //class name of object removed to create draggable button
-            let removedID = removedItem.constructor.name;
-            
-            this.dragAddComponent(removedID, insertMode, removedItem)
-          }else{
-            
+        this.changed = true;
+        
+      }
+    }  
+  }
+
+  onMoveFieldGroup(up:boolean){
+
+    document.onmouseup = (e) =>{
+      if (this.clickOnCanva(e.pageX, e.pageY)){
+
+        this.clickOnComponent().then( ([i,j]:any)=>{
+          //if promise resolved, remove selected field group and save it 
+          let moved = this.fields[i];    
+          
+          //do nothing if component is the first and action is move up
+          up && i==0 ? null : this.fields.splice(i,1);
+
+          up ? --i : ++i;
+          
+          if(i>=0){
+            //if valid index
+            this.fields.splice(i,0,moved);
+            //this.fields = [...this.fields];
           }
-
    
         }).catch(r=>{});
 
-        this.changed = true
+        this.changed = true;
 
       }
     }  
- 
   }
  
   // Method use to filter the key and values of the formly field using the JSON.stringify method
@@ -281,7 +313,7 @@ export class CanvaComponent{
       if (value instanceof formComponent['Datepicker']) return value.returnObject()
       if (value instanceof formComponent['Input']) return value.returnObject()
       if (value instanceof formComponent['Label']) return value.returnObject()
-      if (value instanceof formComponent['RadioButton']) return value.returnObject()
+      if (value instanceof formComponent['Radio']) return value.returnObject()
       if (value instanceof formComponent['Select']) return value.returnObject()
       if (value instanceof formComponent['Slider']) return value.returnObject()
       if (value instanceof formComponent['Textarea']) return value.returnObject()
@@ -372,6 +404,10 @@ export class CanvaComponent{
     try {
       //Parse the data to json and assign it to the formly field
       data = JSON.parse(jsonData);
+
+      console.log(data);
+      
+
       this.fields = data 
     } catch (error) {
       success = false

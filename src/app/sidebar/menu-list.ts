@@ -13,7 +13,7 @@ export const componentList = [
     //new ComponenetItem('Field Group', 'crop_landscape'),
     new ComponenetItem('Input', 'input'),
     //new ComponenetItem('Label', 'label'),
-    new ComponenetItem('RadioButton', 'radio_button_checked'),
+    new ComponenetItem('Radio', 'radio_button_checked'),
     new ComponenetItem('Select', 'select_all'),
     new ComponenetItem('Slider', 'slider'),
     new ComponenetItem('Textarea', 'text_rotation_none'),

@@ -104,15 +104,19 @@ export class SidebarComponent{
     }
   }
   setDraggable(id:string,insertMode:string){
-    this.canva.onChange(id, insertMode);
+    this.canva.onInsert(id, insertMode);
   }
 
   deleteComponent(){
     this.canva.onDelete();
   }
 
-  move(insertMode:string, component: boolean){
-    this.canva.onMove(insertMode, component);
+  moveComponent(insertMode:string){
+    this.canva.onMove(insertMode);
+  }
+
+  moveFieldGroup(up:boolean){
+    this.canva.onMoveFieldGroup(up);
   }
 
 }

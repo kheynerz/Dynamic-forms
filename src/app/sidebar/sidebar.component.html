@@ -11,21 +11,21 @@
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
-        <mat-button-toggle-group #modesGroup="matButtonToggleGroup">
-          <mat-button-toggle color="basic" value="select">
-            <mat-icon>touch_app</mat-icon>&nbsp;
-          </mat-button-toggle>
-          <mat-button-toggle (click)="move(insertGroup.value, true)" color="basic" value="move">
-            <mat-icon>pan_tool</mat-icon>&nbsp;
-          </mat-button-toggle>   
-          <mat-button-toggle (click)="move(insertGroup.value, false)" color="basic" value="move">
-            <mat-icon>pan_tool</mat-icon>&nbsp;
-          </mat-button-toggle>  
-          <mat-button-toggle (click)="deleteComponent()" color="basic" value="delete">
-            <mat-icon>delete</mat-icon>&nbsp;
-          </mat-button-toggle>    
-        </mat-button-toggle-group>
-
+        <button color="basic" mat-icon-button>
+          <mat-icon>touch_app</mat-icon>&nbsp;
+        </button> 
+        <button (click)="moveComponent(insertGroup.value)" color="basic" mat-icon-button>
+          <mat-icon>pan_tool</mat-icon>&nbsp;
+        </button>
+        <button (click)="moveFieldGroup(false)" color="basic" mat-icon-button>
+          <mat-icon>arrow_downward</mat-icon>&nbsp;
+        </button>
+        <button (click)="moveFieldGroup(true)" color="basic" mat-icon-button>
+          <mat-icon>arrow_upward</mat-icon>&nbsp;
+        </button>
+        <button (click)="deleteComponent()" color="basic" mat-icon-button>
+          <mat-icon>delete</mat-icon>&nbsp;
+        </button> 
         <button (click)="openFile()" color="basic" mat-icon-button>
           <mat-icon>cloud_upload</mat-icon>&nbsp;
         </button>
