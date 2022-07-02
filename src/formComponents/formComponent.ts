@@ -17,7 +17,7 @@ export class FormComponent{
   
   //Properties of the component
   templateOptions:  { label: string, description: string, placeholder: string, pattern: string, 
-                      type: string, value: string, selectAllOption: string, rows: any, 
+                      type: string, value: string, selectAllOption: string, rows: any, min: any, max:any, 
                       thumbLabel: any, required: any, multiple: any, options: Array<object>} = {
     label: '',
     description: '',
@@ -27,6 +27,8 @@ export class FormComponent{
     value: '',
     selectAllOption: 'Select All',
     rows: 1,
+    min: '',
+    max: '',
     thumbLabel: false,
     required: false,      
     multiple: false,
@@ -63,7 +65,7 @@ export class FormComponent{
         //Keys of the properties and his data type
         const booleanKeys = ['required', 'multiple', 'thumbLabel']
         const stringKeys = ['label', 'type', 'description','placeholder','pattern', 'value','selectAllOption']
-        const numberKeys = ['rows']
+        const numberKeys = ['rows', 'min','max']
 
         //Check for the datatypes of the newValue 
         if (typeof newValue === 'boolean'){
@@ -114,6 +116,10 @@ export class FormComponent{
     if (this.templateOptions.type != '')  templateOptions['type'] = this.templateOptions.type
     
     if (this.templateOptions.rows != 1)  templateOptions['rows'] = this.templateOptions.rows
+    
+    if (this.templateOptions.min != '')  templateOptions['min'] = this.templateOptions.min
+    if (this.templateOptions.max != '')  templateOptions['max'] = this.templateOptions.max
+    
     if (this.templateOptions.thumbLabel != false)  templateOptions['thumbLabel'] = this.templateOptions.thumbLabel
    
     if (this.templateOptions.required != false)  templateOptions['required'] = this.templateOptions.required
