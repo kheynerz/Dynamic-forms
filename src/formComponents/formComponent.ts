@@ -1,12 +1,13 @@
+
 /*This class is a base for all the components that can be created with Formly*/
-export class FormComponent {
+export class FormComponent{
   /*Formly doesnt implement style property but is posible to add a class with the custom css to the component*/
   styles: object = {};//Custom CSS styles that can be applied to the Component
   stylesClass: string = '';//Name of the class with the custom CSS
 
   //Formly principal properties
   className : string = '';
-  key : string = '';
+  key : any = '';
   type: string = '';
 
   
@@ -16,35 +17,43 @@ export class FormComponent {
   
   //Properties of the component
   templateOptions:  { label: string, description: string, placeholder: string, pattern: string, 
-                      value: string, selectAllOption: string, rows: any, thumbLabel: any,
-                      required: any, multiple: any, options: Array<object>} = {
+                      type: string, value: string, selectAllOption: string, rows: any, 
+                      thumbLabel: any, required: any, multiple: any, options: Array<object>} = {
     label: '',
     description: '',
     placeholder: '',
     pattern: '',
+    type: '',
     value: '',
     selectAllOption: 'Select All',
     rows: 1,
     thumbLabel: false,
     required: false,      
     multiple: false,
-    options : []
+    options : [ ]
   } 
 
+  hooks!:{
+  
+  
+  }
 
   constructor(key: string, flexPosition : string, type: string, availableProperties: Array<string>){
-    this.#availableProperties = availableProperties
+    this.#availableProperties = ['key', ...availableProperties]
     this.key = key;
     this.className= flexPosition;
     this.type = type;
     this.flexPosition = flexPosition;
   }
 
+
   /*Function that validate and change the property of a component*/
   private changeProps(property: string, newValue: string | boolean | number | Date ): boolean{
     //In formly defaultValue is separated from the template properties
     if (property === "defaultValue"){
-      this.defaultValue = newValue
+      this.defaultValue = newValue 
+    }else if (property === 'key'){
+      this.key = newValue
     }else{
       try {
         //Create an ObjectKey to dynamically access the template options
@@ -53,7 +62,7 @@ export class FormComponent {
         
         //Keys of the properties and his data type
         const booleanKeys = ['required', 'multiple', 'thumbLabel']
-        const stringKeys = ['label', 'description','placeholder','pattern', 'value','selectAllOption']
+        const stringKeys = ['label', 'type', 'description','placeholder','pattern', 'value','selectAllOption']
         const numberKeys = ['rows']
 
         //Check for the datatypes of the newValue 
@@ -102,6 +111,7 @@ export class FormComponent {
     if (this.templateOptions.placeholder != '')  templateOptions['placeholder'] = this.templateOptions.placeholder
     if (this.templateOptions.pattern != '')  templateOptions['pattern'] = this.templateOptions.pattern
     if (this.templateOptions.value != '')  templateOptions['value'] = this.templateOptions.value
+    if (this.templateOptions.type != '')  templateOptions['type'] = this.templateOptions.type
     
     if (this.templateOptions.rows != 1)  templateOptions['rows'] = this.templateOptions.rows
     if (this.templateOptions.thumbLabel != false)  templateOptions['thumbLabel'] = this.templateOptions.thumbLabel
@@ -176,11 +186,40 @@ export class FormComponent {
     return this.#availableProperties
   }
 
-  addOption(label: string, value: any, disable: boolean = false){
+  get(prop: string): any{
+
+    if (prop === 'key'){
+      return this.key
+    }
+
+    if (prop === 'defaultValue'){
+      return this.defaultValue
+    }
+
+    //Create an ObjectKey to dynamically access the template options
+    type ObjectKey = keyof typeof this.templateOptions;
+    const key = prop as ObjectKey;
+    
+    return this.templateOptions[key]
+  }
+
+
+  updateOptions(newOptions: Array<{label: string, value: any, disabled: boolean}>){
     let success = false
     //Check if the component can add options, and push it
     if (this.#availableProperties.indexOf("options") !== -1){
-      this.templateOptions.options.push({label, value, disable})
+      this.templateOptions.options = newOptions
+      success = true
+    }
+    return success
+  }
+
+
+  addOption(label: string, value: any, disabled: boolean = false){
+    let success = false
+    //Check if the component can add options, and push it
+    if (this.#availableProperties.indexOf("options") !== -1){
+      this.templateOptions.options.push({label, value, disabled})
       success = true
     }
     return success

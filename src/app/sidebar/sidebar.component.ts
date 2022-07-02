@@ -1,7 +1,8 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import {componentList, properties} from './menu-list'
+import {componentList} from './menu-list'
 import {CanvaComponent} from '../canva/canva.component'
 import { CodeTabComponent } from '../code-tab/code-tab.component';
+import { PropertiesComponent } from '../properties/properties.component';
 import {FormControl} from '@angular/forms';
 
 
@@ -10,7 +11,7 @@ import {FormControl} from '@angular/forms';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent{
+export class SidebarComponent implements AfterViewInit{
   //Input of type file if the user wants to upload a JSON
   @ViewChild('FileInput') FileInput!: ElementRef;
   //Canva where the user can build the Form with the components
@@ -18,27 +19,24 @@ export class SidebarComponent{
   //Code editor where the user can see and edit the JSON of the Form
   @ViewChild('codeTab') codeTab!: CodeTabComponent;
 
-  filename = 'formInProgress'
+  @ViewChild('properties') properties!: PropertiesComponent;
+
+  filename = ''
 
   tabs = ['Form','Json'];
   selected = new FormControl(0);
 
 
   sideComponents = componentList;
-  sideProperties = properties;
-  collapse = true;
+  //sideProperties = properties;
   //Variable to toggle the view of the canva and the code editor
   toggleCanva = true
   
   //Data to show in the json code editor
   jsonData: string = "";
 
-  toggleSidebar() {
-    this.collapse = !this.collapse;
-  }
-
-  sidebarActions() {
-    console.log("Sidebar actions");
+  ngAfterViewInit() {
+    this.canva.onNormalClick()
   }
 
   saveJSON() {
@@ -62,7 +60,7 @@ export class SidebarComponent{
   }
 
   onChangeInputFile(){
-    //If the user selects a file in the input File
+    //Hook when the user selects a file
     let input = this.FileInput.nativeElement
     let files : Array<Blob> =   Array.from(input.files);
     //Get only the first file of the list
@@ -92,6 +90,7 @@ export class SidebarComponent{
         this.codeTab.setData(result.data)
       }
       this.toggleCanva = false
+      this.properties.lockPropertiesBar(true)
     }else{
       //Get the data of the code editor
       let result = this.codeTab.getJsonData();
@@ -100,6 +99,7 @@ export class SidebarComponent{
       if (result.dataChanged){
         this.canva.setData(result.data)
       }
+      this.properties.lockPropertiesBar(false)
       this.toggleCanva = true
     }
   }
@@ -117,6 +117,21 @@ export class SidebarComponent{
 
   moveFieldGroup(up:boolean){
     this.canva.onMoveFieldGroup(up);
+  }
+
+  showProperties(component: any){
+    this.properties.showProperties(component)
+    
+  }
+
+  updateChanges(changes: any){
+    if (changes.success){
+      this.canva.update(changes)
+      let result = this.canva.getJsonData()
+      if (result.dataChanged){
+        this.codeTab.setData(result.data)
+      }
+    }
   }
 
 }

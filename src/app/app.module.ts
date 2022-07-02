@@ -5,10 +5,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
+
+
+import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 
+import {MatSelectModule} from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table'  
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatInputModule } from '@angular/material/input'
+import { MatDialogModule } from '@angular/material/dialog';
 
 /*Form components*/
 import { MatButtonModule } from '@angular/material/button';
@@ -41,8 +49,10 @@ import { CodeTabComponent } from './code-tab/code-tab.component';
 
 import { LabelWrapperComponent } from './labelWrapper';
 import { FormlyFieldLabel } from './labelType';
+import { PropertiesComponent } from './properties/properties.component';
 
 import {MatTabsModule} from '@angular/material/tabs';
+import { OptionsComponent } from './dialogs/options/options.component';
 
 @NgModule({
   declarations: [
@@ -51,14 +61,22 @@ import {MatTabsModule} from '@angular/material/tabs';
     CanvaComponent,
     CodeTabComponent,
     LabelWrapperComponent,
-    FormlyFieldLabel
+    FormlyFieldLabel,
+    PropertiesComponent,
+    OptionsComponent
   ],
   imports: [ 
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatInputModule,
+    MatDialogModule, 
     MatButtonToggleModule,
     MatTabsModule,
+    MatTableModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    FormsModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 2000,
@@ -86,6 +104,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    
       //Form Components
     FormlyMatSliderModule,
     FormlyMatToggleModule,

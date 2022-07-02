@@ -1,0 +1,33 @@
+
+<div mat-menu-item class="with-icon padded">
+  <button (click)="toggleSidebar()" color="basic" mat-icon-button>
+    <mat-icon>menu</mat-icon>&nbsp;
+  </button>         
+</div> 
+<mat-divider></mat-divider>
+
+<div [hidden]="collapse" class="padded">
+    <span >Properties</span>
+    <p *ngIf="!isSelected">Select a form component</p>
+
+    <div *ngFor="let p of properties">
+      <p>
+        {{p.title}}
+        <input type='text' [(ngModel)]="p.value" *ngIf="p.type === 'inp'" (keyup.enter)="changeProp(p)"/>
+        <input type="checkbox" [(ngModel)]="p.value" *ngIf="p.type === 'chk'" (change)="changeProp(p)">
+        <input type="number" [(ngModel)]="p.value" *ngIf="p.type === 'num'" (change)="changeProp(p)">
+        <input type="number" min="1" max="6" [(ngModel)]="p.value" *ngIf="p.type === 'size'" (change)="changeProp(p)">
+       
+        <mat-select [(ngModel)]="selectedValue" *ngIf="p.type === 'sel'" (selectionChange)="changeCombo(p)" >
+          <mat-option *ngFor="let opt of p.value" [value]="opt">
+            {{opt}}
+          </mat-option>
+        </mat-select>
+
+        <button  *ngIf="p.type === 'opt'" (click)="addOptionsDialog()"  mat-button>Open</button>
+      </p>
+
+    </div>
+
+</div>
+

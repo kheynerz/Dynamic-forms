@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef} from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
@@ -19,14 +19,29 @@ export class CanvaComponent{
   form = new FormGroup({});
   model = {};
 
+  clickMode: string = 'Normal'
   changed: boolean = true;
+  selectedElement: any;
+
+  componentCount = 1
 
   fields: FormlyFieldConfig[] = [];
   
-  formlyForm = null
+  @Output() selectedComponent = new EventEmitter<any>();
 
-  constructor(private toastr: ToastrService, private el:ElementRef) {
-    
+  constructor(private toastr: ToastrService, private el:ElementRef) {}
+
+  public async update(changes: any){
+    if (changes.success){
+      let fieldGroup = this.fields[changes.i].fieldGroup!
+      if (fieldGroup){
+        fieldGroup[changes.j] = {}
+        await setTimeout(()=>{
+          fieldGroup[changes.j] = changes.component
+          this.changed = true
+        },10)
+      }
+    }
   }
 
   //Method to show a toastr error notification
@@ -42,6 +57,12 @@ export class CanvaComponent{
   //Method to show a toastr info notification
   private showInfo(message: string, title:string){
     this.toastr.info(message, title)
+  }
+
+  changeClickMode(newMode: string){
+    this.clickMode = newMode
+    console.log(this.clickMode);
+    
   }
 
   onSubmit() {
@@ -162,7 +183,11 @@ export class CanvaComponent{
           }).catch(r=>{});
 
         } 
-      }      
+      } 
+      
+      if (this.clickMode === 'Normal'){
+        this.onNormalClick()
+      }
     }
     
     document.onmousemove = (e) =>{
@@ -202,8 +227,8 @@ export class CanvaComponent{
     //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
-    let newComponent = new formComponent[requiredKey](requiredKey+Math.random() as string & object[],'flex-1');
-
+    let newComponent = new formComponent[requiredKey](requiredKey+this.componentCount as string & object[],'flex-1');
+    this.componentCount++
     //drag and add the selected component
     this.dragAddComponent(id, insertMode, newComponent);
 
@@ -288,13 +313,27 @@ export class CanvaComponent{
     }  
   }
  
+
+  onNormalClick(){
+    document.onmouseup = (e) =>{
+      if (this.clickOnCanva(e.pageX, e.pageY)){
+
+        this.clickOnComponent().then( ([i,j]:any)=>{
+          //if promise resolved, Show properties of selected component 
+          this.selectedComponent.emit({"isSelected" : true, "component": this.fields[i].fieldGroup![j], i,j})
+        }).catch(_=>{this.selectedComponent.emit({"isSelected": false})});
+
+      }
+    }  
+  }
+
   // Method use to filter the key and values of the formly field using the JSON.stringify method
   private replacer(key: string, value: any) {
     //Arrays of data to ignore in the json
     let undefinedValues = ["", false, null, undefined]
     
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 
-                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'selectAllOption', 
+                        'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'disabled','selectAllOption', 
                         'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validation', 'messages', 'template']
 
     //Data to ignore
@@ -318,7 +357,6 @@ export class CanvaComponent{
       if (value instanceof formComponent['Slider']) return value.returnObject()
       if (value instanceof formComponent['Textarea']) return value.returnObject()
       if (value instanceof formComponent['Toggle']) return value.returnObject()
-      if (value instanceof formComponent['Label2']) return value.returnObject()
     }
     
     if (acceptedKeys.indexOf(key) === -1){
@@ -345,8 +383,12 @@ export class CanvaComponent{
     return finalJson
   }
 
-
   onSave(filename: string){
+    if (filename === ""){
+      this.showInfo(`Por favor ingrese el nombre del archivo`,'Archivo sin nombre');
+      return
+    }
+
     try {
       let data = this.stringifyData()
       
