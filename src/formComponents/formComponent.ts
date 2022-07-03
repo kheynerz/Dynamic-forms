@@ -1,3 +1,11 @@
+import { FormlyFieldConfig } from "@ngx-formly/core";
+
+
+interface Template{
+  label: string, description: string, placeholder: string, pattern: string, 
+  type: string, value: string, selectAllOption: string, rows: any, min: any, max:any, 
+  thumbLabel: any, required: any, multiple: any, options: Array<object>
+}
 
 /*This class is a base for all the components that can be created with Formly*/
 export class FormComponent{
@@ -16,9 +24,7 @@ export class FormComponent{
   flexPosition: string = ''; //For the visual positioning of the Component we use flex positioning
   
   //Properties of the component
-  templateOptions:  { label: string, description: string, placeholder: string, pattern: string, 
-                      type: string, value: string, selectAllOption: string, rows: any, min: any, max:any, 
-                      thumbLabel: any, required: any, multiple: any, options: Array<object>} = {
+  templateOptions: Template = {
     label: '',
     description: '',
     placeholder: '',
@@ -35,10 +41,7 @@ export class FormComponent{
     options : [ ]
   } 
 
-  hooks!:{
-  
-  
-  }
+  validators = {}
 
   constructor(key: string, flexPosition : string, type: string, availableProperties: Array<string>){
     this.#availableProperties = ['key', ...availableProperties]
@@ -47,6 +50,18 @@ export class FormComponent{
     this.type = type;
     this.flexPosition = flexPosition;
   }
+
+
+  setData(templateOptions: Template, validators: any = {}, defaultValue:any = null){
+    this.validators = validators
+    this.defaultValue = defaultValue
+    for (const prop in templateOptions) {
+      type ObjectKey = keyof typeof this.templateOptions;
+      const key = prop as ObjectKey;
+      this.templateOptions[key] = templateOptions[key]
+    }
+  }
+
 
 
   /*Function that validate and change the property of a component*/
@@ -130,8 +145,11 @@ export class FormComponent{
     
     if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
    
-    values['templateOptions'] = templateOptions
 
+    if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
+
+    values['templateOptions'] = templateOptions
+    
     return values
   }
 
@@ -197,22 +215,40 @@ export class FormComponent{
     if (prop === 'key'){
       return this.key
     }
-
     if (prop === 'defaultValue'){
       return this.defaultValue
+    }
+
+    if (prop === 'validators'){
+      return this.validators
     }
 
     //Create an ObjectKey to dynamically access the template options
     type ObjectKey = keyof typeof this.templateOptions;
     const key = prop as ObjectKey;
-    
     return this.templateOptions[key]
   }
+
+  
+  updateValidator(newValidators: any) : boolean{
+    let success = false
+    //Check if the component can add validators, and update it
+    if (this.#availableProperties.indexOf("validators") !== -1){
+      this.validators = newValidators
+
+      console.log(this.validators);
+      
+      success = true
+    }
+    return success
+  }
+
+
 
 
   updateOptions(newOptions: Array<{label: string, value: any, disabled: boolean}>){
     let success = false
-    //Check if the component can add options, and push it
+    //Check if the component can add options, and update it
     if (this.#availableProperties.indexOf("options") !== -1){
       this.templateOptions.options = newOptions
       success = true

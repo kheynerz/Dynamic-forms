@@ -3,6 +3,7 @@ import { FormComponent } from 'src/formComponents/formComponent';
 
 import { MatDialog } from  '@angular/material/dialog';
 import { OptionsComponent } from '../dialogs/options/options.component';
+import { ValidatorsComponent } from '../dialogs/validators/validators.component';
 
 @Component({
   selector: 'app-properties',
@@ -14,7 +15,7 @@ export class PropertiesComponent {
   
   collapse = true;
   isSelected = false;
-  showOptions = false;
+  blockClickInCanva = false;
   locked = false;
   selectedValue: string = ''
 
@@ -28,10 +29,18 @@ export class PropertiesComponent {
   inputProps = ['key', 'label', 'description', 'placeholder', 'pattern', 'selectAllOption', 'text']
   checkBoxProps = ['required', 'multiple', 'thumbLabel', 'bold', 'italic','under','del']
   numberProps = ['min','max','rows']
+
+
+  availableTypes = ['color','email','password','text','number','time']
+
   component!: FormComponent;
   properties: Array<{'title': string, "prop": string, "type": string, "value": any}> = [];
   i = -1
   j = -1
+
+  customValidators: Array<{name: string, regex: string}> = []
+
+
   constructor(private  dialog:  MatDialog){}
 
   toggleSidebar() {
@@ -44,7 +53,7 @@ export class PropertiesComponent {
     if (lock){
       this.collapse = true;
       this.isSelected = false;
-      this.showOptions = false;
+      this.blockClickInCanva = false;
       this.locked = true
       this.properties = []
     }else{
@@ -52,7 +61,7 @@ export class PropertiesComponent {
     }
   }
   showProperties(formComponent: any){
-    if (this.showOptions){
+    if (this.blockClickInCanva){
       return
     }
 
@@ -66,28 +75,23 @@ export class PropertiesComponent {
       this.component.getProperties().forEach(p => {
         type ObjectKey = keyof typeof this.propTitles;
         const key = p as ObjectKey;
+
+        let prop = {title: this.propTitles[key], prop: p, type: '', value: this.component.get(p)}
+
         if(this.inputProps.indexOf(p) >= 0){
-          this.properties.push({'title': this.propTitles[key], 'prop': p, "type": 'inp', 'value': this.component.get(p)})
+          prop.type = 'inp'
         }
         else if(this.checkBoxProps.indexOf(p) >= 0){
-          this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'chk', 'value': this.component.get(p)})
+          prop.type = 'chk'
         }
         else if(this.numberProps.indexOf(p) >= 0){
-          this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'num', 'value': this.component.get(p)})
+          prop.type = 'num'
         }
-        else if(p === 'type'){
-          let value: Array<string> = []
-          if (this.component.type === 'input' ){
-            value = ['color','email','password','text','number','time']
-          }
-          this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'sel', 'value': value})
+        else{
+          prop.type = p
         }
-        else if (p === 'size'){
-          this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'size', 'value': this.component.get(p)})
-        }
-        else if(p === 'options'){
-          this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'opt', 'value': ''})
-        }
+
+        this.properties.push(prop)
         
       });
     }
@@ -108,7 +112,7 @@ export class PropertiesComponent {
   }
 
   public async addOptionsDialog(){
-    this.showOptions = true
+    this.blockClickInCanva = true
     const dialogRef = this.dialog.open(OptionsComponent, {
       data: {"key":this.component.key, "options":this.component.get('options')},
       width: '65%',
@@ -123,7 +127,36 @@ export class PropertiesComponent {
           this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j})
         }
       }
-      this.showOptions = false
+      this.blockClickInCanva = false
     })
   }
+
+  public async validatorsDialog(){
+    this.blockClickInCanva = true
+    const dialogRef = this.dialog.open(ValidatorsComponent, {
+      data: {"key":this.component.key, "validators": this.component.get('validators'), 'customValidators': this.customValidators},
+      width: '65%',
+      height: '65%',
+      disableClose: true
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+        console.log(result);
+        if(result && result.changes){
+          console.log(this.customValidators);
+          
+          this.customValidators = result.customValidators
+          let success = this.component.updateValidator(result.validators)
+          if (success && (this.i != -1 && this.j != -1)){
+            
+            this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j, 'validators': this.customValidators })
+          }
+        }
+        this.blockClickInCanva = false
+      })
+  
+  }
+
+
+
 }

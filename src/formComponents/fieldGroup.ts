@@ -5,4 +5,8 @@ export class FieldGroup {
     constructor(components : Array<object> ){
         this.fieldGroup = components;
     }
+
+    setData(){
+        
+    }
 }

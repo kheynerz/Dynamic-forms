@@ -12,14 +12,12 @@ export class OptionsComponent{
   dataSource: Array<{'label':string, 'value': string, 'disabled': boolean}> = []
   changes: boolean = false
   newData: {'label': string, "value": any, "disabled": boolean} = {"label": '', 'value':'', "disabled":false}
+  
   constructor(private  dialogRef:  MatDialogRef<OptionsComponent>, @Inject(MAT_DIALOG_DATA) public  data:  any) {
     this.dataSource = data.options
   }
    
   public close() {
-    this.dialogRef.close();
-  }
-  onCancelClick(): void {
     this.dialogRef.close();
   }
 

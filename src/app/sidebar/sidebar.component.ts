@@ -126,11 +126,13 @@ export class SidebarComponent implements AfterViewInit{
 
   updateChanges(changes: any){
     if (changes.success){
+
       this.canva.update(changes)
       let result = this.canva.getJsonData()
       if (result.dataChanged){
         this.codeTab.setData(result.data)
       }
+
     }
   }
 

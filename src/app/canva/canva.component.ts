@@ -26,7 +26,12 @@ export class CanvaComponent{
   componentCount = 1
 
   fields: FormlyFieldConfig[] = [];
+
+  validators: Array<string> = ['email','id']
   
+  //  /^[1-9]-\d{4}-\d{4}$/
+  //  
+
   @Output() selectedComponent = new EventEmitter<any>();
 
   constructor(private toastr: ToastrService, private el:ElementRef) {}
@@ -41,6 +46,14 @@ export class CanvaComponent{
           this.changed = true
         },10)
       }
+      if (changes.validators){
+        this.validators = ['email','id']
+        changes.validators.forEach((v:any) => {
+          this.validators.push(v.name) 
+                   
+        })
+      }
+      console.log(this.validators);
     }
   }
 
@@ -328,14 +341,18 @@ export class CanvaComponent{
   }
 
   // Method use to filter the key and values of the formly field using the JSON.stringify method
-  private replacer(key: string, value: any) {
+  public replacer(key: string, value: any) {
     //Arrays of data to ignore in the json
     let undefinedValues = ["", false, null, undefined]
     
+    console.log(key,value, typeof value);
+    
+
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 'min','max',
                         'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'disabled','selectAllOption', 
-                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validation', 'messages', 'template']
+                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validators', 'ip', 'expression', 'message', 'template']
 
+    
     //Data to ignore
     if (undefinedValues.indexOf(value) > -1) return undefined;
     
@@ -359,11 +376,13 @@ export class CanvaComponent{
       if (value instanceof formComponent['Toggle']) return value.returnObject()
     }
     
+    if (typeof value === 'function'){
+      return `${value}`      
+    }
+
     if (acceptedKeys.indexOf(key) === -1){
       if (isNaN(+key)) return undefined;
     };
-   
-    
 
     return value;
   }
@@ -376,6 +395,10 @@ export class CanvaComponent{
     if (data.length !== 0){
       //The stringify method is applied twice, because, some data inside objects is deleted in the first one,
       //and these objects can be empty, the second time is to delete these objects from the json
+      //console.log(data);
+      
+      //console.log(JSON.stringify(data,undefined,4));
+      
       let firstJson = JSON.stringify(data, this.replacer)
       finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer), undefined, 4)
     }
@@ -439,18 +462,83 @@ export class CanvaComponent{
     return {success, "data": this.stringifyData()};
   }
 
+
+  private reviver(key:string , value: any){
+   
+    return value
+  }
+
+
+  private transformData(data: Array<any>){
+    //HAcer esto en funciones >:(
+    let fields: FormlyFieldConfig[] = [];
+
+    data.forEach(field => {
+      try {
+        let newFieldGroup = new formComponent['FieldGroup']([])
+        if (field.fieldGroup){
+          field.fieldGroup.forEach((element:any) => {
+            if (element.type){
+              let component = element.type.charAt(0).toUpperCase() + element.type.slice(1);
+              
+              type ObjectKey = keyof typeof formComponent;
+              const key = component as ObjectKey;      
+
+              let newComponent = new formComponent[key](element.key,element.className);
+              this.componentCount++
+             
+              if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
+                newComponent.setData(element.templateOptions, element.validators, element.defaultValue)
+              }
+              newFieldGroup.fieldGroup.push(newComponent)
+            }else if (element.template){
+              let newComponent = new formComponent['Label'](element.key,element.className);
+              newComponent.setData(element.template)
+              newFieldGroup.fieldGroup.push(newComponent)
+            }
+          })
+          fields.push(newFieldGroup)
+        }else{
+          if (field.type){
+            let component = field.type.charAt(0).toUpperCase() + field.type.slice(1);
+            
+            type ObjectKey = keyof typeof formComponent;
+            const key = component as ObjectKey;      
+
+            let newComponent = new formComponent[key](field.key,field.className);
+            this.componentCount++
+           
+            if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
+              newComponent.setData(field.templateOptions, field.validators, field.defaultValue)
+            }
+            newFieldGroup.fieldGroup.push(newComponent)
+          }else if (field.template){
+            let newComponent = new formComponent['Label'](field.key,field.className);
+            newComponent.setData(field.template)
+            newFieldGroup.fieldGroup.push(newComponent)
+          }
+        }
+        
+      } catch (error) {
+        console.log(error);
+      }
+    })
+
+    return fields
+  }
+
   setData(jsonData: string){
     let success = true
     //The data to read is always an array
     let data: Array<object> = []
     try {
       //Parse the data to json and assign it to the formly field
-      data = JSON.parse(jsonData);
-
-      console.log(data);
+      console.log("aca");
+      console.log(jsonData);
       
-
-      this.fields = data 
+      data = JSON.parse(jsonData, this.reviver);
+      
+      this.fields = this.transformData(data) 
     } catch (error) {
       success = false
       this.showError('El JSON presenta errores en su estructura', 'Error al modificar el JSON');
