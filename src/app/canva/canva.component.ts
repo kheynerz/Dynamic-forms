@@ -302,7 +302,6 @@ export class CanvaComponent{
           if(i>=0){
             //if valid index
             this.fields.splice(i,0,moved);
-            //this.fields = [...this.fields];
           }
    
         }).catch(r=>{});
@@ -447,10 +446,23 @@ export class CanvaComponent{
       //Parse the data to json and assign it to the formly field
       data = JSON.parse(jsonData);
 
-      console.log(data);
+      type ObjectKey = keyof typeof data[any];
+      const key = 'fieldGroup' as ObjectKey;
       
+      for (let i = 0; i < data.length; i++) {
+        //check if data is in field groups
 
-      this.fields = data 
+        if(!data[i][key]){   
+          //if there is no field group add one
+          let newFieldGroup = new formComponent['FieldGroup']([]); 
+          newFieldGroup.fieldGroup = [data[i]];      
+
+          data.splice(i, 0, newFieldGroup);
+          data.splice(i+1, 1);
+        }
+      }
+      this.fields = data;
+
     } catch (error) {
       success = false
       this.showError('El JSON presenta errores en su estructura', 'Error al modificar el JSON');
