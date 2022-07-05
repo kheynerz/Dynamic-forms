@@ -15,6 +15,12 @@ export class OptionsComponent{
   
   constructor(private  dialogRef:  MatDialogRef<OptionsComponent>, @Inject(MAT_DIALOG_DATA) public  data:  any) {
     this.dataSource = data.options
+    
+    data.options.forEach((option:any)=>{
+      if (!option.disabled){
+        option.disabled = false
+      }
+    })
   }
    
   public close() {
