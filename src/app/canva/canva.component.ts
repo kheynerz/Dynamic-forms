@@ -187,7 +187,8 @@ export class CanvaComponent implements AfterContentChecked{
   
               //updating fields in screen
               this.fields = [ ...newFields];
-            }
+            }else
+              this.showError("El tamaño del agrupador es el máximo","Agregar componentes");
 
           }).catch(r=>{
             //adding one field group to the end of canva
