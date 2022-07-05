@@ -1,4 +1,10 @@
 
+interface Template{
+  label: string, description: string, placeholder: string, pattern: string, 
+  type: string, value: string, selectAllOption: string, rows: any, min: any, max:any, 
+  thumbLabel: any, required: any, multiple: any, options: Array<object>
+}
+
 /*This class is a base for all the components that can be created with Formly*/
 export class FormComponent{
   /*Formly doesnt implement style property but is posible to add a class with the custom css to the component*/
@@ -13,12 +19,10 @@ export class FormComponent{
   
   #availableProperties: Array<string> = [''] //Properties of the component that can be modified 
   defaultValue: any = ''; //Some components can define a default Value 
-  flexPosition: string = ''; //For the visual positioning of the Component we use flex positioning
+  flexPosition: number = 1; //For the visual positioning of the Component we use flex positioning
   
   //Properties of the component
-  templateOptions:  { label: string, description: string, placeholder: string, pattern: string, 
-                      type: string, value: string, selectAllOption: string, rows: any, min: any, max:any, 
-                      thumbLabel: any, required: any, multiple: any, options: Array<object>} = {
+  templateOptions: Template = {
     label: '',
     description: '',
     placeholder: '',
@@ -35,27 +39,49 @@ export class FormComponent{
     options : [ ]
   } 
 
-  hooks!:{
-  
-  
-  }
+  validators = {} //Validators of the input files
 
   constructor(key: string, flexPosition : string, type: string, availableProperties: Array<string>){
-    this.#availableProperties = ['key', ...availableProperties]
+    this.#availableProperties = ['key', 'className', ...availableProperties]
     this.key = key;
     this.className= flexPosition;
     this.type = type;
-    this.flexPosition = flexPosition;
+    
+    //Parse the flexPosition string to get the number
+    try {
+      this.flexPosition = Number(flexPosition[flexPosition.length -1]);
+    } catch (error) {
+      console.log("Error while parsing the flex position");
+    }
   }
+
+  //If the data is imported this function is used to set the data to the respective properties
+  setData(templateOptions: Template, validators: any = {}, defaultValue:any = null){
+    this.validators = validators
+    this.defaultValue = defaultValue
+    //Iterate the received properties and set the value to the templateOptions
+    for (const prop in templateOptions) {
+      type ObjectKey = keyof typeof this.templateOptions;
+      const key = prop as ObjectKey;
+      this.templateOptions[key] = templateOptions[key]
+    }
+  }
+
 
 
   /*Function that validate and change the property of a component*/
   private changeProps(property: string, newValue: string | boolean | number | Date ): boolean{
-    //In formly defaultValue is separated from the template properties
+    //In formly defaultValue, key and className are separated from the template properties
     if (property === "defaultValue"){
       this.defaultValue = newValue 
+
     }else if (property === 'key'){
       this.key = newValue
+
+    }else if(property === 'className'){
+      this.className = `flex-${newValue}`
+      this.flexPosition = Number(newValue)
+
     }else{
       try {
         //Create an ObjectKey to dynamically access the template options
@@ -96,7 +122,8 @@ export class FormComponent{
           return false
         }
 
-      } catch (_) { }
+      } catch (_) {console.log("Error while accessing to a property");
+       }
     }
     return false
   }
@@ -130,11 +157,15 @@ export class FormComponent{
     
     if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
    
-    values['templateOptions'] = templateOptions
+    //If it is something in validators add them to the object
+    if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
 
+    values['templateOptions'] = templateOptions
+    
     return values
   }
 
+  //Not implemented
   private changeStyle(newStyles: string){
     /*Creates a style tag for custom css for a form component*/
 
@@ -153,6 +184,7 @@ export class FormComponent{
     this.className = this.flexPosition + ` ${this.stylesClass}` 
   }
 
+  //Not implemented
   changeStyleProperty(property: string, value: string){
     //Get the styles and change the value of the property
     const style = {
@@ -171,10 +203,10 @@ export class FormComponent{
     this.changeStyle(newStyles)
   }
 
-  changeSize(newSize: Number){
+  changeSize(newSize: number){
     //Change the flex size of the component
     this.className = `flex-${newSize}` + ` ${this.stylesClass}`
-    this.flexPosition = `flex-${newSize}`;
+    this.flexPosition = newSize;
   }
  
 
@@ -193,56 +225,45 @@ export class FormComponent{
   }
 
   get(prop: string): any{
-
+    //Function to get the value of a property
     if (prop === 'key'){
       return this.key
     }
-
     if (prop === 'defaultValue'){
       return this.defaultValue
     }
 
+    if (prop === 'validators'){
+      return this.validators
+    }
+
+    if (prop === 'className'){
+      return this.flexPosition
+    }
     //Create an ObjectKey to dynamically access the template options
     type ObjectKey = keyof typeof this.templateOptions;
     const key = prop as ObjectKey;
-    
     return this.templateOptions[key]
   }
 
+  
+  updateValidator(newValidators: any) : boolean{
+    let success = false
+    //Check if the component can add validators, and update it
+    if (this.#availableProperties.indexOf("validators") !== -1){
+      this.validators = newValidators
+      success = true
+    }
+    return success
+  }
 
   updateOptions(newOptions: Array<{label: string, value: any, disabled: boolean}>){
     let success = false
-    //Check if the component can add options, and push it
+    //Check if the component can add options, and update it
     if (this.#availableProperties.indexOf("options") !== -1){
       this.templateOptions.options = newOptions
       success = true
     }
     return success
   }
-
-
-  addOption(label: string, value: any, disabled: boolean = false){
-    let success = false
-    //Check if the component can add options, and push it
-    if (this.#availableProperties.indexOf("options") !== -1){
-      this.templateOptions.options.push({label, value, disabled})
-      success = true
-    }
-    return success
-
-  }
-
-  removeOption(index: number){
-    let success = false
-    //Check if the component can add options, remove the index
-    if (this.#availableProperties.indexOf("options") !== -1){
-      if (index > -1) {
-        if (this.templateOptions.options.splice(index, 1).length !== 0) {
-          success = true
-        }
-      }
-    }
-    return success
-  }
-
 }

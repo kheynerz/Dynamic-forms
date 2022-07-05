@@ -16,15 +16,19 @@
         <input type='text' [(ngModel)]="p.value" *ngIf="p.type === 'inp'" (keyup.enter)="changeProp(p)"/>
         <input type="checkbox" [(ngModel)]="p.value" *ngIf="p.type === 'chk'" (change)="changeProp(p)">
         <input type="number" [(ngModel)]="p.value" *ngIf="p.type === 'num'" (change)="changeProp(p)">
-        <input type="number" min="1" max="6" [(ngModel)]="p.value" *ngIf="p.type === 'size'" (change)="changeProp(p)">
+        <input type="number" min="1" max="6" [(ngModel)]="p.value" *ngIf="p.type === 'size' || p.type === 'className'" (change)="changeProp(p)">
        
-        <mat-select [(ngModel)]="selectedValue" *ngIf="p.type === 'sel'" (selectionChange)="changeCombo(p)" >
-          <mat-option *ngFor="let opt of p.value" [value]="opt">
-            {{opt}}
+        <mat-select [(ngModel)]="selectedValue" *ngIf="p.type === 'type'" (selectionChange)="changeCombo(p)" >
+          <mat-option *ngFor="let type of availableTypes" [value]="type">
+            {{type}}
           </mat-option>
         </mat-select>
 
-        <button  *ngIf="p.type === 'opt'" (click)="addOptionsDialog()"  mat-button>Open</button>
+        <button  *ngIf="p.type === 'options'" (click)="addOptionsDialog()"  mat-button>Open</button>
+        <span  *ngIf="p.type === 'validators'" >
+          Validators: <button  (click)="validatorsDialog()"  mat-button>Open</button>
+        </span>
+        
       </p>
 
     </div>

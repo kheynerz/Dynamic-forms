@@ -53,6 +53,7 @@ import { PropertiesComponent } from './properties/properties.component';
 
 import {MatTabsModule} from '@angular/material/tabs';
 import { OptionsComponent } from './dialogs/options/options.component';
+import { ValidatorsComponent } from './dialogs/validators/validators.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { OptionsComponent } from './dialogs/options/options.component';
     LabelWrapperComponent,
     FormlyFieldLabel,
     PropertiesComponent,
-    OptionsComponent
+    OptionsComponent,
+    ValidatorsComponent
   ],
   imports: [ 
     BrowserModule,

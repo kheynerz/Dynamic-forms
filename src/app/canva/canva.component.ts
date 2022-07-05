@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output} from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output, ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
@@ -15,35 +15,59 @@ import FileSaver from 'file-saver';
   styleUrls: ['./canva.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CanvaComponent{
+export class CanvaComponent implements AfterContentChecked{
+ 
+  //Click mode (Normal, Delete, Move)
+  clickMode: string = 'Normal'
+
+  //Variable to avoid re rendering the fields in the json code Tab
+  //If changes are made, the code tab must render the new data
+  changed: boolean = true;
+
+  //Available Validators
+  validators: Array<string> = ['email','IDCR'] 
+
+  //Count of components in the fields
+  componentCount = 1
+
+  //Formly
+  fields: FormlyFieldConfig[] = [];
   form = new FormGroup({});
   model = {};
 
-  clickMode: string = 'Normal'
-  changed: boolean = true;
-  selectedElement: any;
-
-  componentCount = 1
-
-  fields: FormlyFieldConfig[] = [];
-  
+  //Event emitter to send a signal to show the properties
   @Output() selectedComponent = new EventEmitter<any>();
 
-  constructor(private toastr: ToastrService, private el:ElementRef) {}
+  constructor(
+    private toastr: ToastrService, //Send messages to the user
+    private el:ElementRef, 
+    private cd: ChangeDetectorRef //Detect changes to avoid ExpressionChangedAfterItHasBeenCheckedError
+    ){}
 
-  public async update(changes: any){
-    if (changes.success){
-      let fieldGroup = this.fields[changes.i].fieldGroup!
-      if (fieldGroup){
-        fieldGroup[changes.j] = {}
-        await setTimeout(()=>{
-          fieldGroup[changes.j] = changes.component
-          this.changed = true
-        },10)
-      }
+  //Hook to avoid ExpressionChangedAfterItHasBeenCheckedError 
+  ngAfterContentChecked() {
+    this.cd.detectChanges();
+  }
+  
+  //Update the Fields, 
+  public update(changes: any){
+      if (changes.success){
+        //The changes in the component were made but they are not render in the screen
+        //Create a copy of the field group where is the component 
+        let fieldGroup = this.fields[changes.i].fieldGroup!
+        if (fieldGroup){
+          //Erase the component and reassign it 
+          fieldGroup[changes.j] = {}
+          //If setTimeout is not used the changes are not rendered
+          setTimeout(()=>{
+              this.form = new FormGroup({});//Re assign the form to update validators
+              fieldGroup[changes.j] = changes.component//Re assign the component
+              this.changed = true //Changes were made in the canva
+          },10)
+        }
     }
   }
-
+  
   //Method to show a toastr error notification
   private showError(message: string, title:string){
     this.toastr.error(message, title)
@@ -61,14 +85,6 @@ export class CanvaComponent{
 
   changeClickMode(newMode: string){
     this.clickMode = newMode
-    console.log(this.clickMode);
-    
-  }
-
-  onSubmit() {
-    if (this.form.valid) {
-      alert(JSON.stringify(this.model, null, 2));
-    }
   }
 
   getDragValue(id:string){
@@ -330,13 +346,18 @@ export class CanvaComponent{
   }
 
   // Method use to filter the key and values of the formly field using the JSON.stringify method
-  private replacer(key: string, value: any) {
+  public replacer(key: string, value: any) {
     //Arrays of data to ignore in the json
     let undefinedValues = ["", false, null, undefined]
     
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 'min','max',
                         'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'disabled','selectAllOption', 
-                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validation', 'messages', 'template']
+                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validators', 'strMessage','regularExpression', 
+                        'expression', 'message', 'template']
+
+    if (this.validators){
+      acceptedKeys = Array.from(new Set([...acceptedKeys, ...this.validators]));
+    }
 
     //Data to ignore
     if (undefinedValues.indexOf(value) > -1) return undefined;
@@ -361,11 +382,14 @@ export class CanvaComponent{
       if (value instanceof formComponent['Toggle']) return value.returnObject()
     }
     
+    if (typeof value === 'function'){
+      return `${value}`      
+    }
+    
+
     if (acceptedKeys.indexOf(key) === -1){
       if (isNaN(+key)) return undefined;
     };
-   
-    
 
     return value;
   }
@@ -378,8 +402,14 @@ export class CanvaComponent{
     if (data.length !== 0){
       //The stringify method is applied twice, because, some data inside objects is deleted in the first one,
       //and these objects can be empty, the second time is to delete these objects from the json
-      let firstJson = JSON.stringify(data, this.replacer)
-      finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer), undefined, 4)
+      //console.log(data);
+      
+      let firstJson = JSON.stringify(data, (key:string, value:any) => {
+        return this.replacer(key,value)
+      })
+      finalJson = JSON.stringify(JSON.parse(firstJson, (key:string, value:any) => {
+        return this.replacer(key,value)  
+      }), undefined, 4)
     }
     
     return finalJson
@@ -441,31 +471,82 @@ export class CanvaComponent{
     return {success, "data": this.stringifyData()};
   }
 
+  private reviver(key:string , value: any){
+    if (key  === 'expression' || key === 'message'){
+      console.log(value);
+      return eval(value)
+    }
+    return value
+  }
+
+  private transformData(data: Array<any>){
+    //HAcer esto en funciones >:(
+    let fields: FormlyFieldConfig[] = [];
+
+    data.forEach(field => {
+      try {
+        let newFieldGroup = new formComponent['FieldGroup']([])
+        if (field.fieldGroup){
+          field.fieldGroup.forEach((element:any) => {
+            if (element.type){
+              let component = element.type.charAt(0).toUpperCase() + element.type.slice(1);
+              
+              type ObjectKey = keyof typeof formComponent;
+              const key = component as ObjectKey;      
+
+              let newComponent = new formComponent[key](element.key,element.className ? element.className : 'flex-1');
+              this.componentCount++
+             
+              if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
+                newComponent.setData(element.templateOptions, element.validators, element.defaultValue)
+              }
+              newFieldGroup.fieldGroup.push(newComponent)
+            }else if (element.template){
+              let newComponent = new formComponent['Label'](element.key,element.className);
+              newComponent.setData(element.template)
+              newFieldGroup.fieldGroup.push(newComponent)
+            }
+          })
+          fields.push(newFieldGroup)
+        }else{
+          if (field.type){
+            let component = field.type.charAt(0).toUpperCase() + field.type.slice(1);
+            
+            type ObjectKey = keyof typeof formComponent;
+            const key = component as ObjectKey;      
+            
+            let newComponent = new formComponent[key](field.key,field.className ? field.className : 'flex-1');
+            this.componentCount++
+           
+            if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
+              newComponent.setData(field.templateOptions, field.validators, field.defaultValue)
+            }
+            newFieldGroup.fieldGroup.push(newComponent)
+          }else if (field.template){
+            let newComponent = new formComponent['Label'](field.key,field.className);
+            newComponent.setData(field.template)
+            newFieldGroup.fieldGroup.push(newComponent)
+          }
+          fields.push(newFieldGroup)
+        }
+        
+      } catch (error) {
+        console.log(error);
+      }
+    })
+
+    return fields
+  }
+
   setData(jsonData: string){
     let success = true
     //The data to read is always an array
     let data: Array<object> = []
     try {
       //Parse the data to json and assign it to the formly field
-      data = JSON.parse(jsonData);
-
-      type ObjectKey = keyof typeof data[any];
-      const key = 'fieldGroup' as ObjectKey;
+      data = JSON.parse(jsonData, this.reviver);
       
-      for (let i = 0; i < data.length; i++) {
-        //check if data is in field groups
-
-        if(!data[i][key]){   
-          //if there is no field group add one
-          let newFieldGroup = new formComponent['FieldGroup']([]); 
-          newFieldGroup.fieldGroup = [data[i]];      
-
-          data.splice(i, 0, newFieldGroup);
-          data.splice(i+1, 1);
-        }
-      }
-      this.fields = data;
-
+      this.fields = this.transformData(data) 
     } catch (error) {
       success = false
       this.showError('El JSON presenta errores en su estructura', 'Error al modificar el JSON');
