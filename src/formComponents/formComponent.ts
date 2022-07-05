@@ -1,5 +1,3 @@
-import { FormlyFieldConfig } from "@ngx-formly/core";
-
 
 interface Template{
   label: string, description: string, placeholder: string, pattern: string, 
@@ -21,7 +19,7 @@ export class FormComponent{
   
   #availableProperties: Array<string> = [''] //Properties of the component that can be modified 
   defaultValue: any = ''; //Some components can define a default Value 
-  flexPosition: string = ''; //For the visual positioning of the Component we use flex positioning
+  flexPosition: number = 1; //For the visual positioning of the Component we use flex positioning
   
   //Properties of the component
   templateOptions: Template = {
@@ -44,11 +42,15 @@ export class FormComponent{
   validators = {}
 
   constructor(key: string, flexPosition : string, type: string, availableProperties: Array<string>){
-    this.#availableProperties = ['key', ...availableProperties]
+    this.#availableProperties = ['key', 'className', ...availableProperties]
     this.key = key;
     this.className= flexPosition;
     this.type = type;
-    this.flexPosition = flexPosition;
+    try {
+      this.flexPosition = Number(flexPosition[flexPosition.length -1]);
+    } catch (error) {
+      console.log("Error while parsing the flex position");
+    }
   }
 
 
@@ -71,6 +73,9 @@ export class FormComponent{
       this.defaultValue = newValue 
     }else if (property === 'key'){
       this.key = newValue
+    }else if(property === 'className'){
+      this.className = `flex-${newValue}`
+      this.flexPosition = Number(newValue)
     }else{
       try {
         //Create an ObjectKey to dynamically access the template options
@@ -189,10 +194,10 @@ export class FormComponent{
     this.changeStyle(newStyles)
   }
 
-  changeSize(newSize: Number){
+  changeSize(newSize: number){
     //Change the flex size of the component
     this.className = `flex-${newSize}` + ` ${this.stylesClass}`
-    this.flexPosition = `flex-${newSize}`;
+    this.flexPosition = newSize;
   }
  
 
@@ -221,6 +226,10 @@ export class FormComponent{
 
     if (prop === 'validators'){
       return this.validators
+    }
+
+    if (prop === 'className'){
+      return this.flexPosition
     }
 
     //Create an ObjectKey to dynamically access the template options

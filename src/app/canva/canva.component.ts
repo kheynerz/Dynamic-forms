@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output} from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output, ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
@@ -15,7 +15,7 @@ import FileSaver from 'file-saver';
   styleUrls: ['./canva.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CanvaComponent{
+export class CanvaComponent implements AfterContentChecked{
   form = new FormGroup({});
   model = {};
 
@@ -27,36 +27,31 @@ export class CanvaComponent{
 
   fields: FormlyFieldConfig[] = [];
 
-  validators: Array<string> = ['email','id']
+  validators: Array<string> = ['email','idCR']
   
-  //  /^[1-9]-\d{4}-\d{4}$/
-  //  
-
   @Output() selectedComponent = new EventEmitter<any>();
 
-  constructor(private toastr: ToastrService, private el:ElementRef) {}
+  constructor(private toastr: ToastrService, private el:ElementRef, private cd: ChangeDetectorRef) {}
 
-  public async update(changes: any){
-    if (changes.success){
+  public update(changes: any){
+      if (changes.success){
       let fieldGroup = this.fields[changes.i].fieldGroup!
       if (fieldGroup){
         fieldGroup[changes.j] = {}
-        await setTimeout(()=>{
-          fieldGroup[changes.j] = changes.component
-          this.changed = true
+        setTimeout(()=>{
+            this.form = new FormGroup({});
+            fieldGroup[changes.j] = changes.component
+            this.changed = true
         },10)
       }
-      if (changes.validators){
-        this.validators = ['email','id']
-        changes.validators.forEach((v:any) => {
-          this.validators.push(v.name) 
-                   
-        })
-      }
-      console.log(this.validators);
     }
   }
 
+  ngAfterContentChecked() {
+    this.cd.detectChanges();
+  }
+  
+  
   //Method to show a toastr error notification
   private showError(message: string, title:string){
     this.toastr.error(message, title)
@@ -345,14 +340,15 @@ export class CanvaComponent{
     //Arrays of data to ignore in the json
     let undefinedValues = ["", false, null, undefined]
     
-    console.log(key,value, typeof value);
-    
-
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 'min','max',
                         'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'disabled','selectAllOption', 
-                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validators', 'ip', 'expression', 'message', 'template']
+                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validators', 'strMessage','regularExpression', 
+                        'expression', 'message', 'template']
 
-    
+    if (this.validators){
+      acceptedKeys = Array.from(new Set([...acceptedKeys, ...this.validators]));
+    }
+
     //Data to ignore
     if (undefinedValues.indexOf(value) > -1) return undefined;
     
@@ -379,6 +375,7 @@ export class CanvaComponent{
     if (typeof value === 'function'){
       return `${value}`      
     }
+    
 
     if (acceptedKeys.indexOf(key) === -1){
       if (isNaN(+key)) return undefined;
@@ -397,10 +394,12 @@ export class CanvaComponent{
       //and these objects can be empty, the second time is to delete these objects from the json
       //console.log(data);
       
-      //console.log(JSON.stringify(data,undefined,4));
-      
-      let firstJson = JSON.stringify(data, this.replacer)
-      finalJson = JSON.stringify(JSON.parse(firstJson, this.replacer), undefined, 4)
+      let firstJson = JSON.stringify(data, (key:string, value:any) => {
+        return this.replacer(key,value)
+      })
+      finalJson = JSON.stringify(JSON.parse(firstJson, (key:string, value:any) => {
+        return this.replacer(key,value)  
+      }), undefined, 4)
     }
     
     return finalJson
@@ -462,12 +461,13 @@ export class CanvaComponent{
     return {success, "data": this.stringifyData()};
   }
 
-
   private reviver(key:string , value: any){
-   
+    if (key  === 'expression' || key === 'message'){
+      console.log(value);
+      return eval(value)
+    }
     return value
   }
-
 
   private transformData(data: Array<any>){
     //HAcer esto en funciones >:(
@@ -484,7 +484,7 @@ export class CanvaComponent{
               type ObjectKey = keyof typeof formComponent;
               const key = component as ObjectKey;      
 
-              let newComponent = new formComponent[key](element.key,element.className);
+              let newComponent = new formComponent[key](element.key,element.className ? element.className : 'flex-1');
               this.componentCount++
              
               if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
@@ -504,8 +504,8 @@ export class CanvaComponent{
             
             type ObjectKey = keyof typeof formComponent;
             const key = component as ObjectKey;      
-
-            let newComponent = new formComponent[key](field.key,field.className);
+            
+            let newComponent = new formComponent[key](field.key,field.className ? field.className : 'flex-1');
             this.componentCount++
            
             if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
@@ -517,6 +517,7 @@ export class CanvaComponent{
             newComponent.setData(field.template)
             newFieldGroup.fieldGroup.push(newComponent)
           }
+          fields.push(newFieldGroup)
         }
         
       } catch (error) {

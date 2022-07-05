@@ -19,7 +19,7 @@ export class PropertiesComponent {
   locked = false;
   selectedValue: string = ''
 
-  propTitles = {'key': 'Key', 'defaultValue': 'Default value', 'label': 'Label', 'type': 'Type', 'min':'Min','max':'Max',
+  propTitles = {'key': 'Key', 'className': 'Flex Size', 'defaultValue': 'Default value', 'label': 'Label', 'type': 'Type', 'min':'Min','max':'Max',
                 'description': 'Description', 'placeholder':'Placeholder', 'pattern': 'Pattern', 
                 'selectAllOption': 'Select all option text','required': 'Required', 'multiple' : 'Multiple', 
                 'thumbLabel' : 'Thumb Label', 'rows': 'Rows','options': 'Options', 'text': 'Text', 
@@ -37,9 +37,6 @@ export class PropertiesComponent {
   properties: Array<{'title': string, "prop": string, "type": string, "value": any}> = [];
   i = -1
   j = -1
-
-  customValidators: Array<{name: string, regex: string}> = []
-
 
   constructor(private  dialog:  MatDialog){}
 
@@ -78,6 +75,8 @@ export class PropertiesComponent {
 
         let prop = {title: this.propTitles[key], prop: p, type: '', value: this.component.get(p)}
 
+        console.log(prop);
+        
         if(this.inputProps.indexOf(p) >= 0){
           prop.type = 'inp'
         }
@@ -134,7 +133,7 @@ export class PropertiesComponent {
   public async validatorsDialog(){
     this.blockClickInCanva = true
     const dialogRef = this.dialog.open(ValidatorsComponent, {
-      data: {"key":this.component.key, "validators": this.component.get('validators'), 'customValidators': this.customValidators},
+      data: {"key":this.component.key, "validators": this.component.get('validators')},
       width: '65%',
       height: '65%',
       disableClose: true
@@ -143,13 +142,10 @@ export class PropertiesComponent {
     dialogRef.afterClosed().subscribe(result => {
         console.log(result);
         if(result && result.changes){
-          console.log(this.customValidators);
-          
-          this.customValidators = result.customValidators
           let success = this.component.updateValidator(result.validators)
           if (success && (this.i != -1 && this.j != -1)){
             
-            this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j, 'validators': this.customValidators })
+            this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j})
           }
         }
         this.blockClickInCanva = false

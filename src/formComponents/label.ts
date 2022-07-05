@@ -5,8 +5,6 @@ export class Label {
     
     //Formly properties
     template = ``
-    type = 'label'
-    flexPosition = 'flex-1'
     key = ''
 
     //Properties of the label
@@ -14,9 +12,8 @@ export class Label {
          text: '', size: 4, bold : false, italic: false, 
         under: false, del: false
     }
-    constructor(key: string, flexPos: string){
+    constructor(key: string, _: string){
         this.key = key,
-        this.flexPosition = flexPos
         this.templateOptions['text'] = 'Label'
         this.template = `<h4>Label</h4>`
     }
@@ -25,35 +22,37 @@ export class Label {
         this.template = template
         const regex = /<\/?[\w\d]+>/gi;
         let tags = template.match(regex)
-        let spaces = 4
         tags = tags.slice(0, tags.length/2)
-
+        let h = 0
         tags.forEach((t:string) => {
             switch (t) {
                 case '<strong>':
-                    spaces += 8;
                     this.templateOptions.bold = true;
                     break;
                 case '<i>':
-                    spaces += 3;
                     this.templateOptions.italic = true;
                     break;
                 case '<u>':
-                    spaces += 3;
                     this.templateOptions.under = true;
                     break;
                 case '<del>':
-                    spaces += 5;
                     this.templateOptions.del = true;
                     break;
                 default:
-                    this.templateOptions.size = Number(t[2]);
+                    h = Number(t[2])
+                    this.templateOptions.size = h + (5 - 2*(h - 1));
                     break;
             }
         })
         
-        let end = template.length -tags.length -spaces 
-        this.templateOptions.text = template.slice(spaces,end)
+        let regExp = RegExp(`<h${h}>(.*?)<h/${h}>`)
+
+        let text = this.template.match(regExp)
+
+        if (text){
+            this.templateOptions.text = text[1]
+        }
+
     }
 
 
@@ -90,8 +89,6 @@ export class Label {
     /*Return the object that can be rendered with formly*/
     public returnObject(){
         return {"key": this.key, 
-                "className" : this.flexPosition, 
-                "type": this.type, 
                 "template": this.getTemplate()
             }
     }
@@ -143,7 +140,7 @@ export class Label {
 
     /*This function add the size to the template*/
     private addSize(){
-        let size = this.templateOptions['size'] + (5 - 2*(this.templateOptions['size']-1))
+        let size = this.templateOptions['size'] + (5 - 2*(this.templateOptions['size'] - 1))
         this.template += `<h${size}>`
         this.addText()
         this.template += `</h${size}>`

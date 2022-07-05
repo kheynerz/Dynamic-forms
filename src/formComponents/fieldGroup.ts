@@ -6,7 +6,5 @@ export class FieldGroup {
         this.fieldGroup = components;
     }
 
-    setData(){
-        
-    }
+    setData(){}
 }
