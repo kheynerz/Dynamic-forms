@@ -109,25 +109,21 @@ export class CanvaComponent{
   
   clickOnComponent(){
     return new Promise((resolve, reject) => {
-      let formlyForm = document.getElementById("form1");
+      let fieldGroups = document.querySelector("#form1")!.children;
 
-      if (formlyForm){
-        let fieldGroups = formlyForm.children;
+      for (let i = 0; i < fieldGroups.length; i++) {
+        //add click listener to all form component items in screen 
+        
+        let items  = fieldGroups[i].children.item(0)!.children;
 
-        for (let i = 0; i < fieldGroups.length; i++) {
-          //add click listener to all form component items in screen 
-          
-          let items  = fieldGroups[i].children.item(0)!.children;
-
-          for (let j = 0; j < items.length; j++) {
-            items[j].addEventListener('click', ()=>{
-              //resolve promise if some component is clicked
-              resolve([i,j]);
-            });
-          } 
-        }
+        for (let j = 0; j < items.length; j++){
+          items[j].addEventListener('click', ()=>{
+            //resolve promise if some component is clicked
+            resolve([i,j]);
+          });
+        } 
       }
-    
+  
       //reject promise if not resolved 
       setTimeout(() => {  
         reject();
@@ -144,7 +140,7 @@ export class CanvaComponent{
 
     //Mouse events 
     
-    document.onmouseup = (e) => {   
+    document.onmouseup = async(e) => {   
       if (dragValue){
         document.body.removeChild(dragValue);
         dragValue = null;
@@ -154,7 +150,7 @@ export class CanvaComponent{
     
           //adding one field group always to the end of canva
           this.fields = [ ...this.fields, endFieldGroup ]; 
- 
+
           this.clickOnComponent().then( ([i,j]:any)=>{
             //if promise resolved, add new component to selected field group
 
@@ -190,16 +186,23 @@ export class CanvaComponent{
       }
     }
     
+    let inThrottle:boolean;
     document.onmousemove = (e) =>{
-      //dragging element
-      let x = e.pageX;
-      let y = e.pageY;
+      if (!inThrottle) {
+        //dragging element with refresh timeout  
+        let x = e.pageX;
+        let y = e.pageY;
 
-      if(dragValue){
-        dragValue.style.top = y  + 'px';
-        dragValue.style.left = x  + 'px';
-      }  
+        if(dragValue){
+          dragValue.style.top = y  + 'px';
+          dragValue.style.left = x  + 'px';
+        }  
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, 25);
+      }
     }  
+
+
   }
 
   removeComponent(i: number, j : number){ 
