@@ -39,13 +39,15 @@ export class FormComponent{
     options : [ ]
   } 
 
-  validators = {}
+  validators = {} //Validators of the input files
 
   constructor(key: string, flexPosition : string, type: string, availableProperties: Array<string>){
     this.#availableProperties = ['key', 'className', ...availableProperties]
     this.key = key;
     this.className= flexPosition;
     this.type = type;
+    
+    //Parse the flexPosition string to get the number
     try {
       this.flexPosition = Number(flexPosition[flexPosition.length -1]);
     } catch (error) {
@@ -53,10 +55,11 @@ export class FormComponent{
     }
   }
 
-
+  //If the data is imported this function is used to set the data to the respective properties
   setData(templateOptions: Template, validators: any = {}, defaultValue:any = null){
     this.validators = validators
     this.defaultValue = defaultValue
+    //Iterate the received properties and set the value to the templateOptions
     for (const prop in templateOptions) {
       type ObjectKey = keyof typeof this.templateOptions;
       const key = prop as ObjectKey;
@@ -68,14 +71,17 @@ export class FormComponent{
 
   /*Function that validate and change the property of a component*/
   private changeProps(property: string, newValue: string | boolean | number | Date ): boolean{
-    //In formly defaultValue is separated from the template properties
+    //In formly defaultValue, key and className are separated from the template properties
     if (property === "defaultValue"){
       this.defaultValue = newValue 
+
     }else if (property === 'key'){
       this.key = newValue
+
     }else if(property === 'className'){
       this.className = `flex-${newValue}`
       this.flexPosition = Number(newValue)
+
     }else{
       try {
         //Create an ObjectKey to dynamically access the template options
@@ -116,7 +122,8 @@ export class FormComponent{
           return false
         }
 
-      } catch (_) { }
+      } catch (_) {console.log("Error while accessing to a property");
+       }
     }
     return false
   }
@@ -150,7 +157,7 @@ export class FormComponent{
     
     if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
    
-
+    //If it is something in validators add them to the object
     if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
 
     values['templateOptions'] = templateOptions
@@ -158,6 +165,7 @@ export class FormComponent{
     return values
   }
 
+  //Not implemented
   private changeStyle(newStyles: string){
     /*Creates a style tag for custom css for a form component*/
 
@@ -176,6 +184,7 @@ export class FormComponent{
     this.className = this.flexPosition + ` ${this.stylesClass}` 
   }
 
+  //Not implemented
   changeStyleProperty(property: string, value: string){
     //Get the styles and change the value of the property
     const style = {
@@ -216,7 +225,7 @@ export class FormComponent{
   }
 
   get(prop: string): any{
-
+    //Function to get the value of a property
     if (prop === 'key'){
       return this.key
     }
@@ -231,7 +240,6 @@ export class FormComponent{
     if (prop === 'className'){
       return this.flexPosition
     }
-
     //Create an ObjectKey to dynamically access the template options
     type ObjectKey = keyof typeof this.templateOptions;
     const key = prop as ObjectKey;
@@ -244,16 +252,10 @@ export class FormComponent{
     //Check if the component can add validators, and update it
     if (this.#availableProperties.indexOf("validators") !== -1){
       this.validators = newValidators
-
-      console.log(this.validators);
-      
       success = true
     }
     return success
   }
-
-
-
 
   updateOptions(newOptions: Array<{label: string, value: any, disabled: boolean}>){
     let success = false
@@ -264,30 +266,4 @@ export class FormComponent{
     }
     return success
   }
-
-
-  addOption(label: string, value: any, disabled: boolean = false){
-    let success = false
-    //Check if the component can add options, and push it
-    if (this.#availableProperties.indexOf("options") !== -1){
-      this.templateOptions.options.push({label, value, disabled})
-      success = true
-    }
-    return success
-
-  }
-
-  removeOption(index: number){
-    let success = false
-    //Check if the component can add options, remove the index
-    if (this.#availableProperties.indexOf("options") !== -1){
-      if (index > -1) {
-        if (this.templateOptions.options.splice(index, 1).length !== 0) {
-          success = true
-        }
-      }
-    }
-    return success
-  }
-
 }

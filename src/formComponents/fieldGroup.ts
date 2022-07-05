@@ -6,5 +6,7 @@ export class FieldGroup {
         this.fieldGroup = components;
     }
 
+    //Set data is not needed in FieldGroup, but is keeped while refractoring the code
+    //because it produce errors
     setData(){}
 }

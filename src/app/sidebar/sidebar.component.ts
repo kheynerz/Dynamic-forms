@@ -103,6 +103,7 @@ export class SidebarComponent implements AfterViewInit{
       this.toggleCanva = true
     }
   }
+  
   setDraggable(id:string,insertMode:string){
     this.canva.onInsert(id, insertMode);
   }

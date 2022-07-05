@@ -16,41 +16,57 @@ import FileSaver from 'file-saver';
   encapsulation: ViewEncapsulation.None
 })
 export class CanvaComponent implements AfterContentChecked{
+ 
+  //Click mode (Normal, Delete, Move)
+  clickMode: string = 'Normal'
+
+  //Variable to avoid re rendering the fields in the json code Tab
+  //If changes are made, the code tab must render the new data
+  changed: boolean = true;
+
+  //Available Validators
+  validators: Array<string> = ['email','IDCR'] 
+
+  //Count of components in the fields
+  componentCount = 1
+
+  //Formly
+  fields: FormlyFieldConfig[] = [];
   form = new FormGroup({});
   model = {};
 
-  clickMode: string = 'Normal'
-  changed: boolean = true;
-  selectedElement: any;
-
-  componentCount = 1
-
-  fields: FormlyFieldConfig[] = [];
-
-  validators: Array<string> = ['email','idCR']
-  
+  //Event emitter to send a signal to show the properties
   @Output() selectedComponent = new EventEmitter<any>();
 
-  constructor(private toastr: ToastrService, private el:ElementRef, private cd: ChangeDetectorRef) {}
+  constructor(
+    private toastr: ToastrService, //Send messages to the user
+    private el:ElementRef, 
+    private cd: ChangeDetectorRef //Detect changes to avoid ExpressionChangedAfterItHasBeenCheckedError
+    ){}
 
-  public update(changes: any){
-      if (changes.success){
-      let fieldGroup = this.fields[changes.i].fieldGroup!
-      if (fieldGroup){
-        fieldGroup[changes.j] = {}
-        setTimeout(()=>{
-            this.form = new FormGroup({});
-            fieldGroup[changes.j] = changes.component
-            this.changed = true
-        },10)
-      }
-    }
-  }
-
+  //Hook to avoid ExpressionChangedAfterItHasBeenCheckedError 
   ngAfterContentChecked() {
     this.cd.detectChanges();
   }
   
+  //Update the Fields, 
+  public update(changes: any){
+      if (changes.success){
+        //The changes in the component were made but they are not render in the screen
+        //Create a copy of the field group where is the component 
+        let fieldGroup = this.fields[changes.i].fieldGroup!
+        if (fieldGroup){
+          //Erase the component and reassign it 
+          fieldGroup[changes.j] = {}
+          //If setTimeout is not used the changes are not rendered
+          setTimeout(()=>{
+              this.form = new FormGroup({});//Re assign the form to update validators
+              fieldGroup[changes.j] = changes.component//Re assign the component
+              this.changed = true //Changes were made in the canva
+          },10)
+        }
+    }
+  }
   
   //Method to show a toastr error notification
   private showError(message: string, title:string){
@@ -69,14 +85,6 @@ export class CanvaComponent implements AfterContentChecked{
 
   changeClickMode(newMode: string){
     this.clickMode = newMode
-    console.log(this.clickMode);
-    
-  }
-
-  onSubmit() {
-    if (this.form.valid) {
-      alert(JSON.stringify(this.model, null, 2));
-    }
   }
 
   getDragValue(id:string){

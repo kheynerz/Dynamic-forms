@@ -12,18 +12,49 @@ export class Label {
          text: '', size: 4, bold : false, italic: false, 
         under: false, del: false
     }
-    constructor(key: string, _: string){
+
+    //Constructor of the class
+    //Flex position is not longer used in Label Class, but is keeped while refractoring the code
+    constructor(key: string, flexPosition: string){
         this.key = key,
         this.templateOptions['text'] = 'Label'
         this.template = `<h4>Label</h4>`
     }
 
+    //If data is imported set the data in the template to the templateOptions
     public setData(template: any){
-        this.template = template
+
+        //Regular expression to get the HTML tags
         const regex = /<\/?[\w\d]+>/gi;
         let tags = template.match(regex)
-        tags = tags.slice(0, tags.length/2)
-        let h = 0
+        
+        //Half size of the tags 
+        let midLength = tags.length/2 
+        
+        //Inside the mid tags is the text of the label
+        let initTextTag = tags[midLength-1]
+        let lastTextTag = tags[midLength]
+
+        //Index of the tags to get the value of the text 
+        let initIndex = template.indexOf(initTextTag) + initTextTag.length;
+        let endIndex = template.indexOf(lastTextTag);
+        
+        //Set the substring beetween the indexes to get the text
+        this.templateOptions.text = template.substring(initIndex, endIndex);
+
+        //To set the boolean values of the tags        
+        //Only need the opening tags
+        tags = tags.slice(0, midLength)
+
+        //Get the header tag of the template
+        let header = template.match(/<\/?h[1-6]>/ig)
+        let h  = Number(header[0][2]) //Size of the HTML header tag
+        
+        //For the user the size grows but if the value of the html tag grows,
+        //the header will be smaller, so a formula is applied to invert the size of tags
+        this.templateOptions.size = h + (5 - 2*(h - 1));
+
+        //Iterate the tags and set the respective option to true
         tags.forEach((t:string) => {
             switch (t) {
                 case '<strong>':
@@ -39,45 +70,38 @@ export class Label {
                     this.templateOptions.del = true;
                     break;
                 default:
-                    h = Number(t[2])
-                    this.templateOptions.size = h + (5 - 2*(h - 1));
                     break;
             }
         })
         
-        let regExp = RegExp(`<h${h}>(.*?)<h/${h}>`)
-
-        let text = this.template.match(regExp)
-
-        if (text){
-            this.templateOptions.text = text[1]
-        }
-
+        this.getTemplate()
     }
-
 
     public getProperties(): Array<string>{
         return ['key', 'text', 'italic','under','del','size']
     }
 
+    //Function to get the value of a property
     public get(prop:string): any{
         if (prop ==='key'){
             return this.key
         }
 
+        //Create a Object key to dynamically access a template option and return the property
         type ObjectKey = keyof typeof this.templateOptions;
         const key = prop as ObjectKey;
 
         return this.templateOptions[key]
     }
     public changeProperty(property: string, newValue: string | boolean | number ){
+        //Create a Object key to dynamically access a template option
         type ObjectKey = keyof typeof this.templateOptions;
         const key = property as ObjectKey;
+        // Set the new value to the option
         this.templateOptions[key] = newValue
-        
+        //Update the template of the Label
         this.getTemplate()
     }
-
 
     /*Get the template of the label*/
     public getTemplate(){
