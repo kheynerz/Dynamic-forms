@@ -148,16 +148,13 @@ export class CanvaComponent{
         if (this.clickOnCanva(e.pageX, e.pageY)){ 
           //Rendering new form in canva when a valid position is selected  
     
-          //adding one field group always to the end of canva
-          this.fields = [ ...this.fields, endFieldGroup ]; 
-
           this.clickOnComponent().then( ([i,j]:any)=>{
             //if promise resolved, add new component to selected field group
 
             //creating fields to render, with the new component
             let newFields:FormlyFieldConfig[] = [];
             let newFieldGroup = new formComponent['FieldGroup']([]); 
-      
+
             newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
 
             //index where to splice depending in the insert mode 
@@ -166,17 +163,20 @@ export class CanvaComponent{
             //insert component in the index specified
             newFieldGroup.fieldGroup.splice(j, 0, newComponent);
 
-            newFields = [ ...this.fields];  
-            newFields[i] = newFieldGroup;    
+            if (newFieldGroup.fieldGroup.length <= 6){
+              //field group maximum components
 
-            //removing previously added end field group     
-            newFields.splice(newFields.length-1, 1);
+              newFields = [ ...this.fields];  
+              newFields[i] = newFieldGroup;    
   
+              //updating fields in screen
+              this.fields = [ ...newFields];
+            }
 
-            //updating fields in screen
-            this.fields = [ ...newFields];
-            
-          }).catch(r=>{});
+          }).catch(r=>{
+            //adding one field group to the end of canva
+            this.fields = [ ...this.fields, endFieldGroup ]; 
+          });
 
         } 
       } 
