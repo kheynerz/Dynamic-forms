@@ -334,7 +334,7 @@ export class CanvaComponent{
     //Arrays of data to ignore in the json
     let undefinedValues = ["", false, null, undefined]
     
-    let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 
+    let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 'min','max',
                         'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'disabled','selectAllOption', 
                         'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validation', 'messages', 'template']
 

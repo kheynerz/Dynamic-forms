@@ -18,7 +18,7 @@ export class PropertiesComponent {
   locked = false;
   selectedValue: string = ''
 
-  propTitles = {'key': 'Key', 'defaultValue': 'Default value', 'label': 'Label', 'type': 'Type',
+  propTitles = {'key': 'Key', 'defaultValue': 'Default value', 'label': 'Label', 'type': 'Type', 'min':'Min','max':'Max',
                 'description': 'Description', 'placeholder':'Placeholder', 'pattern': 'Pattern', 
                 'selectAllOption': 'Select all option text','required': 'Required', 'multiple' : 'Multiple', 
                 'thumbLabel' : 'Thumb Label', 'rows': 'Rows','options': 'Options', 'text': 'Text', 
@@ -27,6 +27,7 @@ export class PropertiesComponent {
 
   inputProps = ['key', 'label', 'description', 'placeholder', 'pattern', 'selectAllOption', 'text']
   checkBoxProps = ['required', 'multiple', 'thumbLabel', 'bold', 'italic','under','del']
+  numberProps = ['min','max','rows']
   component!: FormComponent;
   properties: Array<{'title': string, "prop": string, "type": string, "value": any}> = [];
   i = -1
@@ -71,6 +72,9 @@ export class PropertiesComponent {
         else if(this.checkBoxProps.indexOf(p) >= 0){
           this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'chk', 'value': this.component.get(p)})
         }
+        else if(this.numberProps.indexOf(p) >= 0){
+          this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'num', 'value': this.component.get(p)})
+        }
         else if(p === 'type'){
           let value: Array<string> = []
           if (this.component.type === 'input' ){
@@ -84,9 +88,7 @@ export class PropertiesComponent {
         else if(p === 'options'){
           this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'opt', 'value': ''})
         }
-        else if(p === 'rows'){
-          this.properties.push({'title': this.propTitles[key],'prop': p, "type": 'num', 'value': this.component.get(p)})
-        }
+        
       });
     }
   }
