@@ -188,14 +188,19 @@ export class CanvaComponent implements AfterContentChecked{
               this.showError("El tamaño del agrupador ya es el máximo","Agregar componentes");
 
               //make a backup if copy is received
-              fieldsCopy ? this.fields = [...fieldsCopy] : null;     
+              fieldsCopy ? this.fields = [...fieldsCopy]: null;
             }
+            //keep moving if copy is received (called from onMove)
+            fieldsCopy ? this.onMove(insertMode): null;
 
-
-          }).catch(r=>{
+          }).catch(()=>{
             //adding one field group to the end of canva
             this.fields = [ ...this.fields, endFieldGroup ]; 
+            //keep moving if copy is received (called from onMove)
+            fieldsCopy ? this.onMove(insertMode): null;
           });
+
+          
 
         } 
       } 
@@ -267,7 +272,7 @@ export class CanvaComponent implements AfterContentChecked{
           
           this.removeComponent(i,j);
           
-        }).catch(r=>{});
+        }).catch(_=>{});
 
         this.changed = true;
     
@@ -311,7 +316,7 @@ export class CanvaComponent implements AfterContentChecked{
           //drag and add the selected component
           this.dragAddComponent(removedID, insertMode, removedItem, fieldsCopy) 
           
-        }).catch(r=>{});
+        }).catch(_=>{});
 
         this.changed = true;
         
@@ -342,7 +347,7 @@ export class CanvaComponent implements AfterContentChecked{
             this.fields.splice(i,0,moved);
           }
    
-        }).catch(r=>{});
+        }).catch(_=>{});
 
         this.changed = true;
 
