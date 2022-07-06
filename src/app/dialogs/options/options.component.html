@@ -55,6 +55,14 @@
     <button style="background-color: aqua; margin-left: 5%;" mat-button (click)="addOption()">Add</button>
 </div>
 
+
+<h4 style="margin: 2% 0;">Load from WebService:</h4>
+<div class="inline">
+    <input [(ngModel)]="webServiceUrl" matInput placeholder="WebService"/>
+    <mat-checkbox [(ngModel)]="replace">Replace Options</mat-checkbox>
+    <button mat-button style="background-color: aqua; margin-left: 5%;" (click)="loadFromWebService()">Load</button>
+</div>
+
 <div  mat-dialog-actions>
     <button mat-raised-button (click)="close()">Cancel</button>
     <button mat-raised-button [mat-dialog-close]="{changes, dataSource}">Apply</button>

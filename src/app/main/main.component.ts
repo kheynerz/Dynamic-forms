@@ -6,6 +6,7 @@ import { PropertiesComponent } from '../properties/properties.component';
 import { FormControl } from '@angular/forms';
 
 
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -55,7 +56,7 @@ export class MainComponent implements AfterViewInit{
   
   openFile(){
     //Trigger the fileInput click event
-    this.FileInput.nativeElement.click()
+    this.FileInput.nativeElement.click() 
   }
 
   onChangeInputFile(){
