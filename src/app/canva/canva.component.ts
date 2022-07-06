@@ -16,9 +16,6 @@ import FileSaver from 'file-saver';
   encapsulation: ViewEncapsulation.None
 })
 export class CanvaComponent implements AfterContentChecked{
- 
-  //Click mode (Normal, Delete, Move)
-  clickMode: string = 'Normal'
 
   //Variable to avoid re rendering the fields in the json code Tab
   //If changes are made, the code tab must render the new data
@@ -81,10 +78,6 @@ export class CanvaComponent implements AfterContentChecked{
   //Method to show a toastr info notification
   private showInfo(message: string, title:string){
     this.toastr.info(message, title)
-  }
-
-  changeClickMode(newMode: string){
-    this.clickMode = newMode
   }
 
   getDragValue(id:string){
@@ -154,6 +147,9 @@ export class CanvaComponent implements AfterContentChecked{
     //getting the button to drag
     let dragValue: any = this.getDragValue(id);  
 
+    //appropriate cursor style
+    document.body.style.cursor = "grabbing"
+
     //Mouse events 
     
     document.onmouseup = async(e) => {   
@@ -189,7 +185,7 @@ export class CanvaComponent implements AfterContentChecked{
               this.fields = [ ...newFields];
 
             }else{
-              this.showError("El tamaño del agrupador es el máximo","Agregar componentes");
+              this.showError("El tamaño del agrupador ya es el máximo","Agregar componentes");
 
               //make a backup if copy is received
               fieldsCopy ? this.fields = [...fieldsCopy] : null;     
@@ -204,9 +200,7 @@ export class CanvaComponent implements AfterContentChecked{
         } 
       } 
       
-      if (this.clickMode === 'Normal'){
-        this.onNormalClick()
-      }
+      this.onNormalClick();
     }
     
     let inThrottle:boolean;
@@ -261,6 +255,10 @@ export class CanvaComponent implements AfterContentChecked{
   }
 
   onDelete(){
+
+    //change to appropriate cursor style
+    document.body.style.cursor = "no-drop"
+    
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
@@ -273,12 +271,20 @@ export class CanvaComponent implements AfterContentChecked{
 
         this.changed = true;
     
+      }else{
+        //if click is outside canva reset event and cursor 
+        document.onmouseup = () =>{};
+        this.onNormalClick();
       }
-    }  
-   
+
+    }
+
   }
 
   onMove(insertMode:string){
+
+    //change to appropriate cursor style
+    document.body.style.cursor = "grab"
     
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
@@ -298,10 +304,10 @@ export class CanvaComponent implements AfterContentChecked{
           const key = 'type' as ObjectKey;      
           if (removedID === "Object"){
             //getting type of component to drag 
-            removedID = removedItem[key]
-            removedID = removedID.charAt(0).toUpperCase() + removedID.slice(1)
+            removedID = removedItem[key];
+            removedID = removedID.charAt(0).toUpperCase() + removedID.slice(1);
           }       
- 
+  
           //drag and add the selected component
           this.dragAddComponent(removedID, insertMode, removedItem, fieldsCopy) 
           
@@ -311,9 +317,13 @@ export class CanvaComponent implements AfterContentChecked{
         
       }
     }  
+    
   }
 
   onMoveFieldGroup(up:boolean){
+    
+    //change to appropriate cursor style
+    document.body.style.cursor = "move";
 
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
@@ -336,12 +346,18 @@ export class CanvaComponent implements AfterContentChecked{
 
         this.changed = true;
 
+      }else{
+         //if click is outside canva reset event and cursor 
+         document.onmouseup = () =>{};
+         this.onNormalClick();
       }
     }  
   }
  
 
   onNormalClick(){
+    document.body.style.cursor = "default"
+
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
