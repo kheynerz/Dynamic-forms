@@ -1,9 +1,8 @@
 import { Component, Inject } from '@angular/core';
 
 import {MatDialogRef, MAT_DIALOG_DATA} from  '@angular/material/dialog';
-import { FormlyFieldConfig } from '@ngx-formly/core';
 
-
+import {validators, dataSource} from './validators'
 
 interface Validators{
   [name:string]: {expression: Function, message: Function}
@@ -15,91 +14,44 @@ interface Validators{
   templateUrl: './validators.component.html',
   styleUrls: ['./validators.component.css']
 })
-export class ValidatorsComponent{
-  email = {
-    expression: (c:any) => /^([\w\d._\-#])+@([\w\d._\-#]+[.][\w\d._\-#]+)+$/.test(c.value),
-    message: (_: any, field: FormlyFieldConfig) => `"${field.formControl!.value}" is not a valid Email Address`,
-  }
-  idCR = {
-    expression: (c:any) => /^[1-9]-\d{4}-\d{4}$/.test(c.value),
-    message: (_: any, field: FormlyFieldConfig) => `"${field.formControl!.value}" is not a valid Costa Rican ID`,
-  }
-
-  availableValidators: Validators = {
-    email : this.email,
-    idCR : this.idCR
-  }
-
-  componentValidators: Validators = {}
-  customValidators: Array<{name: string, regex: string}> = []
-
-  //newValidator = {name: '', regex: '', message: ''}
-  changes: boolean = false
-
+export class ValidatorsDialog{
+  //Columns to be displayed in the Mat table
   displayedColumns = ['validator', 'regex', 'activated']
+  //Variable to avoid updating data in the fields when is not necessary
+  changes: boolean = false
+  //Data of the table
+  dataSource: Array<{name: string, regex: RegExp, checked: boolean}> = dataSource
 
-  dataSource: Array<{name: string, regex: RegExp, checked: boolean, action: boolean}> = [
-    {name:'email', regex: /^([\w\d._\-#])+@([\w\d._\-#]+[.][\w\d._\-#]+)+$/, checked: false, action: false},
-    {name:'idCR', regex: /^[1-9]-\d{4}-\d{4}$/, checked: false, action: false},
-  ]
+  //Store the validators of the component
+  componentValidators: Validators = {}
 
-  constructor( private  dialogRef:  MatDialogRef<ValidatorsComponent>, 
+  constructor( private  dialogRef:  MatDialogRef<ValidatorsDialog>, 
     @Inject(MAT_DIALOG_DATA) public  data:  {key:string, validators:any} ){
 
-    this.dataSource.forEach(e => {
-      if (Object.keys(data.validators).indexOf(e.name) >= 0){
-        e.checked = true
+    //Check the validators of the component
+    this.dataSource.forEach(v => {
+      if (Object.keys(data.validators).indexOf(v.name) >= 0){
+        v.checked = true
       }
     })
 
     this.componentValidators = data.validators
   }
-  
+ 
+  //Close the Validators Dialog
   public close() {
     this.dialogRef.close();
   }
 
+  //When a validator is checked
   public changeCheckBox(element: any){
     element.checked = !element.checked; 
+    this.changes = true
+    //Add the validator to the component or delete it 
     if (element.checked){
-      this.componentValidators[element.name] = this.availableValidators[element.name]
-      this.changes = true
+      this.componentValidators[element.name] = validators[element.name]
     }else{
       delete this.componentValidators[element.name]
-      this.changes = true
     }
   }
-
-  /*
-  public addValidator(){
-    let {name, regex, message} = this.newValidator
-
-    if (name === '' && regex === ''){
-      return
-    }
-    let repeatedName = false
-    this.dataSource.forEach(validator =>{
-      if (validator.name === name){
-        console.log("Nombre repetido: Mostrar al usuario");
-        repeatedName = true
-      }
-    })
-
-    if (repeatedName) return
-
-    this.changes = true
-
-    let exp = regex.replace(/\//g, '')
-    let regularExpression = new RegExp(exp);
-
-    let validator = {
-      expression: (c:any) => regularExpression.test(c.value),
-      message: (_: any, field: FormlyFieldConfig) => `"${field.formControl!.value}" ${message}`,
-    }
-
-    this.availableValidators[name] = validator
-    this.customValidators.push({name, regex: exp})
-    this.dataSource.push({name, regex: regularExpression, checked: false, action: true})
-    this.dataSource = [...this.dataSource]
-  }*/
 }

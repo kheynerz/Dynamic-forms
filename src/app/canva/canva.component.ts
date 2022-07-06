@@ -473,6 +473,9 @@ export class CanvaComponent implements AfterContentChecked{
   }
 
   private reviver(key:string , value: any){
+    //The data in expression and message cant be parse by default
+    //Because they are functions
+    //Eval this functions and return the function
     if (key  === 'expression' || key === 'message'){
       console.log(value);
       return eval(value)
@@ -556,7 +559,7 @@ export class CanvaComponent implements AfterContentChecked{
   }
 
   getJsonData(){
-    //If the data has changed 
+    //If the data has changed, get the new Data and return it
     let dataChanged = this.changed
     let data = ""
 

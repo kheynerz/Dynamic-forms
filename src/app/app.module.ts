@@ -52,8 +52,8 @@ import { FormlyFieldLabel } from './labelType';
 import { PropertiesComponent } from './properties/properties.component';
 
 import {MatTabsModule} from '@angular/material/tabs';
-import { OptionsComponent } from './dialogs/options/options.component';
-import { ValidatorsComponent } from './dialogs/validators/validators.component';
+import { OptionsDialog } from './dialogs/options/options.component';
+import { ValidatorsDialog } from './dialogs/validators/validators.component';
 
 @NgModule({
   declarations: [
@@ -64,8 +64,8 @@ import { ValidatorsComponent } from './dialogs/validators/validators.component';
     LabelWrapperComponent,
     FormlyFieldLabel,
     PropertiesComponent,
-    OptionsComponent,
-    ValidatorsComponent
+    OptionsDialog,
+    ValidatorsDialog
   ],
   imports: [ 
     BrowserModule,

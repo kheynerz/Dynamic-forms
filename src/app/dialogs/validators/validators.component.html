@@ -26,5 +26,5 @@
 
 <div  mat-dialog-actions>
     <button mat-raised-button (click)="close()">Cancel</button>
-    <button mat-raised-button [mat-dialog-close]="{changes, validators: componentValidators, customValidators}">Apply</button>
+    <button mat-raised-button [mat-dialog-close]="{changes, dataSource: componentValidators}">Apply</button>
 </div>

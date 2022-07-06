@@ -131,7 +131,7 @@ export class FormComponent{
   //This function only returns the properties with values not empty or false
   returnObject(){
     //This values must be always returned
-    let values: any = {"key": this.key, "className" : this.flexPosition, "type": this.type}
+    let values: any = {"key": this.key, "className" : this.className, "type": this.type}
 
     //If the values are not empty add them to the object
     let templateOptions: any = {}

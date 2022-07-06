@@ -18,14 +18,13 @@ export class SidebarComponent implements AfterViewInit{
   @ViewChild('canva') canva!: CanvaComponent;
   //Code editor where the user can see and edit the JSON of the Form
   @ViewChild('codeTab') codeTab!: CodeTabComponent;
-
+  //Properties Side bar where the user can change the properties of the components
   @ViewChild('properties') properties!: PropertiesComponent;
 
   filename = ''
 
   tabs = ['Form','Json'];
   selected = new FormControl(0);
-
 
   sideComponents = componentList;
   //sideProperties = properties;
@@ -122,19 +121,18 @@ export class SidebarComponent implements AfterViewInit{
 
   showProperties(component: any){
     this.properties.showProperties(component)
-    
   }
 
+  //Update the change if a property changed, in the formly fields
   updateChanges(changes: any){
     if (changes.success){
-
+      //update the component
       this.canva.update(changes)
+      //If the data has changed update the code tab
       let result = this.canva.getJsonData()
       if (result.dataChanged){
         this.codeTab.setData(result.data)
       }
-
     }
   }
-
 }
