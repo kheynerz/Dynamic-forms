@@ -1,17 +1,17 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import {componentList} from './menu-list'
-import {CanvaComponent} from '../canva/canva.component'
+import { componentList } from './menu-list'
+import { CanvaComponent } from '../canva/canva.component'
 import { CodeTabComponent } from '../code-tab/code-tab.component';
 import { PropertiesComponent } from '../properties/properties.component';
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.css']
 })
-export class SidebarComponent implements AfterViewInit{
+export class MainComponent implements AfterViewInit{
   //Input of type file if the user wants to upload a JSON
   @ViewChild('FileInput') FileInput!: ElementRef;
   //Canva where the user can build the Form with the components

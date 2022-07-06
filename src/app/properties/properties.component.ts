@@ -160,8 +160,8 @@ export class PropertiesComponent {
       //Check if changes were done and update them
       if(result && result.changes){
         this.update(this.component.updateOptions(result.dataSource))
-        this.blockClickInCanva = false
       }
+      this.blockClickInCanva = false
     })
   }
 
@@ -175,8 +175,8 @@ export class PropertiesComponent {
       //Check if changes were done and update them
       if(result && result.changes){
         this.update(this.component.updateValidator(result.dataSource))
-        this.blockClickInCanva = false
       }
+      this.blockClickInCanva = false
     })
   }
 }
