@@ -148,7 +148,7 @@ export class CanvaComponent implements AfterContentChecked{
     })
   }
 
-  dragAddComponent(id:string, insertMode:string, newComponent : Object){
+  dragAddComponent(id:string, insertMode:string, newComponent : Object, fieldsCopy:Array<Object> | null){
     let endFieldGroup = new formComponent['FieldGroup']([newComponent]);
 
     //getting the button to drag
@@ -187,8 +187,14 @@ export class CanvaComponent implements AfterContentChecked{
   
               //updating fields in screen
               this.fields = [ ...newFields];
-            }else
+
+            }else{
               this.showError("El tamaño del agrupador es el máximo","Agregar componentes");
+
+              //make a backup if copy is received
+              fieldsCopy ? this.fields = [...fieldsCopy] : null;     
+            }
+
 
           }).catch(r=>{
             //adding one field group to the end of canva
@@ -218,7 +224,6 @@ export class CanvaComponent implements AfterContentChecked{
         setTimeout(() => inThrottle = false, 25);
       }
     }  
-
 
   }
 
@@ -250,7 +255,7 @@ export class CanvaComponent implements AfterContentChecked{
     let newComponent = new formComponent[requiredKey](requiredKey+this.componentCount as string & object[],'flex-1');
     this.componentCount++
     //drag and add the selected component
-    this.dragAddComponent(id, insertMode, newComponent);
+    this.dragAddComponent(id, insertMode, newComponent, null);
 
     this.changed = true;
   }
@@ -279,6 +284,9 @@ export class CanvaComponent implements AfterContentChecked{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
         this.clickOnComponent().then( ([i,j]:any)=>{
+          //copy in case component is not added
+          let fieldsCopy = [...this.fields];
+
           //if promise resolved, remove selected component and save it   
           let removedItem = this.removeComponent(i,j)[0]
 
@@ -293,9 +301,9 @@ export class CanvaComponent implements AfterContentChecked{
             removedID = removedItem[key]
             removedID = removedID.charAt(0).toUpperCase() + removedID.slice(1)
           }       
-          
+ 
           //drag and add the selected component
-          this.dragAddComponent(removedID, insertMode, removedItem)
+          this.dragAddComponent(removedID, insertMode, removedItem, fieldsCopy) 
           
         }).catch(r=>{});
 
