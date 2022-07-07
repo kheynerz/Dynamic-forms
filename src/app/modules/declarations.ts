@@ -7,8 +7,10 @@ import { PropertiesComponent } from '../properties/properties.component';
 //Dialog Components
 import { OptionsDialog } from '../dialogs/options/options.component';
 import { ValidatorsDialog } from '../dialogs/validators/validators.component';
+import { DynamicOptionsDialog } from '../dialogs/dynamic-options/dynamic-options.component';
 
 export let declarations = [
+    DynamicOptionsDialog,
     AppComponent,
     MainComponent,
     CanvaComponent,

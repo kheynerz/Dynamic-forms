@@ -18,8 +18,6 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { declarations } from './modules/declarations';
 import { AppComponent } from './app.component';
 
-//Providers
-import { HttpErrorHandler } from './services/ErrorHandler';
 
 @NgModule({
   declarations,
@@ -39,7 +37,8 @@ import { HttpErrorHandler } from './services/ErrorHandler';
       preventDuplicates: true
     }),
   ],
-  providers: [HttpErrorHandler],
-  bootstrap: [AppComponent]
+  providers: [],
+  bootstrap: [AppComponent],
+
 })
 export class AppModule { }

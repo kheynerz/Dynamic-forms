@@ -2,7 +2,7 @@
 interface Template{
   label: string, description: string, placeholder: string, pattern: string, 
   type: string, value: string, selectAllOption: string, rows: any, min: any, max:any, 
-  thumbLabel: any, required: any, multiple: any, options: Array<object>
+  thumbLabel: any, required: any, multiple: any, options: Array<object>, dynamicOptions: any
 }
 
 /*This class is a base for all the components that can be created with Formly*/
@@ -36,7 +36,8 @@ export class FormComponent{
     thumbLabel: false,
     required: false,      
     multiple: false,
-    options : [ ]
+    options : [ ],
+    dynamicOptions: {}
   } 
 
   validators = {} //Validators of the input files
