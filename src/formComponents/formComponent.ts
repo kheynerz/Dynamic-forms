@@ -156,10 +156,16 @@ export class FormComponent{
     //If its a select add and the multiple option its enable add the Select All Option
     if (this.type === "select" && this.templateOptions.multiple) templateOptions['selectAllOption'] = this.templateOptions.selectAllOption
     
-    if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
+    if (Object.keys(this.templateOptions.dynamicOptions).length !== 0) templateOptions['dynamicOptions'] = this.templateOptions.dynamicOptions
+    
+    if (!templateOptions['dynamicOptions']){
+      if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
+    }
    
     //If it is something in validators add them to the object
     if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
+
+
 
     values['templateOptions'] = templateOptions
     
