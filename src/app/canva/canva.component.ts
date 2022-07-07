@@ -483,62 +483,53 @@ export class CanvaComponent implements AfterContentChecked{
     return value
   }
 
-  private transformData(data: Array<any>){
-    //HAcer esto en funciones >:(
-    let fields: FormlyFieldConfig[] = [];
 
+  private createComponent(element: any, fieldGroup: any){
+    let component = element.type.charAt(0).toUpperCase() + element.type.slice(1);
+              
+    type ObjectKey = keyof typeof formComponent;
+    const key = component as ObjectKey;      
+
+    let newComponent = new formComponent[key](element.key,element.className ? element.className : 'flex-1');
+    this.componentCount++
+   
+    if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
+      newComponent.setData(element.templateOptions, element.validators, element.defaultValue)
+    }
+    fieldGroup.fieldGroup.push(newComponent)
+  }
+
+  private createLabel(element: any, fieldGroup: any){
+    let newComponent = new formComponent['Label'](element.key,element.className);
+    newComponent.setData(element.template)
+    fieldGroup.fieldGroup.push(newComponent)
+  }
+
+  private transformObject(element: any, fieldGroup:any){
+    if (element.type){
+      this.createComponent(element, fieldGroup)
+    }else if (element.template){
+      this.createLabel(element, fieldGroup)
+    }
+  }
+
+  private transformData(data: Array<any>){
+    let fields: FormlyFieldConfig[] = [];
     data.forEach(field => {
       try {
         let newFieldGroup = new formComponent['FieldGroup']([])
         if (field.fieldGroup){
           field.fieldGroup.forEach((element:any) => {
-            if (element.type){
-              let component = element.type.charAt(0).toUpperCase() + element.type.slice(1);
-              
-              type ObjectKey = keyof typeof formComponent;
-              const key = component as ObjectKey;      
-
-              let newComponent = new formComponent[key](element.key,element.className ? element.className : 'flex-1');
-              this.componentCount++
-             
-              if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
-                newComponent.setData(element.templateOptions, element.validators, element.defaultValue)
-              }
-              newFieldGroup.fieldGroup.push(newComponent)
-            }else if (element.template){
-              let newComponent = new formComponent['Label'](element.key,element.className);
-              newComponent.setData(element.template)
-              newFieldGroup.fieldGroup.push(newComponent)
-            }
+            this.transformObject(element, newFieldGroup)
           })
-          fields.push(newFieldGroup)
         }else{
-          if (field.type){
-            let component = field.type.charAt(0).toUpperCase() + field.type.slice(1);
-            
-            type ObjectKey = keyof typeof formComponent;
-            const key = component as ObjectKey;      
-            
-            let newComponent = new formComponent[key](field.key,field.className ? field.className : 'flex-1');
-            this.componentCount++
-           
-            if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
-              newComponent.setData(field.templateOptions, field.validators, field.defaultValue)
-            }
-            newFieldGroup.fieldGroup.push(newComponent)
-          }else if (field.template){
-            let newComponent = new formComponent['Label'](field.key,field.className);
-            newComponent.setData(field.template)
-            newFieldGroup.fieldGroup.push(newComponent)
-          }
-          fields.push(newFieldGroup)
+          this.transformObject(field, newFieldGroup)
         }
-        
+        fields.push(newFieldGroup)
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     })
-
     return fields
   }
 
