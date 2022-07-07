@@ -1,1 +1,11 @@
-<p>dynamic-options works!</p>
+<h1 style="text-align: center;" mat-dialog-title>Dynamic Options: {{data.key}}</h1>
+
+<input [(ngModel)]="dynamicOptions.url" matInput  placeholder="Url"/>
+<input [(ngModel)]="dynamicOptions.dataLabel" matInput  placeholder="Column Label name" aria-label="Label"/>
+<input [(ngModel)]="dynamicOptions.dataValue" matInput  placeholder="Column Value name" aria-label="Value"/>
+
+
+<div  mat-dialog-actions>
+    <button mat-raised-button (click)="close()">Cancel</button>
+    <button mat-raised-button [mat-dialog-close]="{changes}">Apply</button>
+</div>

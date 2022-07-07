@@ -5,6 +5,7 @@ import { MatDialog } from  '@angular/material/dialog';
 //Dialogs
 import { OptionsDialog } from '../dialogs/options/options.component';
 import { ValidatorsDialog } from '../dialogs/validators/validators.component';
+import { DynamicOptionsDialog } from '../dialogs/dynamic-options/dynamic-options.component';
 
 @Component({
   selector: 'app-properties',
@@ -179,4 +180,17 @@ export class PropertiesComponent {
       this.blockClickInCanva = false
     })
   }
+
+  public dynamicOptionsDialog(){
+    let  data = {"key":this.component.key, "dynamicOptions": this.component.get('dynamicOptions')}
+    const dialogRef = this.OpenDialog(DynamicOptionsDialog, data)
+    dialogRef.afterClosed().subscribe(result => {
+      //Check if changes were done and update them
+      if(result && result.changes){
+        console.log(result);
+      }
+      this.blockClickInCanva = false
+    })
+  }
+
 }

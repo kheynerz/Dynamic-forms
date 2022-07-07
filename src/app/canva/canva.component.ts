@@ -353,8 +353,8 @@ export class CanvaComponent implements AfterContentChecked{
     
     let acceptedKeys = ['','fieldGroupClassName', 'fieldGroup','key','className', 'type', 'defaultValue', 'min','max',
                         'templateOptions', 'label', 'description','placeholder', 'pattern', 'value', 'disabled','selectAllOption', 
-                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validators', 'strMessage','regularExpression', 
-                        'expression', 'message', 'template']
+                        'thumbLabel', 'required', 'multiple', 'rows', 'options', 'validators',  'expression', 'message', 'template', 
+                        'url', 'dataLabel', 'basedOn', 'dataValue', 'queryParams', 'dynamicOptions']
 
     if (this.validators){
       acceptedKeys = Array.from(new Set([...acceptedKeys, ...this.validators]));
@@ -386,7 +386,6 @@ export class CanvaComponent implements AfterContentChecked{
     if (typeof value === 'function'){
       return `${value}`      
     }
-    
 
     if (acceptedKeys.indexOf(key) === -1){
       if (isNaN(+key)) return undefined;

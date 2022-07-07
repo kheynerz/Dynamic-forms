@@ -28,7 +28,12 @@
         <span  *ngIf="p.type === 'validators'" >
           Validators: <button  (click)="validatorsDialog()"  mat-button>Open</button>
         </span>
+
+        <span  *ngIf="p.type === 'dynamicOptions'" >
+          Dynamic Options: <button  (click)="dynamicOptionsDialog()" mat-button>Open</button>
+        </span>
         
+
       </p>
 
     </div>

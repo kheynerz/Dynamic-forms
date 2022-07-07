@@ -37,7 +37,12 @@ export class FormComponent{
     required: false,      
     multiple: false,
     options : [ ],
-    dynamicOptions: {}
+    dynamicOptions: {
+      "url": "",
+      "dataValue": "id",
+      "dataLabel": "nombre",
+      "queryParams": []
+    }
   } 
 
   validators = {} //Validators of the input files
