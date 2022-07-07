@@ -11,10 +11,10 @@
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
-        <button (click)="this.canva.changeClickMode('Normal')" color="basic" mat-icon-button>
+        <button (click)="this.canva.onNormalClick()" color="basic" mat-icon-button>
           <mat-icon>touch_app</mat-icon>&nbsp;
         </button> 
-        <button (click)="moveComponent(insertGroup.value); this.canva.changeClickMode('Move')" color="basic" mat-icon-button>
+        <button (click)="moveComponent(insertGroup.value)" color="basic" mat-icon-button>
           <mat-icon>pan_tool</mat-icon>&nbsp;
         </button>
         <button (click)="moveFieldGroup(false)" color="basic" mat-icon-button>
@@ -23,7 +23,7 @@
         <button (click)="moveFieldGroup(true)" color="basic" mat-icon-button>
           <mat-icon>arrow_upward</mat-icon>&nbsp;
         </button>
-        <button (click)="deleteComponent(); this.canva.changeClickMode('Delete')" color="basic" mat-icon-button>
+        <button (click)="deleteComponent()" color="basic" mat-icon-button>
           <mat-icon>delete</mat-icon>&nbsp;
         </button> 
         <button (click)="openFile()" color="basic" mat-icon-button>
