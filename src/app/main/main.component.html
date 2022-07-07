@@ -11,25 +11,25 @@
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
-        <button (click)="this.canva.onNormalClick()" color="basic" mat-icon-button>
+        <button (click)="this.canva.onNormalClick()" color="basic" matTooltip="Select mode" mat-icon-button>
           <mat-icon>touch_app</mat-icon>&nbsp;
         </button> 
-        <button (click)="moveComponent(insertGroup.value)" color="basic" mat-icon-button>
+        <button (click)="moveComponent(insertGroup.value)" color="basic" matTooltip="Move component mode" mat-icon-button>
           <mat-icon>pan_tool</mat-icon>&nbsp;
         </button>
-        <button (click)="moveFieldGroup(false)" color="basic" mat-icon-button>
+        <button (click)="moveFieldGroup(false)" color="basic" matTooltip="Move entire field group up" mat-icon-button>
           <mat-icon>arrow_downward</mat-icon>&nbsp;
         </button>
-        <button (click)="moveFieldGroup(true)" color="basic" mat-icon-button>
+        <button (click)="moveFieldGroup(true)" color="basic" matTooltip="Move entire field group down" mat-icon-button>
           <mat-icon>arrow_upward</mat-icon>&nbsp;
         </button>
-        <button (click)="deleteComponent()" color="basic" mat-icon-button>
+        <button (click)="deleteComponent()" color="basic" matTooltip="Delete mode" mat-icon-button>
           <mat-icon>delete</mat-icon>&nbsp;
         </button> 
-        <button (click)="openFile()" color="basic" mat-icon-button>
+        <button (click)="openFile()" color="basic" matTooltip="Import file" mat-icon-button>
           <mat-icon>cloud_upload</mat-icon>&nbsp;
         </button>
-        <button (click)="saveJSON ()" color="basic" mat-icon-button>
+        <button (click)="saveJSON ()" color="basic" matTooltip="Download file" mat-icon-button>
           <mat-icon>cloud_download</mat-icon>&nbsp;
         </button> 
       </div>
@@ -47,10 +47,10 @@
 
       
       <mat-button-toggle-group #insertGroup="matButtonToggleGroup" value="Right">
-        <mat-button-toggle value="Left" aria-label="Insert mode left">
+        <mat-button-toggle value="Left" matTooltip="Insert mode left">
           <mat-icon>keyboard_arrow_left</mat-icon>
         </mat-button-toggle>
-        <mat-button-toggle value="Right" aria-label="Insert mode right">
+        <mat-button-toggle value="Right" matTooltip="Insert mode right">
           <mat-icon>keyboard_arrow_right</mat-icon>
         </mat-button-toggle>       
       </mat-button-toggle-group>

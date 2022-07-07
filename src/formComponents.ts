@@ -12,7 +12,7 @@ import { Toggle } from './formComponents/toggle'
 
 export { Checkbox };
 export { Datepicker };
-export { FieldGroup}
+export { FieldGroup};
 export { Input };
 export { Label };
 export { Radio };
@@ -24,7 +24,6 @@ export { Toggle };
 export default {
     "Checkbox" : Checkbox,
     "Datepicker" : Datepicker,
-    "FieldGroup" :FieldGroup,
     "Input" :Input,
     "Label" : Label,
     "Radio" : Radio,

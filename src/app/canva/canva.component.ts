@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, ElementRef, EventEmitter, Output, ChangeD
 import {FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import formComponent from 'src/formComponents';
+import { FieldGroup } from 'src/formComponents';
 
 //Package to implement toastr notifications
 import { ToastrService } from 'ngx-toastr';
@@ -142,7 +143,7 @@ export class CanvaComponent implements AfterContentChecked{
   }
 
   dragAddComponent(id:string, insertMode:string, newComponent : Object, fieldsCopy:Array<Object> | null){
-    let endFieldGroup = new formComponent['FieldGroup']([newComponent]);
+    let endFieldGroup = new FieldGroup([newComponent]);
 
     //getting the button to drag
     let dragValue: any = this.getDragValue(id);  
@@ -165,7 +166,7 @@ export class CanvaComponent implements AfterContentChecked{
 
             //creating fields to render, with the new component
             let newFields:FormlyFieldConfig[] = [];
-            let newFieldGroup = new formComponent['FieldGroup']([]); 
+            let newFieldGroup = new FieldGroup([]); 
 
             newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
 
@@ -190,14 +191,10 @@ export class CanvaComponent implements AfterContentChecked{
               //make a backup if copy is received
               fieldsCopy ? this.fields = [...fieldsCopy]: null;
             }
-            //keep moving if copy is received (called from onMove)
-            fieldsCopy ? this.onMove(insertMode): null;
 
           }).catch(()=>{
             //adding one field group to the end of canva
             this.fields = [ ...this.fields, endFieldGroup ]; 
-            //keep moving if copy is received (called from onMove)
-            fieldsCopy ? this.onMove(insertMode): null;
           });
 
           
@@ -230,7 +227,7 @@ export class CanvaComponent implements AfterContentChecked{
 
     //creating fields to render, without the component
     let newFields:FormlyFieldConfig[] = [];
-    let newFieldGroup = new formComponent['FieldGroup']([]); 
+    let newFieldGroup = new FieldGroup([]); 
     newFieldGroup.fieldGroup = [ ...this.fields[i].fieldGroup!]; 
 
     //delete component in the index specified and save it for return
@@ -251,7 +248,7 @@ export class CanvaComponent implements AfterContentChecked{
     //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;
-    let newComponent = new formComponent[requiredKey](requiredKey+this.componentCount as string & object[],'flex-1');
+    let newComponent = new formComponent[requiredKey](requiredKey + this.componentCount,'flex-1');
     this.componentCount++
     //drag and add the selected component
     this.dragAddComponent(id, insertMode, newComponent, null);
@@ -304,15 +301,6 @@ export class CanvaComponent implements AfterContentChecked{
           //class name of object removed to create draggable button
           let removedID = removedItem.constructor.name;
           
-          //In case the component has a different class
-          type ObjectKey = keyof typeof removedItem;
-          const key = 'type' as ObjectKey;      
-          if (removedID === "Object"){
-            //getting type of component to drag 
-            removedID = removedItem[key];
-            removedID = removedID.charAt(0).toUpperCase() + removedID.slice(1);
-          }       
-  
           //drag and add the selected component
           this.dragAddComponent(removedID, insertMode, removedItem, fieldsCopy) 
           
@@ -400,7 +388,7 @@ export class CanvaComponent implements AfterContentChecked{
       let len = Object.keys(value).length
       if (len === 0) return undefined;
 
-      if (value instanceof formComponent['FieldGroup']) return value
+      if (value instanceof FieldGroup) return value
       if (value instanceof formComponent['Checkbox']) return value.returnObject()
       if (value instanceof formComponent['Datepicker']) return value.returnObject()
       if (value instanceof formComponent['Input']) return value.returnObject()
@@ -521,7 +509,7 @@ export class CanvaComponent implements AfterContentChecked{
     let newComponent = new formComponent[key](element.key,element.className ? element.className : 'flex-1');
     this.componentCount++
    
-    if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof formComponent['FieldGroup']))){
+    if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof FieldGroup))){
       newComponent.setData(element.templateOptions, element.validators, element.defaultValue)
     }
     fieldGroup.fieldGroup.push(newComponent)
@@ -545,7 +533,7 @@ export class CanvaComponent implements AfterContentChecked{
     let fields: FormlyFieldConfig[] = [];
     data.forEach(field => {
       try {
-        let newFieldGroup = new formComponent['FieldGroup']([])
+        let newFieldGroup = new FieldGroup([])
         if (field.fieldGroup){
           field.fieldGroup.forEach((element:any) => {
             this.transformObject(element, newFieldGroup)
