@@ -25,9 +25,10 @@ export class PropertiesComponent {
   locked = false;
   //Selected value of the combo box
   selectedValue: string = ''
-
   //The selected component
   component!: FormComponent;
+  //Selects
+  selects: string[] = []
 
   //Object to transform the keys into a more user friendly text
   propTitles = {'key': 'Key', 'className': 'Flex Size', 'defaultValue': 'Default value', 'label': 'Label', 'type': 'Type', 'min':'Min','max':'Max',
@@ -86,6 +87,8 @@ export class PropertiesComponent {
       //Get the cords of the component
       this.i = formComponent.i
       this.j = formComponent.j
+      //Selects
+      this.selects = formComponent.selects
       //Get the component and iterate his properties to show them in the screen
       this.component = formComponent.component
       this.component.getProperties().forEach(p => {
@@ -118,16 +121,17 @@ export class PropertiesComponent {
 
   changeProp(prop: {"prop": string, "type": string, "value": any}){
     //Change the prop and if it is successful, send a Event to the parent to update the component in the formly fields
+    let key = this.component.get('key')
     let success = this.component.changeProperty(prop.prop, prop.value)
     if (success && (this.i != -1 && this.j != -1)){
-      this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j})
+      this.updateChanges.emit({'success': success, key, 'component': this.component, "i": this.i ,"j" : this.j, type: 'prop'})
     }
   }
   changeCombo(prop: {"prop": string, "type": string, "value": any}){
     //Change the prop and if is successful, send a Event to the parent to update the component in the formly fields
     let success = this.component.changeProperty(prop.prop, this.selectedValue)
     if (success && (this.i != -1 && this.j != -1)){
-      this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j})
+      this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j, type: 'prop'})
     }
   }
 
@@ -145,9 +149,9 @@ export class PropertiesComponent {
   }
 
   //Send and event to the parent to Update the changes in the formly field
-  private update(success:boolean){
+  private update(success:boolean, type: string = 'prop'){
     if (success && (this.i != -1 && this.j != -1)){
-      this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j})
+      this.updateChanges.emit({'success': success, 'component': this.component, "i": this.i ,"j" : this.j, type})
     }
   }
 
@@ -160,7 +164,7 @@ export class PropertiesComponent {
     dialogRef.afterClosed().subscribe(result => {
       //Check if changes were done and update them
       if(result && result.changes){
-        this.update(this.component.updateOptions(result.dataSource))
+        this.update(this.component.updateOptions(result.dataSource),'options')
       }
       this.blockClickInCanva = false
     })
@@ -169,25 +173,26 @@ export class PropertiesComponent {
   //Validator Dialog
   public validatorsDialog(){
     //Data of the component and the validators
-    let  data = {"key":this.component.key, "validators": this.component.get('validators')}
+    let  data = {key : this.component.key, validators: this.component.get('validators')}
     //Open the dialog
     const dialogRef = this.OpenDialog(ValidatorsDialog, data)
     dialogRef.afterClosed().subscribe(result => {
       //Check if changes were done and update them
       if(result && result.changes){
-        this.update(this.component.updateValidator(result.dataSource))
+        this.update(this.component.updateValidator(result.dataSource),'validators')
       }
       this.blockClickInCanva = false
     })
   }
 
   public dynamicOptionsDialog(){
-    let  data = {"key":this.component.key, "dynamicOptions": this.component.get('dynamicOptions')}
+    console.log(this.selects);
+    let  data = {key:this.component.key, selects: this.selects, dynamicOptions: this.component.get('dynamicOptions')}
     const dialogRef = this.OpenDialog(DynamicOptionsDialog, data)
     dialogRef.afterClosed().subscribe(result => {
       //Check if changes were done and update them
       if(result && result.changes){
-        console.log(result);
+        this.update(this.component.updateDynamicOptions(result.dynamicOptions),'dynamicOptions')
       }
       this.blockClickInCanva = false
     })

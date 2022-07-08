@@ -1,0 +1,25 @@
+table { 
+    width: 100% !important;
+}
+
+.Optionsinputs {
+    width: 30%;
+}
+
+.Optionsinputs input:host{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.inline{
+    margin: 2% 0;
+    display: flex;
+}
+
+.inline input{
+    width: 20%; 
+    padding-left: 2%; 
+    padding-right: 8%; 
+    border-bottom: 2px;
+}

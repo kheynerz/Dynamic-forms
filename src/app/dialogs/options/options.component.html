@@ -48,13 +48,17 @@
 </table>
 
 <h4 style="margin: 2% 0;">New Option:</h4>
-<div class="inline">
+<mat-form-field>
+    <mat-label>Label</mat-label>
     <input [(ngModel)]="newData.label" matInput  placeholder="Label"/>
-    <input [(ngModel)]="newData.value" matInput  placeholder="Value" aria-label="Value"/>
-    <mat-checkbox [(ngModel)]="newData.disabled">Disabled</mat-checkbox>
-    <button style="background-color: aqua; margin-left: 5%;" mat-button (click)="addOption()">Add</button>
-</div>
+</mat-form-field>
+<mat-form-field>
+    <mat-label>Value</mat-label>
+    <input [(ngModel)]="newData.value" matInput  placeholder="Value"/>
+</mat-form-field>
 
+<mat-checkbox [(ngModel)]="newData.disabled">Disabled</mat-checkbox>
+<button mat-raised-button color="primary" (click)="addOption()">Add</button>
 <div  mat-dialog-actions>
     <button mat-raised-button (click)="close()">Cancel</button>
     <button mat-raised-button [mat-dialog-close]="{changes, dataSource}">Apply</button>
