@@ -13,11 +13,11 @@
     <div *ngFor="let p of properties">
       <p>
         {{p.title}}
-        <input type='text' [(ngModel)]="p.value" *ngIf="p.type === 'inp'" (keyup.enter)="changeProp(p)"/>
+        <input type='text' [(ngModel)]="p.value" *ngIf="p.type === 'inp'" (keyup)="changeProp(p)"/>
         <input type="checkbox" [(ngModel)]="p.value" *ngIf="p.type === 'chk'" (change)="changeProp(p)">
-        <input type="number" [(ngModel)]="p.value" *ngIf="p.type === 'num'" (change)="changeProp(p)">
-        <input type="number" min="1" max="6" [(ngModel)]="p.value" *ngIf="p.type === 'size' || p.type === 'className'" (change)="changeProp(p)">
-       
+        <input type="number" [(ngModel)]="p.value" *ngIf="p.type === 'num'"  (keyup)="changeProp(p)">
+        <input type="number" min="1" max="6" [(ngModel)]="p.value" *ngIf="p.type === 'size' || p.type === 'className'" onkeydown="return false" (click)="changeProp(p)">
+
         <mat-select [(ngModel)]="selectedValue" *ngIf="p.type === 'type'" (selectionChange)="changeCombo(p)" >
           <mat-option *ngFor="let type of availableTypes" [value]="type">
             {{type}}

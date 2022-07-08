@@ -19,16 +19,21 @@ export class OptionsDialog{
   //Data of the table
   dataSource: Array<Option> = []
   
+  options: Array<Option> = []
+
   //Variable to avoid update the data in the fields when is not necessary
   changes: boolean = false
 
   //When the user wants to add a new option, the data is saved in this object
   newData: Option = {"label": '', 'value':'', "disabled":false}
-  
+  newDataCleaned: boolean = true
+
   //If the user wants to load options from a webservice
   webServiceUrl: string = '';
   //Replace the options in the table when loading from a webservice
   replace: boolean = false;
+
+
 
   constructor(private  dialogRef:  MatDialogRef<OptionsDialog>, @Inject(MAT_DIALOG_DATA) public  data:  any) {
     this.dataSource = data.options
@@ -46,15 +51,24 @@ export class OptionsDialog{
     this.dialogRef.close();
   }
 
-  //
+  public apply(){
+    this.dataSource.forEach((option: Option) => {
+      if (option.label !== '' && option.value !== ''){
+        this.options.push(option)
+      }
+    })
+  }
+
+
   addOption():void{
     this.changes = true
-
+    this.newDataCleaned = false
     //Get the data and check is not empty
     let {label, value, disabled} = this.newData
     if (label !== '' && value !== ''){
       //Clean the data
       this.newData.label = this.newData.value = ""
+      this.newDataCleaned = true
       this.newData.disabled = false
       //Add the data to the array
       this.dataSource.push({label,value,disabled})
