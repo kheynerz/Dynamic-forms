@@ -4,7 +4,7 @@ import { CanvaComponent } from '../canva/canva.component'
 import { CodeTabComponent } from '../code-tab/code-tab.component';
 import { PropertiesComponent } from '../properties/properties.component';
 import { FormControl } from '@angular/forms';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 @Component({
@@ -21,6 +21,8 @@ export class MainComponent implements AfterViewInit{
   @ViewChild('codeTab') codeTab!: CodeTabComponent;
   //Properties Side bar where the user can change the properties of the components
   @ViewChild('properties') properties!: PropertiesComponent;
+  //Toggle group to select between select, move, and delete modes
+  @ViewChild('modesGroup') modesGroup!: Object;
 
   filename = ''
 
@@ -36,7 +38,7 @@ export class MainComponent implements AfterViewInit{
   jsonData: string = "";
 
   ngAfterViewInit() {
-    this.canva.onNormalClick()
+    this.canva.onNormalClick(this.modesGroup)
   }
 
   saveJSON() {
@@ -108,16 +110,16 @@ export class MainComponent implements AfterViewInit{
     this.canva.onInsert(id, insertMode);
   }
 
-  deleteComponent(){
-    this.canva.onDelete();
+  moveComponent(insertMode:string, modesGroup:Object){
+    this.canva.onMove(insertMode, modesGroup);
   }
 
-  moveComponent(insertMode:string){
-    this.canva.onMove(insertMode);
+  moveFieldGroup(up:boolean, modesGroup:Object){
+    this.canva.onMoveFieldGroup(up, modesGroup);
   }
-
-  moveFieldGroup(up:boolean){
-    this.canva.onMoveFieldGroup(up);
+  
+  deleteComponent(modesGroup:Object){
+    this.canva.onDelete(modesGroup);
   }
 
   showProperties(component: any){

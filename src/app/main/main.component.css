@@ -35,15 +35,19 @@ input{
   font-weight:bold;
 }
 
+.mat-button-toggle{
+  width: 35px;
+  height: 40px;
+}
+
+.modeIcons {
+  margin-left: -8px;
+  margin-top: -10px;
+}
+
 .with-icon {
   display: flex;
   align-items: center;
-}
-
-.mat-icon:hover{
-  background-color: #668ca3;
-  border-radius: 10px;
-  border: 5px solid #668ca3;
 }
 
 .sidenav .mat-toolbar {
