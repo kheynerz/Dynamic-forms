@@ -350,7 +350,7 @@ export class CanvaComponent implements AfterContentChecked{
     document.body.style.cursor = "default"
 
     //reset toggle group value to normal click
-    modesGroup.value = "Normal"
+    modesGroup ? modesGroup.value = "Normal": null;
     
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){

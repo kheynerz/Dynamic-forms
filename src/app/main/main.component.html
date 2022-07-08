@@ -11,7 +11,7 @@
       <mat-divider></mat-divider>
 
       <div mat-menu-item class="padded" >
-        <mat-button-toggle-group #modesGroup="matButtonToggleGroup" value="Select">
+        <mat-button-toggle-group #modesGroup="matButtonToggleGroup" value="Normal">
           <mat-button-toggle value="Normal" (click)="this.canva.onNormalClick(modesGroup)" color="basic" matTooltip="Select mode">
             <mat-icon class="modeIcons">touch_app</mat-icon>&nbsp;
           </mat-button-toggle> 
@@ -40,7 +40,7 @@
       <mat-divider class="padded"></mat-divider>
 
       <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded">
-        <button id="{{ i.name }}" (click)="setDraggable(i.name, insertGroup.value)" color="basic" class="sidenavButtons" mat-raised-button>
+        <button id="{{ i.name }}" (click)="insertComponent(i.name, insertGroup.value)" color="basic" class="sidenavButtons" mat-raised-button>
           <mat-icon>{{i.icon}}</mat-icon>&nbsp;
           <span>{{ i.name }}</span>
         </button>      
