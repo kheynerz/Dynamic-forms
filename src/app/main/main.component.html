@@ -10,33 +10,36 @@
       </div>
       <mat-divider></mat-divider>
 
-      <div mat-menu-item class="padded">
+      <div class="padded">
         <mat-button-toggle-group #modesGroup="matButtonToggleGroup" value="Normal">
           <mat-button-toggle value="Normal" (click)="this.canva.onNormalClick(modesGroup)" color="basic" matTooltip="Select mode">
-            <mat-icon class="modeIcons">touch_app</mat-icon>&nbsp;
+            <mat-icon class="toggleIcons">touch_app</mat-icon>&nbsp;
           </mat-button-toggle> 
-          <mat-button-toggle value="Move" (click)="moveComponent(insertGroup.value, modesGroup)" color="basic" matTooltip="Move component mode" mat-icon-button>
-            <mat-icon class="modeIcons">pan_tool</mat-icon>&nbsp;
+          <mat-button-toggle value="Move" (click)="moveComponent(insertGroup.value)" color="basic" matTooltip="Move component mode" mat-icon-button>
+            <mat-icon class="toggleIcons">pan_tool</mat-icon>&nbsp;
           </mat-button-toggle>
-          <mat-button-toggle value="Field down" (click)="moveFieldGroup(false, modesGroup)" color="basic" matTooltip="Move entire field group down" mat-icon-button>
-            <mat-icon class="modeIcons">arrow_downward</mat-icon>&nbsp;
+          <mat-button-toggle value="Field down" (click)="moveFieldGroup(false)" color="basic" matTooltip="Move entire field group down" mat-icon-button>
+            <mat-icon class="toggleIcons">arrow_downward</mat-icon>&nbsp;
           </mat-button-toggle>
-          <mat-button-toggle value="Field up" (click)="moveFieldGroup(true, modesGroup)" color="basic" matTooltip="Move entire field group up" mat-icon-button>
-            <mat-icon class="modeIcons">arrow_upward</mat-icon>&nbsp;
+          <mat-button-toggle value="Field up" (click)="moveFieldGroup(true)" color="basic" matTooltip="Move entire field group up" mat-icon-button>
+            <mat-icon class="toggleIcons">arrow_upward</mat-icon>&nbsp;
           </mat-button-toggle>
-          <mat-button-toggle value="Delete" (click)="deleteComponent(modesGroup)" color="basic" matTooltip="Delete mode" mat-icon-button>
-            <mat-icon class="modeIcons">delete</mat-icon>&nbsp;
+          <mat-button-toggle value="Delete" (click)="deleteComponent()" color="basic" matTooltip="Delete mode" mat-icon-button>
+            <mat-icon class="toggleIcons">delete</mat-icon>&nbsp;
           </mat-button-toggle> 
         </mat-button-toggle-group>
 
-        <button (click)="openFile()" color="basic" matTooltip="Import file" mat-icon-button>
-          <mat-icon>cloud_upload</mat-icon>&nbsp;
-        </button>
-        <button (click)="saveJSON ()" color="basic" matTooltip="Download file" mat-icon-button>
-          <mat-icon>cloud_download</mat-icon>&nbsp;
-        </button> 
+        <mat-button-toggle-group #fileGroup="matButtonToggleGroup" class="fileGroup">
+          <mat-button-toggle (click)="openFile()" color="basic" matTooltip="Import file">
+            <mat-icon class="toggleIcons">cloud_upload</mat-icon>&nbsp;
+          </mat-button-toggle> 
+          <mat-button-toggle (click)="saveJSON ()" color="basic" matTooltip="Download file" mat-icon-button>
+            <mat-icon class="toggleIcons">cloud_download</mat-icon>&nbsp;
+          </mat-button-toggle> 
+        </mat-button-toggle-group>
+        
       </div>
-
+     
       <mat-divider class="padded"></mat-divider>
 
       <div mat-menu-item *ngFor="let i of sideComponents" class="with-icon padded">

@@ -242,7 +242,11 @@ export class CanvaComponent implements AfterContentChecked{
     return removed;
   }
    
-  onInsert(id:string, insertMode:string){  
+  onInsert(id:string, insertMode:string, modesGroup:any){  
+
+    //reset toggle group value to normal click
+    modesGroup.value = "Normal";
+
     //Creating the new component specified by button chosen
     type ObjectKey = keyof typeof formComponent;
     const requiredKey = id as ObjectKey;

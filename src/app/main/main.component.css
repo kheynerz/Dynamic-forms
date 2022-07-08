@@ -38,9 +38,18 @@ input{
 .mat-button-toggle{
   width: 35px;
   height: 40px;
+  background-color: #FDF6EC;
 }
 
-.modeIcons {
+.mat-button-toggle-checked {
+  background: #d1ccc6;
+}
+
+.fileGroup .mat-button-toggle-checked {
+  background-color: #FDF6EC;
+}
+
+.toggleIcons {
   margin-left: -8px;
   margin-top: -10px;
 }

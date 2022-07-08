@@ -105,19 +105,19 @@ export class MainComponent implements AfterViewInit{
   }
   
   insertComponent(id:string,insertMode:string){
-    this.canva.onInsert(id, insertMode);
+    this.canva.onInsert(id, insertMode, this.modesGroup);
   }
 
-  moveComponent(insertMode:string, modesGroup:any){
-    this.canva.onMove(insertMode, modesGroup);
+  moveComponent(insertMode:string){
+    this.canva.onMove(insertMode, this.modesGroup);
   }
 
-  moveFieldGroup(up:boolean, modesGroup:any){
-    this.canva.onMoveFieldGroup(up, modesGroup);
+  moveFieldGroup(up:boolean){
+    this.canva.onMoveFieldGroup(up, this.modesGroup);
   }
   
-  deleteComponent(modesGroup:any){
-    this.canva.onDelete(modesGroup);
+  deleteComponent(){
+    this.canva.onDelete(this.modesGroup);
   }
 
   showProperties(component: any){
