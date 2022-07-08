@@ -45,6 +45,11 @@ input{
   margin-top: -10px;
 }
 
+.insertIcons {
+  margin-left: -5px;
+  margin-top: 8px;
+}
+
 .with-icon {
   display: flex;
   align-items: center;

@@ -10,7 +10,7 @@
       </div>
       <mat-divider></mat-divider>
 
-      <div mat-menu-item class="padded" >
+      <div mat-menu-item class="padded">
         <mat-button-toggle-group #modesGroup="matButtonToggleGroup" value="Normal">
           <mat-button-toggle value="Normal" (click)="this.canva.onNormalClick(modesGroup)" color="basic" matTooltip="Select mode">
             <mat-icon class="modeIcons">touch_app</mat-icon>&nbsp;
@@ -18,10 +18,10 @@
           <mat-button-toggle value="Move" (click)="moveComponent(insertGroup.value, modesGroup)" color="basic" matTooltip="Move component mode" mat-icon-button>
             <mat-icon class="modeIcons">pan_tool</mat-icon>&nbsp;
           </mat-button-toggle>
-          <mat-button-toggle value="Field down" (click)="moveFieldGroup(false, modesGroup)" color="basic" matTooltip="Move entire field group up" mat-icon-button>
+          <mat-button-toggle value="Field down" (click)="moveFieldGroup(false, modesGroup)" color="basic" matTooltip="Move entire field group down" mat-icon-button>
             <mat-icon class="modeIcons">arrow_downward</mat-icon>&nbsp;
           </mat-button-toggle>
-          <mat-button-toggle value="Field up" (click)="moveFieldGroup(true, modesGroup)" color="basic" matTooltip="Move entire field group down" mat-icon-button>
+          <mat-button-toggle value="Field up" (click)="moveFieldGroup(true, modesGroup)" color="basic" matTooltip="Move entire field group up" mat-icon-button>
             <mat-icon class="modeIcons">arrow_upward</mat-icon>&nbsp;
           </mat-button-toggle>
           <mat-button-toggle value="Delete" (click)="deleteComponent(modesGroup)" color="basic" matTooltip="Delete mode" mat-icon-button>
@@ -48,16 +48,16 @@
 
       <mat-divider class="padded"></mat-divider>
 
-      
-      <mat-button-toggle-group #insertGroup="matButtonToggleGroup" value="Right">
-        <mat-button-toggle value="Left" matTooltip="Insert mode left">
-          <mat-icon>keyboard_arrow_left</mat-icon>
-        </mat-button-toggle>
-        <mat-button-toggle value="Right" matTooltip="Insert mode right">
-          <mat-icon>keyboard_arrow_right</mat-icon>
-        </mat-button-toggle>       
-      </mat-button-toggle-group>
-      <div>Insert: {{insertGroup.value}}</div>
+      <div mat-menu-item style="padding-left: 25%">
+        <mat-button-toggle-group #insertGroup="matButtonToggleGroup" value="Right">
+          <mat-button-toggle value="Left" matTooltip="Insert mode left">
+            <mat-icon class="insertIcons">keyboard_arrow_left</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="Right" matTooltip="Insert mode right">
+            <mat-icon class="insertIcons">keyboard_arrow_right</mat-icon>
+          </mat-button-toggle>       
+        </mat-button-toggle-group>
+      </div>
 
   </mat-sidenav>
 
