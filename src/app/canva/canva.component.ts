@@ -23,7 +23,7 @@ export class CanvaComponent implements AfterContentChecked{
   changed: boolean = true;
 
   //Available Validators
-  validators: Array<string> = ['email','IDCR'] 
+  validators: Array<string> = ['email','idCR', 'phone', 'weakPassword', 'strongPassword'] 
 
   //QueryParams
   queryParams: Array<any> = []
@@ -86,8 +86,6 @@ export class CanvaComponent implements AfterContentChecked{
           this.addQueryParams(queryParams)
         }
       }
-      
-      console.log(this.selects);
     }
   }
   

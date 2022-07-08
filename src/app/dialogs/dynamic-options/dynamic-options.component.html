@@ -1,77 +1,90 @@
-<h1 style="text-align: center;" mat-dialog-title>Dynamic Options: {{data.key}}</h1>
+<div mat-dialog-title class="dialog-title">
+    <h3>Dynamic Options: {{data.key}}</h3>
+    <button mat-icon-button [mat-dialog-close]="{changes, dynamicOptions}" (click)="apply()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
 
-<mat-form-field class="Optionsinputs">
-    <mat-label>Url</mat-label>
-    <input matInput [(ngModel)]="dynamicOptions.url" (keyup)="changes = true"  placeholder="Url"/>
-</mat-form-field>
+<div class="inputs">
+    <mat-form-field class="left">
+        <mat-label>Url</mat-label>
+        <input matInput [(ngModel)]="dynamicOptions.url" (keyup)="changes = true"  placeholder="Url"/>
+    </mat-form-field>
+    
+    <mat-form-field class="right">    
+        <mat-label>Label</mat-label>
+        <input matInput [(ngModel)]="dynamicOptions.dataLabel" (keyup)="changes = true"  placeholder="Column Label"/>
+    </mat-form-field>
+    
+</div>
 
-<mat-form-field class="Optionsinputs">    
-    <mat-label>Label</mat-label>
-    <input matInput [(ngModel)]="dynamicOptions.dataLabel" (keyup)="changes = true"  placeholder="Column Label name" aria-label="Label"/>
-</mat-form-field>
-
-<mat-form-field>
-    <mat-label>Value</mat-label>
-    <input matInput [(ngModel)]="dynamicOptions.dataValue" (keyup)="changes = true"  placeholder="Column Value name" aria-label="Value"/>
-</mat-form-field>
-
-
-
-
-<mat-form-field>
-    <mat-label>Based On</mat-label>
-    <mat-select (selectionChange)="selectionChange($event)" [(value)]="this.dynamicOptions.basedOn">
-        <mat-option *ngFor="let select of selects" [value]="select" >
-            {{select}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-
-
-
-<table mat-table [dataSource]="dataSource">
-    <!-- Key Column -->
-    <ng-container matColumnDef="key">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Key </th>
-        <td mat-cell *matCellDef="let element">
-            <input [(ngModel)]="element.key" (keyup)="changeState()" matInput  value="{{element.key}}"/>
-        </td>
-    </ng-container>
-
-  <!-- Value Column -->
-    <ng-container matColumnDef="value">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Value </th>
-        <td mat-cell *matCellDef="let element">
-            <input [(ngModel)]="element.value" *ngIf="element.action"  (keyup)="changeState()" matInput value="{{element.value}}" />
-            <span *ngIf="!element.action">{{element.value}}</span>
-        </td>
-    </ng-container>
-
-    <!-- Action Column -->
-    <ng-container matColumnDef="action">
-    <th mat-header-cell *matHeaderCellDef> Action </th>
-    <td mat-cell *matCellDef="let element; let i = index">
-        <button [disabled]="!element.action" (click)="deleteRow(i); changes = true" color="basic" mat-icon-button>
-            <mat-icon>delete</mat-icon>&nbsp;
-        </button>
-    </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-
-<h4 style="margin: 2% 0;">New Option:</h4>
-<div class="inline">
-    <input [(ngModel)]="newQueryParam.key" matInput  placeholder="Key"/>
-    <input [(ngModel)]="newQueryParam.value" matInput  placeholder="Value"/>
-    <button style="background-color: aqua; margin-left: 5%;" mat-button (click)="addQueryParam()">Add</button>
+<div class="inputs">
+    <mat-form-field class="left">
+        <mat-label>Value</mat-label>
+        <input matInput [(ngModel)]="dynamicOptions.dataValue" (keyup)="changes = true"  placeholder="Column Value"/>
+    </mat-form-field>
+    
+    <mat-form-field class="right">
+        <mat-label>Based On</mat-label>
+        <mat-select (selectionChange)="selectionChange($event)" [(value)]="this.dynamicOptions.basedOn">
+            <mat-option *ngFor="let select of selects" [value]="select" >
+                {{select}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 
 
 
-<div  mat-dialog-actions>
-    <button mat-raised-button (click)="close()">Cancel</button>
-    <button mat-raised-button [mat-dialog-close]="{changes, dynamicOptions}" (click)="apply()">Apply</button>
+<div class="tableContainer">
+    <table mat-table [dataSource]="dataSource">
+        <!-- Key Column -->
+        <ng-container matColumnDef="key">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Key </th>
+            <td mat-cell *matCellDef="let element">
+                <input [(ngModel)]="element.key" (keyup)="changeState()" matInput  value="{{element.key}}"/>
+            </td>
+        </ng-container>
+
+    <!-- Value Column -->
+        <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Value </th>
+            <td mat-cell *matCellDef="let element">
+                <input [(ngModel)]="element.value" *ngIf="element.action"  (keyup)="changeState()" matInput value="{{element.value}}" />
+                <span *ngIf="!element.action">{{element.value}}</span>
+            </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let element; let i = index">
+            <button [disabled]="!element.action" (click)="deleteRow(i); changes = true" color="basic" mat-icon-button>
+                <mat-icon>delete</mat-icon>&nbsp;
+            </button>
+        </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 </div>
+
+<div class="newParam">
+    <h3 >New Query Param:</h3>
+    <mat-form-field>
+        <mat-label>Key</mat-label>
+        <input matInput [(ngModel)]="newQueryParam.key" (keyup)="changes = true"  placeholder="Key" required/>
+        <mat-error *ngIf="newQueryParam.key === ''">Input can't be empty</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Value</mat-label>
+        <input matInput [(ngModel)]="newQueryParam.value" (keyup)="changes = true"  placeholder="Value" required/>
+        <mat-error *ngIf="newQueryParam.value === ''">Input can't be empty</mat-error>
+    </mat-form-field>
+
+    <button class="buttons" (click)="addQueryParam()"><mat-icon>add</mat-icon></button>
+
+</div>
+

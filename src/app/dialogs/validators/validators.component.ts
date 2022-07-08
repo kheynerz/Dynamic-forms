@@ -16,11 +16,11 @@ interface Validators{
 })
 export class ValidatorsDialog{
   //Columns to be displayed in the Mat table
-  displayedColumns = ['validator', 'regex', 'activated']
+  displayedColumns = ['validator',  'example', 'regex', 'activated']
   //Variable to avoid updating data in the fields when is not necessary
   changes: boolean = false
   //Data of the table
-  dataSource: Array<{name: string, regex: RegExp, checked: boolean}> = dataSource
+  dataSource: Array<{name: string, regex: RegExp, example:string, checked: boolean}> = dataSource
 
   //Store the validators of the component
   componentValidators: Validators = {}
@@ -53,5 +53,6 @@ export class ValidatorsDialog{
     }else{
       delete this.componentValidators[element.name]
     }
+    
   }
 }

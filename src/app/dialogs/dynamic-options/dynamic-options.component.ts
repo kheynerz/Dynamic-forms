@@ -48,8 +48,9 @@ export class DynamicOptionsDialog{
       if (index > -1) { 
         this.selects.splice(index, 1);
       }
-      //Set select
-      this.dynamicOptions.basedOn
+
+      if (!this.dynamicOptions.basedOn) this.dynamicOptions.basedOn = 'None'
+
       if (data.dynamicOptions.queryParams){
         data.dynamicOptions.queryParams.forEach((param,index) => {
           for (const key in param){
@@ -86,8 +87,13 @@ export class DynamicOptionsDialog{
 
     let queryParams: Array<any> = []
     this.dataSource.forEach(({key, value}: QueryParam)=>{
-      queryParams.push({[key]: value})
+      if(key !== '' && value !== ''){
+        queryParams.push({[key]: value})
+
+      }
     })
+
+    if (this.dynamicOptions.basedOn === 'None') this.dynamicOptions.basedOn = ''
 
     this.dynamicOptions.queryParams = queryParams
   }
@@ -104,8 +110,6 @@ export class DynamicOptionsDialog{
     this.changes = true
     if(matSelect.value === 'None'){
       this.dynamicOptions.basedOn = undefined
-      
-      console.log(this.basedOnIndex);
       
       if (this.basedOnIndex >= 0){
         this.deleteRow(this.basedOnIndex)
@@ -126,13 +130,11 @@ export class DynamicOptionsDialog{
 
   public changeState(){
     this.changes = true
-    console.log("Changes");
-    
   }
 
   public addQueryParam(){
     let {key, value, action} = this.newQueryParam
-    if (key !== ''){
+    if (key !== '' && value !== ''){
       this.newQueryParam = {key: '', value: '', action: true}
       this.changes = true
       this.dataSource.push({key,value, action})

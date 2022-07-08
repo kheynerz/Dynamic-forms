@@ -1,25 +1,48 @@
-table { 
+.dialog-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+
+.dialog-title button{
+    border: none;
+    background-color: white;
+}
+
+.tableContainer{
+    height: 34%;
+    width: 100%;
+    overflow: auto;
+}
+
+.tableContainer table{
     width: 100% !important;
 }
 
-.Optionsinputs {
-    width: 30%;
+.inputs .mat-form-field{
+    margin: 0 2.5%;
+    width: 45%;
 }
 
-.Optionsinputs input:host{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+
+.newParam .mat-form-field{
+    width: 38%;
+    margin: 0 2.5%;
 }
 
-.inline{
-    margin: 2% 0;
-    display: flex;
+
+.buttons{
+    margin-left: 2.5%;
+    width: 8%;
+    font-size: 32px;
+    border-radius: 6%;
+    border: none;
+    height: 3.5rem;
+    background-color: #839AA8;
 }
 
-.inline input{
-    width: 20%; 
-    padding-left: 2%; 
-    padding-right: 8%; 
-    border-bottom: 2px;
+.buttons:hover{
+    cursor: pointer;
 }
+

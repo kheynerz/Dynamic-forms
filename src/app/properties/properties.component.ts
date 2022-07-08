@@ -119,6 +119,7 @@ export class PropertiesComponent {
     }
   }
 
+
   changeProp(prop: {"prop": string, "type": string, "value": any}){
     //Change the prop and if it is successful, send a Event to the parent to update the component in the formly fields
     let key = this.component.get('key')
@@ -164,7 +165,7 @@ export class PropertiesComponent {
     dialogRef.afterClosed().subscribe(result => {
       //Check if changes were done and update them
       if(result && result.changes){
-        this.update(this.component.updateOptions(result.dataSource),'options')
+        this.update(this.component.updateOptions(result.options),'options')
       }
       this.blockClickInCanva = false
     })

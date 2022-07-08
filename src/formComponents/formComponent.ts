@@ -160,10 +160,8 @@ export class FormComponent{
     
     if (Object.keys(this.templateOptions.dynamicOptions).length !== 0) templateOptions['dynamicOptions'] = this.templateOptions.dynamicOptions
     
-    if (!templateOptions['dynamicOptions']){
-      if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
-    }
-   
+    if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
+    
     //If it is something in validators add them to the object
     if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
 
