@@ -11,7 +11,7 @@
       <p *ngIf="p.type != 'chk'"  class="propertiesDescription">
         {{p.title}}
         <input class="form-field" type='text' [(ngModel)]="p.value" *ngIf="p.type === 'inp'" (keyup)="changeProp(p)"/>
-        <input  class="form-field" type="number" [(ngModel)]="p.value" *ngIf="p.type === 'num'"  (keyup)="changeProp(p)">
+        <input  class="form-field" type="number" [(ngModel)]="p.value" *ngIf="p.type === 'num'"  (keyup)="changeProp(p)" (click)="changeProp(p)">
         <input  class="form-field" type="number" min="1" max="6" [(ngModel)]="p.value" *ngIf="p.type === 'size' || p.type === 'className'" onkeydown="return false" (click)="changeProp(p)">
 
         <mat-select [(ngModel)]="selectedValue" *ngIf="p.type === 'type'" (selectionChange)="changeCombo(p)" >
