@@ -37,12 +37,7 @@ export class FormComponent{
     required: false,      
     multiple: false,
     options : [ ],
-    dynamicOptions: {
-      "url": "",
-      "dataValue": "id",
-      "dataLabel": "nombre",
-      "queryParams": []
-    }
+    dynamicOptions: {}
   } 
 
   validators = {} //Validators of the input files
@@ -80,14 +75,16 @@ export class FormComponent{
     //In formly defaultValue, key and className are separated from the template properties
     if (property === "defaultValue"){
       this.defaultValue = newValue 
-
+      return true
+      
     }else if (property === 'key'){
       this.key = newValue
-
+      return true
+      
     }else if(property === 'className'){
       this.className = `flex-${newValue}`
       this.flexPosition = Number(newValue)
-
+      return true
     }else{
       try {
         //Create an ObjectKey to dynamically access the template options
@@ -163,12 +160,10 @@ export class FormComponent{
     
     if (Object.keys(this.templateOptions.dynamicOptions).length !== 0) templateOptions['dynamicOptions'] = this.templateOptions.dynamicOptions
     
-    if (!templateOptions['dynamicOptions']){
-      if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
-    }
-   
+    if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
+    
     //If it is something in validators add them to the object
-    if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
+    //if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
 
 
 
@@ -229,6 +224,7 @@ export class FormComponent{
     if (this.#availableProperties.indexOf(property) >= 0){
       result = this.changeProps(property, newValue)//Change the property
     }
+    
     return result
   }
 
@@ -274,6 +270,16 @@ export class FormComponent{
     //Check if the component can add options, and update it
     if (this.#availableProperties.indexOf("options") !== -1){
       this.templateOptions.options = newOptions
+      success = true
+    }
+    return success
+  }
+
+  updateDynamicOptions(newOptions: Array<{key: string, value: any}>){
+    let success = false
+    //Check if the component can add dynamic options, and update it
+    if (this.#availableProperties.indexOf("dynamicOptions") !== -1){
+      this.templateOptions.dynamicOptions = newOptions
       success = true
     }
     return success

@@ -1,13 +1,49 @@
-table { width: 100%!important; }
-
-.inline{
-    margin: 2% 0;
+.dialog-title {
     display: flex;
+    justify-content: space-between;
+    align-items: center; 
 }
 
-.inline input{
-    width: 20%; 
-    padding-left: 2%; 
-    padding-right: 8%; 
-    border-bottom: 2px;
+.dialog-title button{
+    border: none;
+    background-color: white;
+}
+
+.tableContainer{
+    height: 61%;
+    width: 100%;
+    overflow: auto;
+}
+
+.tableContainer table{
+    width: 100% !important;
+}
+
+
+.newOption h4{
+    margin: 2% 0;
+}
+
+.mat-form-field{
+    margin-right: 5%;
+    width: 34%;
+}
+
+.mat-checkbox{
+    margin-right: 5%;
+    margin-bottom: 16px;
+}
+
+
+.buttons{
+    width: 8%;
+    font-size: 32px;
+    border-radius: 6%;
+    border: none;
+    height: 3.5rem;
+    background-color: #839AA8;
+}
+
+.buttons:hover{
+    cursor: pointer;
 }

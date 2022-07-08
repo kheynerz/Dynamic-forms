@@ -14,6 +14,5 @@ let modules = [
 @NgModule({
     imports: modules,
     exports: modules,
-    providers: [],
 })
 export class NGXFormlyModule { }

@@ -1,0 +1,85 @@
+.properties:hover{
+    background-color: #668ca3;
+    border-radius: 10px;
+    border: 5px solid #668ca3;
+  }
+
+  .propertiesText{
+    padding: 5px;
+    font-weight:bold;
+    font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif', 'Arial Narrow'; 
+  }
+
+
+  .propertiesDescription{
+    height: 65px;
+    width: 200px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    font-weight:bold;
+    background-color: #D1D1D1;
+    border-radius: 10px;
+    border: 5px solid #D1D1D1;
+    text-align: left;
+    font-size: small;
+    font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif', 'Arial Narrow'; 
+  }
+
+  .propertiesDescriptionCheckbox{
+    height: 28px;
+    width: 200px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight:bold;
+    background-color: #D1D1D1;
+    border-radius: 10px;
+    border: 5px solid #D1D1D1;
+    text-align: left;
+    font-size: small;
+    font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif', 'Arial Narrow'; 
+  }
+
+.form-field {
+    width: 100%;
+    height: 50px;
+    padding: 8px 16px;
+    line-height: 20px;
+    font-size: small;
+    font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif', 'Arial Narrow'; 
+    border-radius: 20px;
+    border: 10px solid #D1D1D1;
+    background: #FDF6EC;
+}
+
+.form-field:focus{
+    outline: #FDF6EC;
+}
+
+.open{
+    text-align: center;
+    font-weight:bold;
+    background-color: #e6ded3;
+    border-radius: 10px;
+    border: 5px solid #e6ded3;
+    overflow: hidden; 
+}
+
+.mat-checkbox{
+  border-radius: 10px;
+  border: 5px solid #D1D1D1;
+  background: #FDF6EC;
+}
+
+.mat-select{
+    height: 13px;
+    width: 73%;
+    padding: 8px 16px;
+    line-height: 20px;
+    font-size: small;
+    font-family: 'Roboto', Helvetica, 'Arial', 'sans-serif', 'Arial Narrow'; 
+    border-radius: 20px;
+    border: 10px solid #D1D1D1;
+    background: #FDF6EC;
+}
+

@@ -23,7 +23,13 @@ export class CanvaComponent implements AfterContentChecked{
   changed: boolean = true;
 
   //Available Validators
-  validators: Array<string> = ['email','IDCR'] 
+  validators: Array<string> = ['email','idCR', 'phone', 'weakPassword', 'strongPassword'] 
+
+  //QueryParams
+  queryParams: Array<any> = []
+
+  //Select Component Keys
+  selects: any[] = [] 
 
   //Count of components in the fields
   componentCount = 1
@@ -49,23 +55,54 @@ export class CanvaComponent implements AfterContentChecked{
   
   //Update the Fields, 
   public update(changes: any){
-      if (changes.success){
-        //The changes in the component were made but they are not render in the screen
-        //Create a copy of the field group where is the component 
-        let fieldGroup = this.fields[changes.i].fieldGroup!
-        if (fieldGroup){
-          //Erase the component and reassign it 
-          fieldGroup[changes.j] = {}
-          //If setTimeout is not used the changes are not rendered
-          setTimeout(()=>{
-              this.form = new FormGroup({});//Re assign the form to update validators
-              fieldGroup[changes.j] = changes.component//Re assign the component
-              this.changed = true //Changes were made in the canva
-          },10)
+    if (changes.success){
+      let component = changes.component
+      //The changes in the component were made but they are not render in the screen
+      //Create a copy of the field group where is the component 
+      let fieldGroup = this.fields[changes.i].fieldGroup!
+      if (fieldGroup){
+        //Erase the component and reassign it 
+        fieldGroup[changes.j] = {}
+        //If setTimeout is not used the changes are not rendered
+        setTimeout(()=>{
+            this.form = new FormGroup({});//Re assign the form to update validators
+            fieldGroup[changes.j] = component//Re assign the component
+            this.changed = true //Changes were made in the canva
+        },10)
+      }
+      
+      if (component instanceof formComponent['Select']){
+        
+        if (changes.key){
+          let newKey = component.get('key')
+          if(newKey !== changes.key){
+            let index = this.selects.indexOf(changes.key)
+            this.selects[index] = newKey
+          }
         }
+
+        if(changes.type === 'dynamicOptions'){
+          let queryParams: any[] = component.get('dynamicOptions').queryParams
+          this.addQueryParams(queryParams)
+        }
+      }
     }
   }
   
+
+  private addQueryParams(queryParams: any[]){
+    if (queryParams && queryParams.length > 0){
+      let params: any[] = []
+      queryParams.forEach(param => {
+        params.push(...Object.keys(param))
+      })
+      const difference = this.queryParams.filter(
+        element => !params.includes(element)
+      );
+      this.queryParams = [...difference, ...params];
+    }
+  }
+
   //Method to show a toastr error notification
   private showError(message: string, title:string){
     this.toastr.error(message, title)
@@ -160,7 +197,7 @@ export class CanvaComponent implements AfterContentChecked{
           
         if (this.clickOnCanva(e.pageX, e.pageY)){ 
           //Rendering new form in canva when a valid position is selected  
-    
+          
           this.clickOnComponent().then( ([i,j]:any)=>{
             //if promise resolved, add new component to selected field group
 
@@ -175,13 +212,16 @@ export class CanvaComponent implements AfterContentChecked{
 
             //insert component in the index specified
             newFieldGroup.fieldGroup.splice(j, 0, newComponent);
-
             if (newFieldGroup.fieldGroup.length <= 6){
               //field group maximum components
 
               newFields = [ ...this.fields];  
               newFields[i] = newFieldGroup;    
-  
+              
+              if (newComponent instanceof formComponent['Select']){
+                this.selects.push(newComponent.get('key'))
+              }
+      
               //updating fields in screen
               this.fields = [ ...newFields];
 
@@ -195,6 +235,10 @@ export class CanvaComponent implements AfterContentChecked{
           }).catch(()=>{
             //adding one field group to the end of canva
             this.fields = [ ...this.fields, endFieldGroup ]; 
+            if (newComponent instanceof formComponent['Select']){
+              this.selects.push(newComponent.get('key'))
+            }
+    
           });
 
         } 
@@ -361,8 +405,8 @@ export class CanvaComponent implements AfterContentChecked{
 
         this.clickOnComponent().then( ([i,j]:any)=>{
           //if promise resolved, Show properties of selected component 
-          this.selectedComponent.emit({"isSelected" : true, "component": this.fields[i].fieldGroup![j], i,j})
-        }).catch(_=>{this.selectedComponent.emit({"isSelected": false})});
+          this.selectedComponent.emit({isSelected : true, component: this.fields[i].fieldGroup![j], i,j, selects : this.selects})
+        }).catch(_=>{this.selectedComponent.emit({isSelected: false})});
 
       }
     }  
@@ -380,6 +424,10 @@ export class CanvaComponent implements AfterContentChecked{
 
     if (this.validators){
       acceptedKeys = Array.from(new Set([...acceptedKeys, ...this.validators]));
+    }
+
+    if (this.queryParams){
+      acceptedKeys = Array.from(new Set([...acceptedKeys, ...this.queryParams]));
     }
 
     //Data to ignore
@@ -517,6 +565,13 @@ export class CanvaComponent implements AfterContentChecked{
     if ((!(newComponent instanceof formComponent['Label'])) && (!(newComponent instanceof FieldGroup))){
       newComponent.setData(element.templateOptions, element.validators, element.defaultValue)
     }
+
+    if (newComponent instanceof formComponent['Select']){
+      this.selects.push(newComponent.get('key'))
+      let queryParams = newComponent.get('dynamicOptions').queryParams
+      this.addQueryParams(queryParams)
+    }
+
     fieldGroup.fieldGroup.push(newComponent)
   }
 

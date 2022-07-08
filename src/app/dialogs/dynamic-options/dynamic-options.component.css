@@ -1,0 +1,48 @@
+.dialog-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+
+.dialog-title button{
+    border: none;
+    background-color: white;
+}
+
+.tableContainer{
+    height: 34%;
+    width: 100%;
+    overflow: auto;
+}
+
+.tableContainer table{
+    width: 100% !important;
+}
+
+.inputs .mat-form-field{
+    margin: 0 2.5%;
+    width: 45%;
+}
+
+
+.newParam .mat-form-field{
+    width: 38%;
+    margin: 0 2.5%;
+}
+
+
+.buttons{
+    margin-left: 2.5%;
+    width: 8%;
+    font-size: 32px;
+    border-radius: 6%;
+    border: none;
+    height: 3.5rem;
+    background-color: #839AA8;
+}
+
+.buttons:hover{
+    cursor: pointer;
+}
+
