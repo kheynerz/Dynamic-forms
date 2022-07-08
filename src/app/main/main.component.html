@@ -12,7 +12,7 @@
 
       <div mat-menu-item class="padded" >
         <mat-button-toggle-group #modesGroup="matButtonToggleGroup" value="Select">
-          <mat-button-toggle value="Select" (click)="this.canva.onNormalClick(modesGroup)" color="basic" matTooltip="Select mode">
+          <mat-button-toggle value="Normal" (click)="this.canva.onNormalClick(modesGroup)" color="basic" matTooltip="Select mode">
             <mat-icon class="modeIcons">touch_app</mat-icon>&nbsp;
           </mat-button-toggle> 
           <mat-button-toggle value="Move" (click)="moveComponent(insertGroup.value, modesGroup)" color="basic" matTooltip="Move component mode" mat-icon-button>

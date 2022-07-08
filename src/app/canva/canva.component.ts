@@ -259,8 +259,6 @@ export class CanvaComponent implements AfterContentChecked{
     //change to appropriate cursor style
     document.body.style.cursor = "no-drop"
 
-    modesGroup.value = "Delete"
-    
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
 
@@ -287,8 +285,6 @@ export class CanvaComponent implements AfterContentChecked{
 
     //change to appropriate cursor style
     document.body.style.cursor = "grab"
-
-    modesGroup.value = "Move"
     
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
@@ -319,8 +315,6 @@ export class CanvaComponent implements AfterContentChecked{
     
     //change to appropriate cursor style
     document.body.style.cursor = "move";
-
-    up ? modesGroup.value = "Field up" : modesGroup.value = "Field down";
 
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
@@ -354,7 +348,9 @@ export class CanvaComponent implements AfterContentChecked{
 
   onNormalClick(modesGroup:any){
     document.body.style.cursor = "default"
-    modesGroup.value = "Select"
+
+    //reset toggle group value to normal click
+    modesGroup.value = "Normal"
     
     document.onmouseup = (e) =>{
       if (this.clickOnCanva(e.pageX, e.pageY)){
