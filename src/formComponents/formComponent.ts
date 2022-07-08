@@ -163,7 +163,7 @@ export class FormComponent{
     if (this.templateOptions.options.length !== 0) templateOptions['options'] = this.templateOptions.options
     
     //If it is something in validators add them to the object
-    if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
+    //if (Object.keys(this.validators).length !== 0) values['validators'] = this.validators
 
 
 
