@@ -118,7 +118,7 @@ export class DynamicOptionsDialog{
       this.basedOnIndex = -1
 
     }else{
-      if (this.basedOnIndex > 0){
+      if (this.basedOnIndex >= 0){
         this.deleteRow(this.basedOnIndex)
       }
       this.basedOnIndex = this.dataSource.length
