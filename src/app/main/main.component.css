@@ -35,6 +35,20 @@ input{
   font-weight:bold;
 }
 
+:host .mat-button-toggle-group{
+  border-radius: 15px !important;
+}
+
+:host .fileGroup.mat-button-toggle-group{
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+
+:host .modesGroup.mat-button-toggle-group{
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+
 .mat-button-toggle{
   width: 35px;
   height: 40px;
